@@ -1,0 +1,53 @@
+{
+  "name": "rps-ethereum",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean:install": "rimraf node_modules && yarn install",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@mdi/font": "^2.8.94",
+    "crypto-js": "^3.1.9-1",
+    "ramda": "^0.25.0",
+    "rimraf": "^2.6.2",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.2.0",
+    "vuex": "^3.0.1",
+    "vuex-router-sync": "^5.0.0",
+    "web3": "^1.0.0-beta.36",
+    "web3-provider-engine": "^14.1.0",
+    "web3-utils": "^1.0.0-beta.36"
+  },
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.4",
+    "@vue/cli-plugin-e2e-cypress": "^3.0.4",
+    "@vue/cli-plugin-eslint": "^3.0.4",
+    "@vue/cli-plugin-unit-jest": "^3.0.4",
+    "@vue/cli-service": "^3.0.4",
+    "@vue/eslint-config-prettier": "^4.0.0",
+    "@vue/test-utils": "^1.0.0-beta.20",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-plugin-transform-imports": "^1.5.1",
+    "eslint": "^5.8.0",
+    "eslint-import-resolver-webpack": "^0.10.1",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-compat": "^2.6.2",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-vue": "^5.0.0-0",
+    "material-design-icons-iconfont": "^4.0.2",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "vue-template-compiler": "^2.5.17"
+  }
+}
