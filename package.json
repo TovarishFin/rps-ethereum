@@ -4,11 +4,21 @@
   "private": true,
   "scripts": {
     "clean:install": "rimraf node_modules && yarn install",
+    "clean:contracts": "rimraf contractsBuild && truffle compile",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "build:dapp": "vue-cli-service build",
+    "build:contracts": "truffle compile",
+    "lint:js": "vue-cli-service lint",
+    "lint:sol": "solium -d ./contracts",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "test:dapp": "vue-cli-service test:unit",
+    "test:contracts": "truffle --reset test",
+    "test:contracts:gas-reporter": "GAS_REPORTER=true yarn run test",
+    "migrate:dev": "truffle migrate --reset --network dev",
+    "migrate:kovan": "truffle migrate --reset --network kovan",
+    "migrate:rinkeby": "truffle migrate --reset --network rinkeby",
+    "migrate:ropsten": "truffle migrate --reset --network ropsten",
+    "migrate:mainnet": "truffle migrate --reset --network live"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
@@ -16,6 +26,7 @@
     "crypto-js": "^3.1.9-1",
     "ramda": "^0.25.0",
     "rimraf": "^2.6.2",
+    "truffle": "^4.1.14",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuetify": "^1.2.0",
@@ -38,6 +49,9 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-imports": "^1.5.1",
+    "bn.js": "^4.11.8",
+    "chalk": "^2.4.1",
+    "dotenv": "^6.1.0",
     "eslint": "^5.8.0",
     "eslint-import-resolver-webpack": "^0.10.1",
     "eslint-loader": "^2.1.1",
@@ -45,9 +59,14 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-vue": "^5.0.0-0",
+    "eth-gas-reporter": "^0.1.12",
+    "ganache-cli": "^6.2.1",
     "material-design-icons-iconfont": "^4.0.2",
+    "openzeppelin-solidity": "^2.0.0",
+    "solium": "^1.1.8",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "truffle-hdwallet-provider": "^0.0.6",
     "vue-template-compiler": "^2.5.17"
   }
 }
