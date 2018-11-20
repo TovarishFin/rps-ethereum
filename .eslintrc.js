@@ -108,6 +108,32 @@ module.exports = {
     }
   },
   globals: {
-    before: true
+    __DEV__: true,
+    __dirname: true,
+    accounts: true,
+    after: true,
+    afterAll: true,
+    afterEach: true,
+    artifacts: true,
+    assert: true,
+    before: true,
+    beforeAll: true,
+    beforeEach: true,
+    console: true,
+    contract: true,
+    describe: true,
+    expect: true,
+    fetch: true,
+    global: true,
+    it: true,
+    module: true,
+    process: true,
+    Promise: true,
+    require: true,
+    setTimeout: true,
+    test: true,
+    xdescribe: true,
+    xit: true,
+    web3: true
   }
 }
