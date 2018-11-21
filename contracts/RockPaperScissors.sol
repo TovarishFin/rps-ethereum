@@ -2,16 +2,23 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 
-contract RockPaperScissors {
+/*
+  TODO: 
+  allow non joined games to be cancelled at any time
+  allow to timeout opponent
+  allow retries?
+*/
+contract RockPaperScissors is Ownable {
   using SafeMath for uint256;
 
   uint256 public lastGameId;
   uint256 public minimumBet;
   uint256 public timeout;
   uint256 public referralFeePerMille;
-  uint256 public ownerFeePerMille;
+  uint256 public feePerMille;
 
   mapping(uint256 => Game) public games;
   mapping(address => address) referredBy;
@@ -28,6 +35,7 @@ contract RockPaperScissors {
     Created,
     Ready,
     Committed,
+    TimedOut,
     Tied,
     WinnerDecided,
     Paid
@@ -212,6 +220,51 @@ contract RockPaperScissors {
     enterStage(_gameId, Stage.WinnerDecided);
   }
 
+    function processFee(
+    address _feePayer,
+    address _tokenAddress,
+    uint256 _bet
+  )
+    internal
+    returns (uint256)
+  {
+    uint256 _betAfterFee;
+    uint256 _referralFee;
+    uint256 _ownerFee;
+    address _referrer = referredBy[_feePayer];
+    address _owner = owner();
+
+    if (_referrer == address(0)) {
+      _ownerFee = _bet
+        .mul(feePerMille)
+        .div(1e3);
+
+      _betAfterFee = _bet.sub(_ownerFee);
+    } else {
+      _referralFee = _bet
+        .mul(referralFeePerMille)
+        .div(1e3);
+      _ownerFee = _bet
+        .mul(feePerMille)
+        .div(1e3)
+        .sub(_referralFee);
+
+      _betAfterFee = _bet
+        .sub(_ownerFee)
+        .sub(_referralFee);
+    }
+
+    if (_tokenAddress == address(0)) {
+      transferAllocatedEtherOf(_feePayer, _owner, _ownerFee);
+      transferAllocatedEtherOf(_feePayer, _referrer, _referralFee);
+    } else {
+      transferAllocatedTokensOf(_feePayer, _tokenAddress, _owner, _ownerFee);
+      transferAllocatedTokensOf(_feePayer, _tokenAddress, _referrer, _ownerFee);
+    }
+
+    return _betAfterFee;
+  }
+
   function choiceSecretMatches(
     uint256 _gameId,
     Choice _choice,
@@ -370,41 +423,31 @@ contract RockPaperScissors {
     atEitherStage(_gameId, Stage.WinnerDecided, Stage.Tied)
   {
     Game storage _game = games[_gameId];
+    uint256 _bet1AfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
+    uint256 _bet2AfterFees = processFee(_game.addressP2, _game.tokenAddress, _game.bet);
 
     if (_game.stage == Stage.WinnerDecided) {
       address _loser = _game.winner == _game.addressP1 ? _game.addressP2 : _game.addressP1;
+
       if (_game.tokenAddress == address(0)) {
-        deAllocateEtherOf(_game.winner, _game.bet);
-        transferAllocatedEtherOf(_loser, _game.winner, _game.bet);
+        uint256 _deAllocationAmount = _game.winner == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
+        uint256 _transferAmount = _loser == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
+        deAllocateEtherOf(_game.winner, _deAllocationAmount);
+        transferAllocatedEtherOf(_loser, _game.winner, _transferAmount);
       } else {
-        deAllocateTokensOf(_game.winner, _game.tokenAddress, _game.bet);
-        transferAllocatedTokensOf(_loser, _game.tokenAddress, _game.winner, _game.bet);
+        deAllocateTokensOf(_game.winner, _game.tokenAddress, _deAllocationAmount);
+        transferAllocatedTokensOf(_loser, _game.tokenAddress, _game.winner, _transferAmount);
       }
     } else {
       if (_game.tokenAddress == address(0)) {
-        deAllocateEtherOf(_game.addressP1, _game.bet);
-        deAllocateEtherOf(_game.addressP2, _game.bet);
+        deAllocateEtherOf(_game.addressP1, _bet1AfterFees);
+        deAllocateEtherOf(_game.addressP2, _bet2AfterFees);
       } else {
-        deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _game.bet);
-        deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _game.bet);
+        deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _bet1AfterFees);
+        deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
       }
     }
 
     enterStage(_gameId, Stage.Paid);
-  }
-
-  // TODO: figure out the math on this!
-  function processFees(
-    uint256 _gameId
-  )
-    internal
-    returns (uint256, uint256)
-  {
-    Game memory _game = games[_gameId];
-    uint256 _bet = games[_gameId].bet;
-    uint256 _referralFee = _bet.mul(referralFeePerMille).div(1e3);
-    uint256 _ownerFee = _bet.mul(ownerFeePerMille).div(1e3);
-
-
   }
 }
