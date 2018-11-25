@@ -1,7 +1,6 @@
 module.exports = (deployer, network, accounts) => {
   deployer
     .then(async () => {
-      console.log(network)
       if (network == 'test') {
         global.accounts = accounts
         return
