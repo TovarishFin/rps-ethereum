@@ -9,6 +9,7 @@ module.exports = (deployer, network, accounts) => {
       }
     })
     .catch(err => {
+      // eslint-disable-next-line no-console
       console.log('problem with test migration: ', err)
     })
 }

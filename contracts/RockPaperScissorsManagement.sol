@@ -14,7 +14,10 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     external
     onlyOwner
   {
+    uint256 _oldMinBet = minBet;
     minBet = _newMinBet;
+
+    emit MinBetUpdated(_oldMinBet, _newMinBet);
   }
 
   function updateTimeout(
@@ -25,7 +28,10 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
   {
     require(_newTimeoutInSeconds >= 1 * 60);
 
+    uint256 _oldTimeoutInSeconds = timeoutInSeconds;
     timeoutInSeconds = _newTimeoutInSeconds;
+
+    emit TimeoutUpdated(_oldTimeoutInSeconds, _newTimeoutInSeconds);
   }
 
   function updateReferralFeePerMille(
@@ -36,7 +42,10 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
   {
     require(_newReferralFeePerMille <= feePerMille);
 
+    uint256 _oldReferralFeePerMille = referralFeePerMille;
     referralFeePerMille = _newReferralFeePerMille;
+
+    emit ReferralFeeUpdated(_oldReferralFeePerMille, _newReferralFeePerMille);
   }
 
   function updateFeePerMille(
@@ -47,7 +56,10 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
   {
     require(_newFeePerMille >= referralFeePerMille);
 
+    uint256 _oldFeePerMille = feePerMille;
     feePerMille = _newFeePerMille;
+
+    emit FeeUpdated(_oldFeePerMille, _newFeePerMille);
   }
 
   //

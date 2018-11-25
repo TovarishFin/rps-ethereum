@@ -121,6 +121,26 @@ contract RockPaperScissorsCommon is Upgradeable {
     address indexed addressP2
   );
 
+  event MinBetUpdated(
+    uint256 oldMinBet,
+    uint256 newMinBet
+  );
+
+  event TimeoutUpdated(
+    uint256 oldTimeout,
+    uint256 newTimeout
+  );
+
+  event ReferralFeeUpdated(
+    uint256 oldReferralFee,
+    uint256 newReferralFee
+  );
+
+  event FeeUpdated(
+    uint256 oldFee,
+    uint256 newFee
+  );
+
   //
   // end events
   //
