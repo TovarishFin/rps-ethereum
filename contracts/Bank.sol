@@ -1,8 +1,10 @@
 pragma solidity ^0.4.24;
 
+// interfaces
+import "./interfaces/IRegistry.sol";
+// libraries
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "./interfaces/IRegistry.sol";
 
 
 contract Bank {
@@ -13,7 +15,9 @@ contract Bank {
   mapping(address => uint256) public etherBalanceOf;
   mapping(address => uint256) public allocatedEtherOf;
 
-  // tokenAddress => userAddress => deposit
+  mapping(address => address[]) public tokenUsageOf;
+  // userAddress => tokenAddress => value
+  mapping(address => mapping(address => uint256)) public tokenUsageIndex;
   mapping(address => mapping(address => uint256)) public tokenBalanceOf;
   mapping(address => mapping(address => uint256)) public allocatedTokensOf;
 
@@ -52,6 +56,31 @@ contract Bank {
     require(msg.sender == registry.getEntry("RockPaperScissors"));
 
     _;
+  }
+
+  function updateTokenUsage(
+    address _fundsOwner,
+    address _tokenAddress
+  )
+    private
+  {
+    bool _currentlyUsing = tokenBalanceOf[_fundsOwner][_tokenAddress] != 0
+      || allocatedTokensOf[_fundsOwner][_tokenAddress] != 0;
+
+    bool _usageTracked = tokenUsageIndex[_fundsOwner][_tokenAddress] != 0;
+
+    if (_currentlyUsing && !_usageTracked) {
+      tokenUsageIndex[_fundsOwner][_tokenAddress] = tokenUsageOf[_fundsOwner].length;
+      tokenUsageOf[_fundsOwner].push(_tokenAddress);
+    }
+
+    if (!_currentlyUsing && _usageTracked) {
+      uint256 _index = tokenUsageIndex[_fundsOwner][_tokenAddress];
+      tokenUsageOf[_fundsOwner][_index] = tokenUsageOf[_fundsOwner][tokenUsageOf[_fundsOwner].length - 1];
+      tokenUsageOf[_fundsOwner].length--;
+
+      tokenUsageIndex[_fundsOwner][_tokenAddress] = 0;
+    }
   }
 
   function isContract(address _address)
@@ -163,6 +192,8 @@ contract Bank {
     tokenBalanceOf[_recipient][_tokenAddress] = tokenBalanceOf[_recipient][_tokenAddress]
       .add(_value);
 
+    updateTokenUsage(_fundsOwner, _tokenAddress);
+
     emit FundsTransferred(_fundsOwner, _recipient, _tokenAddress, _value);
   }
 
@@ -202,6 +233,8 @@ contract Bank {
       .add(_value);
     IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _value);
 
+    updateTokenUsage(msg.sender, _tokenAddress);
+    
     emit FundsDeposited(msg.sender, _tokenAddress, _value);
   }
 

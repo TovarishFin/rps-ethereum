@@ -1,10 +1,12 @@
 pragma solidity ^0.4.24;
 
+// interfaces
 import "./interfaces/IRegistry.sol";
-import "./Upgradeable.sol";
 import "./interfaces/IBank.sol";
+// libraries
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
+// contracts
+import "./Upgradeable.sol";
 
 
 contract RockPaperScissorsCommon is Upgradeable {
