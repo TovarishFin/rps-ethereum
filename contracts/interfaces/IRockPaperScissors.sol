@@ -23,7 +23,7 @@ contract IRockPaperScissors {
   // start operating params
   //
 
-  // TODO: write events for updating these!
+  bool public paused;
   uint256 public lastGameId;
   uint256 public minBet;
   uint256 public timeoutInSeconds;
@@ -100,6 +100,10 @@ contract IRockPaperScissors {
   //
   // start events
   //
+
+  event Pause();
+
+  event Unpause();
 
   event ProxyUpgraded(
     address upgradedFrom, 
@@ -244,6 +248,13 @@ contract IRockPaperScissors {
   //
   // start owner only functions
   //
+
+
+  function pause()
+    external;
+
+  function unpause()
+    external;
 
   function updateMinBet(
     uint256 _newMinBet

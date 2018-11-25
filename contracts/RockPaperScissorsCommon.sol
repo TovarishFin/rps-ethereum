@@ -16,7 +16,8 @@ contract RockPaperScissorsCommon is Upgradeable {
   // start operating params
   //
 
-  // TODO: write events for updating these!
+
+  bool public paused;
   uint256 public lastGameId;
   uint256 public minBet;
   uint256 public timeoutInSeconds;
@@ -94,6 +95,10 @@ contract RockPaperScissorsCommon is Upgradeable {
   // start events
   //
 
+  event Paused();
+
+  event Unpaused();
+
   event StageChanged(
     uint256 indexed gameId,
     uint256 indexed stage
@@ -148,6 +153,16 @@ contract RockPaperScissorsCommon is Upgradeable {
   //
   // start modifiers
   //
+
+  modifier whenNotPaused() {
+    require(!paused);
+    _;
+  }
+
+  modifier whenPaused() {
+    require(paused);
+    _;
+  }
 
   modifier atStage(
     uint256 _gameId,

@@ -67,6 +67,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
   )
     external
     payable
+    whenNotPaused
   {
     require(_value > minBet);
 
@@ -110,6 +111,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
   )
     external
     atEitherStage(_gameId, Stage.RematchPending, Stage.Created)
+    whenNotPaused
   {
     enterStage(_gameId, Stage.Cancelled);
     Game memory _game = games[_gameId];
@@ -132,6 +134,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     payable
     atStage(_gameId, Stage.Created)
     canJoinGame(_gameId)
+    whenNotPaused
   {
     Game storage _game = games[_gameId];
     
@@ -160,6 +163,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     external
     atEitherStage(_gameId, Stage.Ready, Stage.TimingOut)
     onlyGameParticipant(_gameId)
+    whenNotPaused
   {
     Game storage _game = games[_gameId];
     if (msg.sender == _game.addressP1) {
@@ -183,6 +187,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     external
     atStage(_gameId, Stage.Committed)
     onlyGameParticipant(_gameId)
+    whenNotPaused
   {
     require(choiceSecretMatches(_gameId, _choice, _sig));
 
@@ -210,6 +215,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     external
     payable
     onlyGameParticipant(_gameId)
+    whenNotPaused
   {
     IBank _bank = IBank(registry.getEntry("Bank"));
 

@@ -4,9 +4,28 @@ import "./RockPaperScissorsCommon.sol";
 
 
 contract RockPaperScissorsManagement is RockPaperScissorsCommon {
+
   //
   // start owner only functions
   //
+
+  function pause()
+    external
+    onlyOwner 
+    whenNotPaused 
+  {
+    paused = true;
+    emit Paused();
+  }
+
+  function unpause()
+    external 
+    onlyOwner 
+    whenPaused 
+  {
+    paused = false;
+    emit Unpaused();
+  }
 
   function updateMinBet(
     uint256 _newMinBet
@@ -74,6 +93,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     uint256 _gameId
   )
     external
+    whenNotPaused
     atEitherStage(_gameId, Stage.Ready, Stage.Committed)
     onlyGameParticipant(_gameId)
     canStartTimeout(_gameId)
@@ -86,6 +106,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     uint256 _gameId
   )
     external
+    whenNotPaused
     atStage(_gameId, Stage.TimingOut)
     onlyGameParticipant(_gameId)
   {
@@ -97,6 +118,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     uint256 _gameId
   )
     external
+    whenNotPaused
   {
     Game storage _game = games[_gameId];
     // IMPORTANT: ensure this matches when/if stages are updated!
