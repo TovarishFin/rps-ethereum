@@ -1,0 +1,1183 @@
+{
+  "contractName": "IStats",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalPlayCount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalWinCount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalWinVolume",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalReferralCount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalReferralVolume",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "incrementPlayCount",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "incrementWinCount",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_winAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "incrementWinVolume",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "incrementReferralCount",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_referralAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "incrementReferralVolume",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.24;\n\n\ninterface IStats {\n\n  function totalPlayCount()\n    external\n    view\n    returns (uint256);\n\n  function totalWinCount()\n    external\n    view\n    returns (uint256);\n\n  function totalWinVolume()\n    external\n    view\n    returns (uint256);\n\n  function totalReferralCount()\n    external\n    view\n    returns (uint256);\n\n  function totalReferralVolume()\n    external\n    view\n    returns (uint256);\n\n\n  function incrementPlayCount()\n    external;\n\n  function incrementWinCount()\n    external;\n\n  function incrementWinVolume(\n    uint256 _winAmount\n  )\n    external;\n\n  function incrementReferralCount()\n    external;\n\n  function incrementReferralVolume(\n    uint256 _referralAmount\n  )\n    external;\n}",
+  "sourcePath": "/Users/tovarishfin/dev/personal/rps/contracts/interfaces/IStats.sol",
+  "ast": {
+    "absolutePath": "/Users/tovarishfin/dev/personal/rps/contracts/interfaces/IStats.sol",
+    "exportedSymbols": {
+      "IStats": [
+        2905
+      ]
+    },
+    "id": 2906,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2860,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:7"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2905,
+        "linearizedBaseContracts": [
+          2905
+        ],
+        "name": "IStats",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2865,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalPlayCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2861,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "72:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2864,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2863,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2865,
+                  "src": "110:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2862,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "110:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "109:9:7"
+            },
+            "scope": 2905,
+            "src": "49:70:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2870,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalWinCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2866,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "145:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2869,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2868,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2870,
+                  "src": "183:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2867,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "183:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "182:9:7"
+            },
+            "scope": 2905,
+            "src": "123:69:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2875,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalWinVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2871,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "219:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2873,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2875,
+                  "src": "257:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2872,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "257:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "256:9:7"
+            },
+            "scope": 2905,
+            "src": "196:70:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2880,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalReferralCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2876,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "297:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2879,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2878,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2880,
+                  "src": "335:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2877,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "335:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "334:9:7"
+            },
+            "scope": 2905,
+            "src": "270:74:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2885,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalReferralVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2881,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "376:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2884,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2883,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2885,
+                  "src": "414:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2882,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "414:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "413:9:7"
+            },
+            "scope": 2905,
+            "src": "348:75:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2888,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementPlayCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2886,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "455:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2887,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "470:0:7"
+            },
+            "scope": 2905,
+            "src": "428:43:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2891,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementWinCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2889,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "501:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2890,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "516:0:7"
+            },
+            "scope": 2905,
+            "src": "475:42:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2896,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementWinVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2894,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2893,
+                  "name": "_winAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2896,
+                  "src": "554:18:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2892,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "554:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "548:28:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2895,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "589:0:7"
+            },
+            "scope": 2905,
+            "src": "521:69:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2899,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementReferralCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2897,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "625:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2898,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "640:0:7"
+            },
+            "scope": 2905,
+            "src": "594:47:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2904,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementReferralVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2902,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2901,
+                  "name": "_referralAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2904,
+                  "src": "683:23:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2900,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "683:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "677:33:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2903,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "723:0:7"
+            },
+            "scope": 2905,
+            "src": "645:79:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2906,
+        "src": "27:699:7"
+      }
+    ],
+    "src": "0:726:7"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/tovarishfin/dev/personal/rps/contracts/interfaces/IStats.sol",
+    "exportedSymbols": {
+      "IStats": [
+        2905
+      ]
+    },
+    "id": 2906,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2860,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:7"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2905,
+        "linearizedBaseContracts": [
+          2905
+        ],
+        "name": "IStats",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2865,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalPlayCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2861,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "72:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2864,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2863,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2865,
+                  "src": "110:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2862,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "110:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "109:9:7"
+            },
+            "scope": 2905,
+            "src": "49:70:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2870,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalWinCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2866,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "145:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2869,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2868,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2870,
+                  "src": "183:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2867,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "183:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "182:9:7"
+            },
+            "scope": 2905,
+            "src": "123:69:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2875,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalWinVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2871,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "219:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2874,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2873,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2875,
+                  "src": "257:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2872,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "257:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "256:9:7"
+            },
+            "scope": 2905,
+            "src": "196:70:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2880,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalReferralCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2876,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "297:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2879,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2878,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2880,
+                  "src": "335:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2877,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "335:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "334:9:7"
+            },
+            "scope": 2905,
+            "src": "270:74:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2885,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "totalReferralVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2881,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "376:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2884,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2883,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2885,
+                  "src": "414:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2882,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "414:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "413:9:7"
+            },
+            "scope": 2905,
+            "src": "348:75:7",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2888,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementPlayCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2886,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "455:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2887,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "470:0:7"
+            },
+            "scope": 2905,
+            "src": "428:43:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2891,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementWinCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2889,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "501:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2890,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "516:0:7"
+            },
+            "scope": 2905,
+            "src": "475:42:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2896,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementWinVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2894,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2893,
+                  "name": "_winAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2896,
+                  "src": "554:18:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2892,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "554:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "548:28:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2895,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "589:0:7"
+            },
+            "scope": 2905,
+            "src": "521:69:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2899,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementReferralCount",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2897,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "625:2:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2898,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "640:0:7"
+            },
+            "scope": 2905,
+            "src": "594:47:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2904,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "incrementReferralVolume",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2902,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2901,
+                  "name": "_referralAmount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2904,
+                  "src": "683:23:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2900,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "683:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "677:33:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2903,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "723:0:7"
+            },
+            "scope": 2905,
+            "src": "645:79:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2906,
+        "src": "27:699:7"
+      }
+    ],
+    "src": "0:726:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-25T21:27:37.410Z"
+}
