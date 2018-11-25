@@ -4,6 +4,7 @@
     "security"
   ],
   "rules": {
+    "error-reason": false,
     "arg-overflow": "error",
     "array-declarations": "error",
     "blank-lines": "error",

@@ -8,6 +8,12 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 /*
   TODO: 
   allow retries?
+  events
+
+  statistics:
+    referrals
+    wins 
+    etc
 */
 contract RockPaperScissors is Ownable {
   using SafeMath for uint256;
@@ -257,13 +263,13 @@ contract RockPaperScissors is Ownable {
       _game.winner = _a2;
     } else if (_c1 == Choice.Rock && _c2 == Choice.Scissors) {
       _game.winner = _a1;
-    } else if(_c1 == Choice.Paper && _c2 == Choice.Rock) {
+    } else if (_c1 == Choice.Paper && _c2 == Choice.Rock) {
       _game.winner = _a1;
-    } else if(_c1 == Choice.Paper && _c2 == Choice.Scissors) {
+    } else if (_c1 == Choice.Paper && _c2 == Choice.Scissors) {
       _game.winner = _a2;
-    } else if(_c1 == Choice.Scissors && _c2 == Choice.Rock) {
+    } else if (_c1 == Choice.Scissors && _c2 == Choice.Rock) {
       _game.winner = _a2;
-    } else if(_c1 == Choice.Scissors && _c2 == Choice.Paper) {
+    } else if (_c1 == Choice.Scissors && _c2 == Choice.Paper) {
       _game.winner = _a1;
     }
 
@@ -308,8 +314,18 @@ contract RockPaperScissors is Ownable {
       transferAllocatedEtherOf(_feePayer, _owner, _ownerFee);
       transferAllocatedEtherOf(_feePayer, _referrer, _referralFee);
     } else {
-      transferAllocatedTokensOf(_feePayer, _tokenAddress, _owner, _ownerFee);
-      transferAllocatedTokensOf(_feePayer, _tokenAddress, _referrer, _ownerFee);
+      transferAllocatedTokensOf(
+        _feePayer, 
+        _tokenAddress, 
+        _owner, 
+        _ownerFee
+      );
+      transferAllocatedTokensOf(
+        _feePayer,
+        _tokenAddress,
+        _referrer,
+        _ownerFee
+      );
     }
 
     return _betAfterFee;
@@ -339,10 +355,11 @@ contract RockPaperScissors is Ownable {
       _secret = _game.choiceSecretP2;
     }
 
-    return keccak256(abi.encodePacked(
-      _gameId,
-      uint256(_choice),
-      _sig
+    return keccak256(
+      abi.encodePacked(
+        _gameId,
+        uint256(_choice),
+        _sig
     )) == _secret;
   }
 
@@ -519,7 +536,7 @@ contract RockPaperScissors is Ownable {
       _game.choiceSecretP2 = _hash;
     }
 
-    if(_game.choiceSecretP1 != 0x0 && _game.choiceSecretP2 != 0x0) {
+    if (_game.choiceSecretP1 != 0x0 && _game.choiceSecretP2 != 0x0) {
       enterStage(_gameId, Stage.Committed);
     }
   }
@@ -570,11 +587,14 @@ contract RockPaperScissors is Ownable {
         transferAllocatedEtherOf(_loser, _game.winner, _transferAmount);
       } else {
         deAllocateTokensOf(_game.winner, _game.tokenAddress, _deAllocationAmount);
-        transferAllocatedTokensOf(_loser, _game.tokenAddress, _game.winner, _transferAmount);
+        transferAllocatedTokensOf(
+          _loser, 
+          _game.tokenAddress, 
+          _game.winner, 
+          _transferAmount
+        );
       }
-    } 
-    
-    else if (_game.stage == Stage.Tied) {
+    } else if (_game.stage == Stage.Tied) {
       if (_game.tokenAddress == address(0)) {
         deAllocateEtherOf(_game.addressP1, _bet1AfterFees);
         deAllocateEtherOf(_game.addressP2, _bet2AfterFees);
@@ -582,9 +602,7 @@ contract RockPaperScissors is Ownable {
         deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _bet1AfterFees);
         deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
       }
-    } 
-
-    else if (_game.stage == Stage.TimedOut) {
+    } else if (_game.stage == Stage.TimedOut) {
       address _timeoutWinner;
       address _timeoutLoser;
 
@@ -592,8 +610,8 @@ contract RockPaperScissors is Ownable {
         _timeoutWinner = _game.choiceP1 != Choice.Undecided ? _game.addressP1 : _game.addressP2;
         _timeoutWinner = _game.choiceP1 == Choice.Undecided ? _game.addressP1 : _game.addressP2;
       } else {
-       _timeoutWinner = _game.choiceSecretP1 != 0x0 ? _game.addressP1 : _game.addressP2;
-       _timeoutLoser = _game.choiceSecretP1 == 0x0 ? _game.addressP1 : _game.addressP2;
+        _timeoutWinner = _game.choiceSecretP1 != 0x0 ? _game.addressP1 : _game.addressP2;
+        _timeoutLoser = _game.choiceSecretP1 == 0x0 ? _game.addressP1 : _game.addressP2;
       }
 
       if (_game.tokenAddress == address(0)) {
@@ -603,7 +621,12 @@ contract RockPaperScissors is Ownable {
         transferAllocatedEtherOf(_timeoutLoser, _timeoutWinner, _timeoutTransferAmount);
       } else {
         deAllocateTokensOf(_timeoutWinner, _game.tokenAddress, _timeoutDeAllocationAmount);
-        transferAllocatedTokensOf(_timeoutLoser, _game.tokenAddress, _timeoutWinner, _timeoutTransferAmount);
+        transferAllocatedTokensOf(
+          _timeoutLoser, 
+          _game.tokenAddress, 
+          _timeoutWinner, 
+          _timeoutTransferAmount
+        );
       }
     }
 
