@@ -1,22 +1,19 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./interfaces/IBank.sol";
+import "./interfaces/IRegistry.sol";
 
 
-/*
-  TODO: 
-  allow retries?
-  events
-
-  statistics:
-    referrals
-    wins 
-    etc
-*/
 contract RockPaperScissors is Ownable {
   using SafeMath for uint256;
+
+  IRegistry public registry;
+
+  //
+  // start operating params
+  //
 
   uint256 public lastGameId;
   uint256 public minBet;
@@ -24,28 +21,51 @@ contract RockPaperScissors is Ownable {
   uint256 public referralFeePerMille;
   uint256 public feePerMille;
 
+  //
+  // end operating params
+  //
+
+  //
+  // start stats
+  //
+
+  uint256 public totalPlayCount;
+  uint256 public totalWinCount;
+  uint256 public totalWinVolume;
+  uint256 public totalReferralCount;
+  uint256 public totalReferralVolume;
+
+  //
+  // end stats
+  //
+
+  //
+  // start game tracking storage
+  //
+
   mapping(uint256 => Game) public games;
+  mapping(address => uint256[]) public activeGamesOf;
+  mapping(uint256 => uint256) public activeGameIndex;
+  mapping(uint256 => uint256) public rematchesFrom;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) referredBy;
 
-  mapping(address => uint256) public etherBalanceOf;
-  mapping(address => uint256) public allocatedEtherOf;
-
-  // tokenAddress => userAddress => deposit
-  mapping(address => mapping(address => uint256)) public tokenBalanceOf;
-  mapping(address => mapping(address => uint256)) public allocatedTokensOf;
+  //
+  // end game tracking storage
+  //
 
   enum Stage {
     Uninitialized, // 0
-    Created, // 1
-    Cancelled, // 2
-    Ready, // 3
-    Committed, // 4
-    TimingOut, // 5
-    TimedOut, // 6
-    Tied, // 7
-    WinnerDecided, // 8
-    Paid // 9
+    RematchPending, // 1
+    Created, // 2
+    Cancelled, // 3
+    Ready, // 4
+    Committed, // 5
+    TimingOut, // 6
+    TimedOut, // 7
+    Tied, // 8
+    WinnerDecided, // 9
+    Paid // 10
   }
 
   enum Choice {
@@ -67,6 +87,41 @@ contract RockPaperScissors is Ownable {
     bytes32 choiceSecretP2;
     Stage stage;
   }
+
+  //
+  // start events
+  //
+
+  event StageChanged(
+    uint256 indexed gameId,
+    uint256 indexed stage
+  );
+
+  event ChoiceCommitted(
+    uint256 indexed gameId,
+    address committer
+  );
+
+  event ChoiceRevealed(
+    uint256 indexed gameId,
+    address committer
+  );
+
+  event ReferralSet(
+    address indexed referrer,
+    address indexed referree
+  );
+
+  event RematchProposed(
+    uint256 gameId,
+    uint256 rematchGameId,
+    address indexed addressP1,
+    address indexed addressP2
+  );
+
+  //
+  // end events
+  //
 
   //
   // start modifiers
@@ -99,7 +154,10 @@ contract RockPaperScissors is Ownable {
     require(_game.addressP2 == address(0));
 
     if (_game.tokenAddress == address(0)) {
-      require(tokenBalanceOf[msg.sender][_game.tokenAddress] >= _game.bet);
+      uint256 _tokenBalance = IBank(registry.getEntry("Bank"))
+        .tokenBalanceOf(msg.sender, _game.tokenAddress);
+
+      require(_tokenBalance >= _game.bet);
     } else {
       require(msg.value == _game.bet);
     }
@@ -139,27 +197,43 @@ contract RockPaperScissors is Ownable {
   // end modifiers
   //
 
-  constructor(
-    uint256 _minBet,
-    uint256 _timeoutInSeconds,
-    uint256 _referralFeePerMille,
-    uint256 _feePerMille
-  )
-    public
-  {
-    require(_timeoutInSeconds >= 1 * 60);
-    require(_referralFeePerMille <= _feePerMille);
-    require(_feePerMille >= _referralFeePerMille);
-
-    minBet = _minBet;
-    timeoutInSeconds = _timeoutInSeconds;
-    referralFeePerMille = _referralFeePerMille;
-    feePerMille = _feePerMille;
-  }
-
   //
   // start internal helper functions
   //
+
+  function isContract(
+    address _address
+  )
+    internal
+    view
+    returns (bool)
+  {
+    uint256 _size;
+    assembly { _size := extcodesize(_address) }
+    return _size > 0;
+  }
+
+  function removeActiveGameOf(
+    address _player,
+    uint256 _gameId
+  )
+    internal
+  {
+    uint256 _index = activeGameIndex[_gameId];
+
+    activeGamesOf[_player][_index] = activeGamesOf[_player][activeGamesOf[_player].length - 1];
+
+    activeGamesOf[_player].length--;
+  }
+
+  function addActiveGameOf(
+    address _player,
+    uint256 _gameId
+  )
+    internal
+  {
+    activeGamesOf[_player].push(_gameId);
+  }
   
   function enterStage(
     uint256 _gameId,
@@ -168,81 +242,8 @@ contract RockPaperScissors is Ownable {
     internal
   {
     games[_gameId].stage = _stage;
-  }
 
-  function allocateEtherOf(
-    address _fundsOwner,
-    uint256 _value
-  )
-    internal
-  {
-    etherBalanceOf[_fundsOwner] = etherBalanceOf[_fundsOwner]
-      .sub(_value);
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner]
-      .add(_value);
-  }
-
-  function allocateTokensOf(
-    address _fundsOwner,
-    address _tokenAddress,
-    uint256 _value
-  )
-    internal
-  {
-    tokenBalanceOf[_fundsOwner][_tokenAddress] = tokenBalanceOf[_fundsOwner][_tokenAddress]
-      .sub(_value);
-    allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
-      .add(_value);
-  }
-
-  function deAllocateEtherOf(
-    address _fundsOwner,
-    uint256 _value
-  )
-    internal
-  {
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner]
-      .sub(_value);
-    etherBalanceOf[_fundsOwner] = etherBalanceOf[_fundsOwner]
-      .add(_value);
-  }
-
-  function deAllocateTokensOf(
-    address _fundsOwner,
-    address _tokenAddress,
-    uint256 _value
-  )
-    internal
-  {
-    allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
-      .sub(_value);
-    tokenBalanceOf[_fundsOwner][_tokenAddress] = tokenBalanceOf[_fundsOwner][_tokenAddress]
-      .add(_value);
-  }
-
-  function transferAllocatedEtherOf(
-    address _fundsOwner,
-    address _recipient,
-    uint256 _value
-  )
-    internal
-  {
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner].sub(_value);
-    etherBalanceOf[_recipient] = etherBalanceOf[_recipient].add(_value);
-  }
-
-  function transferAllocatedTokensOf(
-    address _fundsOwner,
-    address _tokenAddress,
-    address _recipient,
-    uint256 _value
-  )
-    internal
-  {
-    allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
-      .sub(_value);
-    tokenBalanceOf[_recipient][_tokenAddress] = tokenBalanceOf[_recipient][_tokenAddress]
-      .add(_value);
+    emit StageChanged(_gameId, uint256(_stage));
   }
 
   function computeWinner(
@@ -274,6 +275,8 @@ contract RockPaperScissors is Ownable {
     }
 
     enterStage(_gameId, Stage.WinnerDecided);
+
+    totalWinCount++;
   }
 
   function processFee(
@@ -308,19 +311,23 @@ contract RockPaperScissors is Ownable {
       _betAfterFee = _bet
         .sub(_ownerFee)
         .sub(_referralFee);
+
+      totalReferralVolume = totalReferralVolume.add(_referralFee);
     }
 
+    IBank _bank = IBank(registry.getEntry("Bank"));
+
     if (_tokenAddress == address(0)) {
-      transferAllocatedEtherOf(_feePayer, _owner, _ownerFee);
-      transferAllocatedEtherOf(_feePayer, _referrer, _referralFee);
+      _bank.transferAllocatedEtherOf(_feePayer, _owner, _ownerFee);
+      _bank.transferAllocatedEtherOf(_feePayer, _referrer, _referralFee);
     } else {
-      transferAllocatedTokensOf(
+      _bank.transferAllocatedTokensOf(
         _feePayer, 
         _tokenAddress, 
         _owner, 
         _ownerFee
       );
-      transferAllocatedTokensOf(
+      _bank.transferAllocatedTokensOf(
         _feePayer,
         _tokenAddress,
         _referrer,
@@ -334,6 +341,27 @@ contract RockPaperScissors is Ownable {
   //
   // end internal helper functions
   //
+
+  constructor(
+    address _registryAddress,
+    uint256 _minBet,
+    uint256 _timeoutInSeconds,
+    uint256 _referralFeePerMille,
+    uint256 _feePerMille
+  )
+    public
+  {
+    require(isContract(_registryAddress));
+    require(_timeoutInSeconds >= 1 * 60);
+    require(_referralFeePerMille <= _feePerMille);
+    require(_feePerMille >= _referralFeePerMille);
+
+    registry = IRegistry(_registryAddress);
+    minBet = _minBet;
+    timeoutInSeconds = _timeoutInSeconds;
+    referralFeePerMille = _referralFeePerMille;
+    feePerMille = _feePerMille;
+  }
 
   function choiceSecretMatches(
     uint256 _gameId,
@@ -364,61 +392,10 @@ contract RockPaperScissors is Ownable {
   }
 
   //
-  // start token/eth deposit/withdrawal functions
+  // start game actions
   //
 
-  function depositEther()
-    public
-    payable
-  {
-    require(msg.value > 0);
-
-    etherBalanceOf[msg.sender] = etherBalanceOf[msg.sender].add(msg.value);
-  }
-
-  function withdrawEther(
-    uint256 _value
-  )
-    public
-    payable
-  {
-    require(_value > 0);
-
-    etherBalanceOf[msg.sender] = etherBalanceOf[msg.sender].sub(_value);
-    msg.sender.transfer(_value);
-  }
-
-  function depositTokens(
-    address _tokenAddress,
-    uint256 _value
-  )
-    external
-  {
-    require(_value > 0);
-
-    tokenBalanceOf[msg.sender][_tokenAddress] = tokenBalanceOf[msg.sender][_tokenAddress]
-      .add(_value);
-    IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _value);
-  }
-
-  function withdrawTokens(
-    address _tokenAddress,
-    uint256 _value
-  )
-    external
-  {
-    require(_value > 0);
-
-    tokenBalanceOf[msg.sender][_tokenAddress] = tokenBalanceOf[msg.sender][_tokenAddress]
-      .sub(_value);
-    IERC20(_tokenAddress).transfer(msg.sender, _value);
-  }
-
-  //
-  // end token/eth deposit/withdrawal functions
-  //
-
-  function openGame(
+  function createGame(
     address _referrer,
     address _tokenAddress,
     uint256 _value
@@ -428,18 +405,24 @@ contract RockPaperScissors is Ownable {
   {
     require(_value > minBet);
 
+    IBank _bank = IBank(registry.getEntry("Bank"));
+
     if (_tokenAddress != address(0)) {
-      allocateTokensOf(msg.sender, _tokenAddress, _value);
+      _bank.allocateTokensOf(msg.sender, _tokenAddress, _value);
     } else {
       if (msg.value > 0) {
-        depositEther();
+        _bank.depositEther.value(msg.value)();
       }
 
-      allocateEtherOf(msg.sender, _value);
+      _bank.allocateEtherOf(msg.sender, _value);
     }
 
     if (_referrer != address(0)) {
       referredBy[msg.sender] = _referrer;
+
+      emit ReferralSet(_referrer, msg.sender);
+
+      totalReferralCount++;
     }
 
     lastGameId++;
@@ -461,16 +444,18 @@ contract RockPaperScissors is Ownable {
     uint256 _gameId
   )
     external
-    atStage(_gameId, Stage.Created)
+    atEitherStage(_gameId, Stage.RematchPending, Stage.Created)
   {
     enterStage(_gameId, Stage.Cancelled);
     Game memory _game = games[_gameId];
     uint256 _refundAfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
     
+    IBank _bank = IBank(registry.getEntry("Bank"));
+
     if (_game.tokenAddress == address(0)) {
-      deAllocateEtherOf(_game.addressP1, _refundAfterFees);
+      _bank.deAllocateEtherOf(_game.addressP1, _refundAfterFees);
     } else {
-      deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _refundAfterFees);
+      _bank.deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _refundAfterFees);
     }
   }
 
@@ -486,11 +471,16 @@ contract RockPaperScissors is Ownable {
     Game storage _game = games[_gameId];
     
     if (_game.tokenAddress != address(0)) {
-      allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
+      IBank(registry.getEntry("Bank"))
+        .allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
     }
 
     if (_referrer != address(0)) {
       referredBy[msg.sender] = _referrer;
+
+      emit ReferralSet(_referrer, msg.sender);
+
+      totalReferralCount++;
     }
 
     _game.addressP2 = msg.sender;
@@ -539,6 +529,8 @@ contract RockPaperScissors is Ownable {
     if (_game.choiceSecretP1 != 0x0 && _game.choiceSecretP2 != 0x0) {
       enterStage(_gameId, Stage.Committed);
     }
+
+    emit ChoiceCommitted(_gameId, msg.sender);
   }
 
   function revealChoice(
@@ -564,6 +556,10 @@ contract RockPaperScissors is Ownable {
     if (_game.choiceP1 != Choice.Undecided && _game.choiceP2 != Choice.Undecided) {
       computeWinner(_gameId);
     }
+
+    totalPlayCount++;
+
+    emit ChoiceRevealed(_gameId, msg.sender);
   }
 
   function settleBet(
@@ -572,10 +568,13 @@ contract RockPaperScissors is Ownable {
     external
   {
     Game storage _game = games[_gameId];
+    // IMPORTANT: ensure this matches when/if stages are updated!
     // ensure that Stage is any of: TimedOut, Tied, WinnerDecided
-    require(uint256(_game.stage) >= 6 && uint256(_game.stage) <= 8);
+    require(uint256(_game.stage) >= 7 && uint256(_game.stage) <= 9);
     uint256 _bet1AfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
     uint256 _bet2AfterFees = processFee(_game.addressP2, _game.tokenAddress, _game.bet);
+
+    IBank _bank = IBank(registry.getEntry("Bank"));
 
     if (_game.stage == Stage.WinnerDecided) {
       address _loser = _game.winner == _game.addressP1 ? _game.addressP2 : _game.addressP1;
@@ -583,11 +582,11 @@ contract RockPaperScissors is Ownable {
       if (_game.tokenAddress == address(0)) {
         uint256 _deAllocationAmount = _game.winner == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
         uint256 _transferAmount = _loser == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
-        deAllocateEtherOf(_game.winner, _deAllocationAmount);
-        transferAllocatedEtherOf(_loser, _game.winner, _transferAmount);
+        _bank.deAllocateEtherOf(_game.winner, _deAllocationAmount);
+        _bank.transferAllocatedEtherOf(_loser, _game.winner, _transferAmount);
       } else {
-        deAllocateTokensOf(_game.winner, _game.tokenAddress, _deAllocationAmount);
-        transferAllocatedTokensOf(
+        _bank.deAllocateTokensOf(_game.winner, _game.tokenAddress, _deAllocationAmount);
+        _bank.transferAllocatedTokensOf(
           _loser, 
           _game.tokenAddress, 
           _game.winner, 
@@ -596,11 +595,11 @@ contract RockPaperScissors is Ownable {
       }
     } else if (_game.stage == Stage.Tied) {
       if (_game.tokenAddress == address(0)) {
-        deAllocateEtherOf(_game.addressP1, _bet1AfterFees);
-        deAllocateEtherOf(_game.addressP2, _bet2AfterFees);
+        _bank.deAllocateEtherOf(_game.addressP1, _bet1AfterFees);
+        _bank.deAllocateEtherOf(_game.addressP2, _bet2AfterFees);
       } else {
-        deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _bet1AfterFees);
-        deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
+        _bank.deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _bet1AfterFees);
+        _bank.deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
       }
     } else if (_game.stage == Stage.TimedOut) {
       address _timeoutWinner;
@@ -617,11 +616,11 @@ contract RockPaperScissors is Ownable {
       if (_game.tokenAddress == address(0)) {
         uint256 _timeoutDeAllocationAmount = _timeoutWinner == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
         uint256 _timeoutTransferAmount = _timeoutLoser == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
-        deAllocateEtherOf(_timeoutWinner, _timeoutDeAllocationAmount);
-        transferAllocatedEtherOf(_timeoutLoser, _timeoutWinner, _timeoutTransferAmount);
+        _bank.deAllocateEtherOf(_timeoutWinner, _timeoutDeAllocationAmount);
+        _bank.transferAllocatedEtherOf(_timeoutLoser, _timeoutWinner, _timeoutTransferAmount);
       } else {
-        deAllocateTokensOf(_timeoutWinner, _game.tokenAddress, _timeoutDeAllocationAmount);
-        transferAllocatedTokensOf(
+        _bank.deAllocateTokensOf(_timeoutWinner, _game.tokenAddress, _timeoutDeAllocationAmount);
+        _bank.transferAllocatedTokensOf(
           _timeoutLoser, 
           _game.tokenAddress, 
           _timeoutWinner, 
@@ -631,7 +630,61 @@ contract RockPaperScissors is Ownable {
     }
 
     enterStage(_gameId, Stage.Paid);
+
+    totalWinVolume = totalWinVolume.add(_bet1AfterFees.add(_bet2AfterFees));
   }
+
+  function rematch(
+    uint256 _gameId
+  )
+    external
+    payable
+    onlyGameParticipant(_gameId)
+  {
+    IBank _bank = IBank(registry.getEntry("Bank"));
+
+    if (msg.value > 0) {
+      _bank.depositEther.value(msg.value)();
+    }
+
+    Game memory _game;
+
+    if (rematchesFrom[_gameId] == 0) {
+      _game = games[_gameId];
+      require(_game.stage == Stage.WinnerDecided || _game.stage == Stage.Paid);
+      rematchesFrom[_gameId] = _gameId;
+
+      lastGameId++;
+      games[lastGameId] = Game(
+        _game.addressP1,
+        _game.addressP2,
+        address(0),
+        _game.tokenAddress,
+        _game.bet,
+        Choice(0),
+        Choice(0),
+        0x0,
+        0x0,
+        Stage.RematchPending
+      );
+
+      emit RematchProposed(_gameId, lastGameId, _game.addressP1, _game.addressP2);
+    } else {
+      _game = games[rematchesFrom[_gameId]];
+      require(_game.stage == Stage.RematchPending);
+      enterStage(rematchesFrom[_gameId], Stage.Ready);
+    }
+
+    if (_game.tokenAddress != address(0)) {
+      _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
+    } else {
+      _bank.allocateEtherOf(msg.sender, _game.bet);
+    }
+  }
+
+  //
+  // end game actions
+  //
 
   //
   // start owner only functions
