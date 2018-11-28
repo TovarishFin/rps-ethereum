@@ -2,18 +2,17 @@ pragma solidity ^0.4.25;
 
 // interfaces
 import "../interfaces/IRegistry.sol";
+import "../interfaces/IWrappedEther.sol";
 // libraries
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-
+// TODO: convert all ether functions to token functions: tokenize ether
 contract BankStub {
   using SafeMath for uint256;
 
   IRegistry public registry;
-
-  mapping(address => uint256) public etherBalanceOf;
-  mapping(address => uint256) public allocatedEtherOf;
+  IWrappedEther public weth;
 
   mapping(address => address[]) public tokenUsageOf;
   // userAddress => tokenAddress => value
@@ -83,7 +82,9 @@ contract BankStub {
     }
   }
 
-  function isContract(address _address)
+  function isContract(
+    address _address
+  )
     private
     view
     returns (bool)
@@ -94,80 +95,50 @@ contract BankStub {
   }
 
   constructor(
-    address _registryAddress
+    address _registryAddress,
+    address _wethAddress
   )
     public
   {
     require(isContract(_registryAddress));
+    require(isContract(_wethAddress));
+    weth = IWrappedEther(_wethAddress);
     registry = IRegistry(_registryAddress);
   }
 
-  function depositEther()
+  function depositEtherFor(
+    address _recipient
+  )
     public
     payable
   {
     require(msg.value > 0);
+    weth.deposit.value(msg.value)();
+    tokenBalanceOf[_recipient][address(weth)] = tokenBalanceOf[_recipient][address(weth)]
+      .add(msg.value);
 
-    etherBalanceOf[msg.sender] = etherBalanceOf[msg.sender].add(msg.value);
+    emit FundsDeposited(_recipient, address(weth), msg.value);
+  }
 
-    emit FundsDeposited(msg.sender, address(0), msg.value);
+  function depositEther()
+    external
+    payable
+  {
+    depositEtherFor(msg.sender);
   }
 
   function withdrawEther(
     uint256 _value
   )
-    public
+    external
   {
     require(_value > 0);
-
-    etherBalanceOf[msg.sender] = etherBalanceOf[msg.sender].sub(_value);
+    tokenBalanceOf[msg.sender][address(weth)] = tokenBalanceOf[msg.sender][address(weth)]
+      .sub(_value);
+    weth.withdraw(_value);
     msg.sender.transfer(_value);
 
-    emit FundsWithdrawn(msg.sender, address(0), _value);
-  }
-
-  function allocateEtherOf(
-    address _fundsOwner,
-    uint256 _value
-  )
-    external
-    // onlyRps * allow any address to call for testing purposes *
-  {
-    etherBalanceOf[_fundsOwner] = etherBalanceOf[_fundsOwner]
-      .sub(_value);
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner]
-      .add(_value);
-
-    emit FundsAllocated(_fundsOwner, address(0), _value);
-  }
-
-  function deAllocateEtherOf(
-    address _fundsOwner,
-    uint256 _value
-  )
-    external
-    // onlyRps * allow any address to call for testing purposes *
-  {
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner]
-      .sub(_value);
-    etherBalanceOf[_fundsOwner] = etherBalanceOf[_fundsOwner]
-      .add(_value);
-
-    emit FundsDeAllocated(_fundsOwner, address(0), _value);
-  }
-
-  function transferAllocatedEtherOf(
-    address _fundsOwner,
-    address _recipient,
-    uint256 _value
-  )
-    external
-    // onlyRps * allow any address to call for testing purposes *
-  {
-    allocatedEtherOf[_fundsOwner] = allocatedEtherOf[_fundsOwner].sub(_value);
-    etherBalanceOf[_recipient] = etherBalanceOf[_recipient].add(_value);
-
-    emit FundsTransferred(_fundsOwner, _recipient, address(0), _value);
+    emit FundsWithdrawn(msg.sender, address(weth), _value);
   }
 
   function depositTokens(
@@ -208,7 +179,7 @@ contract BankStub {
     uint256 _value
   )
     external
-    // onlyRps * allow any address to call for testing purposes *
+    // onlyRps allow anyone to call for testing purposes
   {
     tokenBalanceOf[_fundsOwner][_tokenAddress] = tokenBalanceOf[_fundsOwner][_tokenAddress]
       .sub(_value);
@@ -224,7 +195,7 @@ contract BankStub {
     uint256 _value
   )
     external
-    // onlyRps * allow any address to call for testing purposes *
+    // onlyRps allow anyone to call for testing purposes
   {
     allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
       .sub(_value);
@@ -241,7 +212,7 @@ contract BankStub {
     uint256 _value
   )
     external
-    // onlyRps * allow any address to call for testing purposes *
+    // onlyRps allow anyone to call for testing purposes
   {
     allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
       .sub(_value);
@@ -251,5 +222,14 @@ contract BankStub {
     updateTokenUsage(_fundsOwner, _tokenAddress);
 
     emit FundsTransferred(_fundsOwner, _recipient, _tokenAddress, _value);
+  }
+
+  function()
+    external
+    payable
+  {
+    if (msg.sender != address(weth)) {
+      depositEtherFor(msg.sender);
+    }
   }
 }

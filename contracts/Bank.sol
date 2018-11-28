@@ -7,7 +7,6 @@ import "./interfaces/IWrappedEther.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-// TODO: convert all ether functions to token functions: tokenize ether
 contract Bank {
   using SafeMath for uint256;
 
@@ -238,6 +237,8 @@ contract Bank {
     external
     payable
   {
-    depositEtherFor(msg.sender);
+    if (msg.sender != address(weth)) {
+      depositEtherFor(msg.sender);
+    }
   }
 }

@@ -1,11 +1,12 @@
+const Registry = artifacts.require('Registry')
+const WrappedEther = artifacts.require('WrappedEther')
+const Bank = artifacts.require('Bank')
+const ContractProxy = artifacts.require('Proxy')
 const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
 const RockPaperScissorsManagement = artifacts.require(
   'RockPaperScissorsManagement'
 )
 const IRockPaperScissors = artifacts.require('IRockPaperScissors')
-const Registry = artifacts.require('Registry')
-const Bank = artifacts.require('Bank')
-const ContractProxy = artifacts.require('Proxy')
 
 const chalk = require('chalk')
 const { BN, toBN } = require('web3-utils')
@@ -171,7 +172,10 @@ const setupContracts = async () => {
   const reg = await Registry.new({
     from: owner
   })
-  const bnk = await Bank.new(reg.address, {
+  const weth = await WrappedEther.new({
+    from: owner
+  })
+  const bnk = await Bank.new(reg.address, weth.address, {
     from: owner
   })
   const rpsCore = await RockPaperScissorsCore.new({
@@ -193,6 +197,7 @@ const setupContracts = async () => {
 
   return {
     reg,
+    weth,
     bnk,
     rps
   }
