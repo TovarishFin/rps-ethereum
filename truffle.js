@@ -5,6 +5,11 @@ const testnetMnemonic = process.env.TESTNET_MNEMONIC
 const mainnetMnemonic = process.env.MAINNET_MNEMONIC
 
 module.exports = {
+  compilers: {
+    solc: {
+      version: '0.4.25'
+    }
+  },
   contracts_build_directory: './contractsBuild',
   networks: {
     test: {

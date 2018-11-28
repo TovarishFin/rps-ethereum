@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 // interfaces
 import "./interfaces/IRegistry.sol";
@@ -192,15 +192,6 @@ contract RockPaperScissorsCommon is Upgradeable {
     require(_game.addressP1 != address(0));
     require(_game.addressP2 == address(0));
 
-    if (_game.tokenAddress == address(0)) {
-      uint256 _tokenBalance = IBank(registry.getEntry("Bank"))
-        .tokenBalanceOf(msg.sender, _game.tokenAddress);
-
-      require(_tokenBalance >= _game.bet);
-    } else {
-      require(msg.value == _game.bet);
-    }
-
     _;
   }
 
@@ -239,6 +230,14 @@ contract RockPaperScissorsCommon is Upgradeable {
   //
   // start internal helper functions
   //
+
+  function getBank()
+    internal
+    view
+    returns (IBank)
+  {
+    return IBank(registry.getEntry("Bank"));
+  }
 
   function removeActiveGameOf(
     address _player,
@@ -342,25 +341,20 @@ contract RockPaperScissorsCommon is Upgradeable {
       totalReferralVolume = totalReferralVolume.add(_referralFee);
     }
 
-    IBank _bank = IBank(registry.getEntry("Bank"));
+    IBank _bank = getBank();
 
-    if (_tokenAddress == address(0)) {
-      _bank.transferAllocatedEtherOf(_feePayer, _owner, _ownerFee);
-      _bank.transferAllocatedEtherOf(_feePayer, _referrer, _referralFee);
-    } else {
-      _bank.transferAllocatedTokensOf(
-        _feePayer, 
-        _tokenAddress, 
-        _owner, 
-        _ownerFee
-      );
-      _bank.transferAllocatedTokensOf(
-        _feePayer,
-        _tokenAddress,
-        _referrer,
-        _ownerFee
-      );
-    }
+    _bank.transferAllocatedTokensOf(
+      _feePayer, 
+      _tokenAddress, 
+      _owner, 
+      _ownerFee
+    );
+    _bank.transferAllocatedTokensOf(
+      _feePayer,
+      _tokenAddress,
+      _referrer,
+      _ownerFee
+    );
 
     return _betAfterFee;
   }

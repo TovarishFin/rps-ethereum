@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 // contracts
 import "./RockPaperScissorsCommon.sol";
@@ -69,19 +69,16 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     payable
     whenNotPaused
   {
+    require(_tokenAddress != address(0));
     require(_value > minBet);
 
-    IBank _bank = IBank(registry.getEntry("Bank"));
+    IBank _bank = getBank();
 
-    if (_tokenAddress != address(0)) {
-      _bank.allocateTokensOf(msg.sender, _tokenAddress, _value);
-    } else {
-      if (msg.value > 0) {
-        _bank.depositEther.value(msg.value)();
-      }
-
-      _bank.allocateEtherOf(msg.sender, _value);
+    if (msg.value > 0) {
+      _bank.depositEtherFor.value(msg.value)(msg.sender);
     }
+
+    _bank.allocateTokensOf(msg.sender, _tokenAddress, _value);
 
     if (_referrer != address(0)) {
       referredBy[msg.sender] = _referrer;
@@ -116,14 +113,8 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     enterStage(_gameId, Stage.Cancelled);
     Game memory _game = games[_gameId];
     uint256 _refundAfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
-    
-    IBank _bank = IBank(registry.getEntry("Bank"));
 
-    if (_game.tokenAddress == address(0)) {
-      _bank.deAllocateEtherOf(_game.addressP1, _refundAfterFees);
-    } else {
-      _bank.deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _refundAfterFees);
-    }
+    getBank().deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _refundAfterFees);
   }
 
   function joinGame(
@@ -136,12 +127,15 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     canJoinGame(_gameId)
     whenNotPaused
   {
+    IBank _bank = getBank();
+
+    if (msg.value > 0) {
+      _bank.depositEtherFor.value(msg.value)(msg.sender);
+    }
+
     Game storage _game = games[_gameId];
     
-    if (_game.tokenAddress != address(0)) {
-      IBank(registry.getEntry("Bank"))
-        .allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
-    }
+    _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
 
     if (_referrer != address(0)) {
       referredBy[msg.sender] = _referrer;
@@ -217,10 +211,10 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     onlyGameParticipant(_gameId)
     whenNotPaused
   {
-    IBank _bank = IBank(registry.getEntry("Bank"));
+    IBank _bank = getBank();
 
     if (msg.value > 0) {
-      _bank.depositEther.value(msg.value)();
+      _bank.depositEtherFor.value(msg.value)(msg.sender);
     }
 
     Game memory _game;
@@ -251,11 +245,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
       enterStage(rematchesFrom[_gameId], Stage.Ready);
     }
 
-    if (_game.tokenAddress != address(0)) {
-      _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
-    } else {
-      _bank.allocateEtherOf(msg.sender, _game.bet);
-    }
+    _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
   }
 
   //

@@ -1,12 +1,27 @@
+const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
+const RockPaperScissorsManagement = artifacts.require(
+  'RockPaperScissorsManagement'
+)
+const IRockPaperScissors = artifacts.require('IRockPaperScissors')
+const Registry = artifacts.require('Registry')
+const Bank = artifacts.require('Bank')
+const ContractProxy = artifacts.require('Proxy')
+
 const chalk = require('chalk')
-const { BN } = require('web3-utils')
+const { BN, toBN } = require('web3-utils')
 
 const owner = accounts[0]
+const ethUser = accounts[1]
+const tokenUser = accounts[2]
 const decimals18 = new BN(10).pow(new BN(18))
 const bigZero = new BN(0)
 const addressZero = `0x${'0'.repeat(40)}`
 const bytes32Zero = '0x' + '00'.repeat(32)
 const gasPrice = new BN(5e9)
+const oneBlockDay = 60 * 60 * 24
+const oneBlockWeek = oneBlockDay * 7
+const oneBlockMonth = oneBlockDay * 30
+const oneBlockYear = oneBlockMonth * 12
 
 const assertRevert = async promise => {
   try {
@@ -71,9 +86,11 @@ const trimBytes32Array = bytes32Array =>
 const getEtherBalance = address => {
   return new Promise((resolve, reject) => {
     web3.eth.getBalance(address, (err, res) => {
-      if (err) reject(err)
+      if (err) {
+        reject(err)
+      }
 
-      resolve(new BN(res))
+      resolve(toBN(res))
     })
   })
 }
@@ -150,13 +167,41 @@ const getCurrentBlockTime = async () => {
   return timestamp
 }
 
-const oneBlockDay = 60 * 60 * 24
-const oneBlockWeek = oneBlockDay * 7
-const oneBlockMonth = oneBlockDay * 30
-const oneBlockYear = oneBlockMonth * 12
+const setupContracts = async () => {
+  const reg = await Registry.new({
+    from: owner
+  })
+  const bnk = await Bank.new(reg.address, {
+    from: owner
+  })
+  const rpsCore = await RockPaperScissorsCore.new({
+    from: owner
+  })
+  const rpsMan = await RockPaperScissorsManagement.new({
+    from: owner
+  })
+  const rpsProxy = await ContractProxy.new(rpsCore.address, rpsMan.address, {
+    from: owner
+  })
+  const rps = await IRockPaperScissors.at(rpsProxy.address, {
+    from: owner
+  })
+
+  await rps.initialize(reg.address, toBN(1e17), 60, 1000, 2000, {
+    from: owner
+  })
+
+  return {
+    reg,
+    bnk,
+    rps
+  }
+}
 
 module.exports = {
   owner,
+  ethUser,
+  tokenUser,
   decimals18,
   bigZero,
   addressZero,
@@ -175,5 +220,6 @@ module.exports = {
   oneBlockDay,
   oneBlockWeek,
   oneBlockMonth,
-  oneBlockYear
+  oneBlockYear,
+  setupContracts
 }
