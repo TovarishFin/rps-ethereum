@@ -137,6 +137,10 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
   await dispatch('setupWeb3Ws')
   await dispatch('setupBank')
   await dispatch('setupBankWs')
+  await dispatch('setupWrappedEther')
+  await dispatch('setupWrappedEtherWs')
+  await dispatch('setupTestToken')
+  await dispatch('setupTestTokenWs')
   await dispatch('getCoinbase')
   await commit('setEthReady', true)
 

@@ -53,6 +53,11 @@ export default {
           icon: 'info',
           title: 'About',
           to: '/about'
+        },
+        {
+          icon: 'mdi-bank',
+          title: 'Bank',
+          to: '/bank'
         }
       ]
     }
