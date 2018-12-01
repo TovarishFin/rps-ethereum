@@ -7,7 +7,6 @@ import "../interfaces/IWrappedEther.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-// TODO: convert all ether functions to token functions: tokenize ether
 contract BankStub {
   using SafeMath for uint256;
 

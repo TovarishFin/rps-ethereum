@@ -167,6 +167,15 @@ contract IRockPaperScissors {
     internal
     returns (uint256);
 
+  function choiceSecretMatches(
+    uint256 _gameId,
+    Choice _choice,
+    bytes _sig
+  )
+    internal
+    view
+    returns (bool);
+
   //
   // end internal helper functions
   //
@@ -179,15 +188,6 @@ contract IRockPaperScissors {
     uint256 _feePerMille
   )
     external;
-
-  function choiceSecretMatches(
-    uint256 _gameId,
-    Choice _choice,
-    bytes _sig
-  )
-    internal
-    view
-    returns (bool);
 
   //
   // start game actions

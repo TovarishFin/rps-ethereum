@@ -7,7 +7,7 @@ import "./interfaces/IWrappedEther.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract Bank {
+contract BankStub {
   using SafeMath for uint256;
 
   IRegistry public registry;
@@ -140,31 +140,21 @@ contract Bank {
     emit FundsWithdrawn(msg.sender, address(weth), _value);
   }
 
-  function depositTokensFor(
-    address _recipient,
-    address _tokenAddress,
-    uint256 _value
-  )
-    public
-  {
-    require(_value > 0);
-
-    tokenBalanceOf[_recipient][_tokenAddress] = tokenBalanceOf[_recipient][_tokenAddress]
-      .add(_value);
-    IERC20(_tokenAddress).transferFrom(_recipient, address(this), _value);
-
-    updateTokenUsage(_recipient, _tokenAddress);
-    
-    emit FundsDeposited(_recipient, _tokenAddress, _value);
-  }
-
   function depositTokens(
     address _tokenAddress,
     uint256 _value
   )
     external
   {
-    depositTokensFor(msg.sender, _tokenAddress, _value);
+    require(_value > 0);
+
+    tokenBalanceOf[msg.sender][_tokenAddress] = tokenBalanceOf[msg.sender][_tokenAddress]
+      .add(_value);
+    IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _value);
+
+    updateTokenUsage(msg.sender, _tokenAddress);
+    
+    emit FundsDeposited(msg.sender, _tokenAddress, _value);
   }
 
   function withdrawTokens(
