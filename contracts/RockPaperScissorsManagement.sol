@@ -96,9 +96,9 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     whenNotPaused
     atEitherStage(_gameId, Stage.Ready, Stage.Committed)
     onlyGameParticipant(_gameId)
-    canStartTimeout(_gameId)
+    timeoutAllowed(_gameId)
   {
-    timingOutGames[_gameId] = block.timestamp;
+    timingOutGames[_gameId] = block.timestamp.add(timeoutInSeconds);
     enterStage(_gameId, Stage.TimingOut);
   }
 
@@ -109,8 +109,21 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     whenNotPaused
     atStage(_gameId, Stage.TimingOut)
     onlyGameParticipant(_gameId)
+    timeoutAllowed(_gameId)
   {
-    require(block.timestamp > timingOutGames[_gameId]);
+    require(block.timestamp >= timingOutGames[_gameId]);
+    Game storage _game = games[_gameId];
+    
+    if (_game.choiceSecretP1 == 0x0 || _game.choiceSecretP2 == 0x0) {
+      _game.winner = _game.choiceSecretP1 == 0x0 
+        ? _game.addressP2 
+        : _game.addressP1;
+    } else if (_game.choiceP1 == Choice.Undecided || _game.choiceP2 == Choice.Undecided) {
+      _game.winner = _game.choiceP1 == Choice.Undecided
+        ? _game.addressP2
+        : _game.addressP1;
+    }
+
     enterStage(_gameId, Stage.TimedOut);
   }
 
@@ -146,43 +159,13 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     _bank.deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
   }
 
-  function settleTimeout(
-    Game memory _game,
-    uint256 _bet1AfterFees,
-    uint256 _bet2AfterFees
-  )
-    internal
-  {
-    IBank _bank = getBank();
-    address _timeoutWinner;
-    address _timeoutLoser;
-
-    if (_game.choiceSecretP1 != 0x0 && _game.choiceSecretP2 != 0x0) {
-      _timeoutWinner = _game.choiceP1 != Choice.Undecided ? _game.addressP1 : _game.addressP2;
-      _timeoutWinner = _game.choiceP1 == Choice.Undecided ? _game.addressP1 : _game.addressP2;
-    } else {
-      _timeoutWinner = _game.choiceSecretP1 != 0x0 ? _game.addressP1 : _game.addressP2;
-      _timeoutLoser = _game.choiceSecretP1 == 0x0 ? _game.addressP1 : _game.addressP2;
-    }
-
-    uint256 _timeoutDeAllocationAmount = _timeoutWinner == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
-    uint256 _timeoutTransferAmount = _timeoutLoser == _game.addressP1 ? _bet1AfterFees : _bet2AfterFees;
-    _bank.deAllocateTokensOf(_timeoutWinner, _game.tokenAddress, _timeoutDeAllocationAmount);
-    _bank.transferAllocatedTokensOf(
-      _timeoutLoser, 
-      _game.tokenAddress, 
-      _timeoutWinner, 
-      _timeoutTransferAmount
-    );
-  }
-
   function settleBet(
     uint256 _gameId
   )
     external
     whenNotPaused
   {
-    Game storage _game = games[_gameId];
+    Game memory _game = games[_gameId];
     // IMPORTANT: ensure this matches when/if stages are updated!
     // ensure that Stage is any of: TimedOut, Tied, WinnerDecided
     require(uint256(_game.stage) >= 7 && uint256(_game.stage) <= 9);
@@ -194,7 +177,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     } else if (_game.stage == Stage.Tied) {
       settleTied(_game, _bet1AfterFees, _bet2AfterFees);
     } else if (_game.stage == Stage.TimedOut) {
-      settleTimeout(_game, _bet1AfterFees, _bet2AfterFees);
+      settleWinner(_game, _bet1AfterFees, _bet2AfterFees);
     }
 
     enterStage(_gameId, Stage.Paid);

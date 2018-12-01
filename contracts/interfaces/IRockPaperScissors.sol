@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 import "./IRegistry.sol";
 
@@ -57,7 +57,7 @@ contract IRockPaperScissors {
   mapping(uint256 => uint256) public activeGameIndex;
   mapping(uint256 => uint256) public rematchesFrom;
   mapping(uint256 => uint256) public timingOutGames;
-  mapping(address => address) referredBy;
+  mapping(address => address) public referredBy;
 
   //
   // end game tracking storage

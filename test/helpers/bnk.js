@@ -21,14 +21,10 @@ const setupBankStub = async () => {
     from: owner
   })
 
-  accounts.forEach(async account => {
-    await tst.mint(account, toBN(5e18), {
-      from: account
-    })
-    await tst.approve(bnk.address, toBN(5e18), {
-      from: account
-    })
-  })
+  for (const account of accounts) {
+    await tst.mint(account, toBN(5e18), { from: account })
+    await tst.approve(bnk.address, toBN(5e18), { from: account })
+  }
 
   return {
     bnk,

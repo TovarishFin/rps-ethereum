@@ -53,7 +53,7 @@ contract RockPaperScissorsCommon is Upgradeable {
   mapping(uint256 => uint256) public activeGameIndex;
   mapping(uint256 => uint256) public rematchesFrom;
   mapping(uint256 => uint256) public timingOutGames;
-  mapping(address => address) referredBy;
+  mapping(address => address) public referredBy;
 
   //
   // end game tracking storage
@@ -195,10 +195,9 @@ contract RockPaperScissorsCommon is Upgradeable {
     _;
   }
 
-  modifier canStartTimeout(
+  modifier timeoutAllowed(
     uint256 _gameId
   ) {
-    require(timingOutGames[_gameId] == 0);
     Game memory _game = games[_gameId];
 
     if (_game.stage == Stage.Ready) {
@@ -313,26 +312,18 @@ contract RockPaperScissorsCommon is Upgradeable {
     internal
     returns (uint256)
   {
-    uint256 _betAfterFee;
-    uint256 _referralFee;
-    uint256 _ownerFee;
+    uint256 _ownerFee = _bet.mul(feePerMille).div(1e3);
+    uint256 _betAfterFee = _bet.sub(_ownerFee);
     address _referrer = referredBy[_feePayer];
     address _owner = owner();
+    uint256 _referralFee;
 
-    if (_referrer == address(0)) {
-      _ownerFee = _bet
-        .mul(feePerMille)
-        .div(1e3);
-
-      _betAfterFee = _bet.sub(_ownerFee);
-    } else {
+    if (_referrer != address(0)) {
       _referralFee = _bet
         .mul(referralFeePerMille)
         .div(1e3);
-      _ownerFee = _bet
-        .mul(feePerMille)
-        .div(1e3)
-        .sub(_referralFee);
+
+      _ownerFee = _ownerFee.sub(_referralFee);
 
       _betAfterFee = _bet
         .sub(_ownerFee)
@@ -353,7 +344,7 @@ contract RockPaperScissorsCommon is Upgradeable {
       _feePayer,
       _tokenAddress,
       _referrer,
-      _ownerFee
+      _referralFee
     );
 
     return _betAfterFee;

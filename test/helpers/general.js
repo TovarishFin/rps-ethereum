@@ -1,5 +1,6 @@
 const Registry = artifacts.require('Registry')
 const WrappedEther = artifacts.require('WrappedEther')
+const TestToken = artifacts.require('TestToken')
 const Bank = artifacts.require('Bank')
 const ContractProxy = artifacts.require('Proxy')
 const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
@@ -14,6 +15,7 @@ const { BN, toBN } = require('web3-utils')
 const owner = accounts[0]
 const ethUser = accounts[1]
 const tokenUser = accounts[2]
+const referrer = accounts[3]
 const decimals18 = new BN(10).pow(new BN(18))
 const bigZero = new BN(0)
 const addressZero = `0x${'0'.repeat(40)}`
@@ -27,7 +29,7 @@ const oneBlockYear = oneBlockMonth * 12
 const assertRevert = async promise => {
   try {
     await promise
-    assert.fail('Expected revert not received')
+    throw new Error('Expected error not received')
   } catch (error) {
     const revertFound = error.message.search('revert') >= 0
     assert(revertFound, `Expected "revert", got ${error} instead`)
@@ -65,9 +67,9 @@ const waitForEvent = (contract, event, optTimeout) =>
   })
 
 const areInRange = (num1, num2, range) => {
-  const bigNum1 = new BN(num1.toString())
-  const bigNum2 = new BN(num2.toString())
-  const bigRange = new BN(range.toString())
+  const bigNum1 = toBN(num1.toString())
+  const bigNum2 = toBN(num2.toString())
+  const bigRange = toBN(range.toString())
 
   if (bigNum1.eq(bigNum2)) {
     return true
@@ -147,9 +149,9 @@ const send = (method, params = []) =>
 const timeWarp = async (seconds, logResults) => {
   if (seconds > 0) {
     await send('evm_increaseTime', [seconds])
-    const { timestamp: previousTimestamp } = await web3.eth.getBlock('latest')
+    const previousTimestamp = await getCurrentBlockTime()
     await send('evm_mine')
-    const { timestamp: currentTimestamp } = await web3.eth.getBlock('latest')
+    const currentTimestamp = await await getCurrentBlockTime()
 
     /* eslint-disable no-console */
     if (logResults) {
@@ -190,16 +192,27 @@ const setupContracts = async () => {
   const rps = await IRockPaperScissors.at(rpsProxy.address, {
     from: owner
   })
-
-  await rps.initialize(reg.address, toBN(1e17), 60, 1000, 2000, {
+  const tst = await TestToken.new({
     from: owner
   })
+
+  await reg.updateEntry('Bank', bnk.address)
+  await reg.updateEntry('RockPaperScissors', rps.address)
+
+  for (const account of accounts) {
+    await tst.mint(account, toBN(5e18), { from: account })
+    await tst.approve(bnk.address, toBN(5e18), { from: account })
+  }
 
   return {
     reg,
     weth,
+    tst,
     bnk,
-    rps
+    rps,
+    rpsCore,
+    rpsMan,
+    rpsProxy
   }
 }
 
@@ -207,6 +220,7 @@ module.exports = {
   owner,
   ethUser,
   tokenUser,
+  referrer,
   decimals18,
   bigZero,
   addressZero,

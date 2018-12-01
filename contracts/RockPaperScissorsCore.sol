@@ -70,7 +70,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     whenNotPaused
   {
     require(_tokenAddress != address(0));
-    require(_value > minBet);
+    require(_value >= minBet);
 
     IBank _bank = getBank();
 
@@ -107,6 +107,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     uint256 _gameId
   )
     external
+    onlyGameParticipant(_gameId)
     atEitherStage(_gameId, Stage.RematchPending, Stage.Created)
     whenNotPaused
   {
@@ -179,13 +180,13 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     bytes _sig
   )
     external
-    atStage(_gameId, Stage.Committed)
+    atEitherStage(_gameId, Stage.Committed, Stage.TimingOut)
     onlyGameParticipant(_gameId)
     whenNotPaused
   {
     require(choiceSecretMatches(_gameId, _choice, _sig));
 
-    Game memory _game = games[_gameId];
+    Game storage _game = games[_gameId];
     if (msg.sender == _game.addressP1) {
       _game.choiceP1 = _choice;
     }
