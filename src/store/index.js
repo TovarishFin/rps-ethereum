@@ -3,6 +3,7 @@ import Vuex, { Store } from 'vuex'
 import network from './network'
 import layout from './layout'
 import route from './route'
+import bank from './bank'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Store({
   modules: {
     network,
     layout,
-    route
+    route,
+    bank
   }
 })

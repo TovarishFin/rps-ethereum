@@ -50,6 +50,10 @@ contract Bank {
     uint256 value
   );
 
+  event TokenUsageUpdated(
+    address indexed fundsOwner
+  );
+
   modifier onlyRps() {
     require(msg.sender == registry.getEntry("RockPaperScissors"));
 
@@ -70,6 +74,8 @@ contract Bank {
     if (_currentlyUsing && !_usageTracked) {
       tokenUsageIndex[_fundsOwner][_tokenAddress] = tokenUsageOf[_fundsOwner].length;
       tokenUsageOf[_fundsOwner].push(_tokenAddress);
+
+      emit TokenUsageUpdated(msg.sender);
     }
 
     if (!_currentlyUsing && _usageTracked) {
@@ -78,6 +84,8 @@ contract Bank {
       tokenUsageOf[_fundsOwner].length--;
 
       tokenUsageIndex[_fundsOwner][_tokenAddress] = 0;
+
+      emit TokenUsageUpdated(msg.sender);
     }
   }
 
@@ -105,6 +113,16 @@ contract Bank {
     registry = IRegistry(_registryAddress);
   }
 
+  function getAllUsedTokens(
+    address _tokenUser
+  )
+    external
+    view
+    returns (address[])
+  {
+    return tokenUsageOf[_tokenUser];
+  }
+
   function depositEtherFor(
     address _recipient
   )
@@ -115,6 +133,8 @@ contract Bank {
     weth.deposit.value(msg.value)();
     tokenBalanceOf[_recipient][address(weth)] = tokenBalanceOf[_recipient][address(weth)]
       .add(msg.value);
+
+    updateTokenUsage(msg.sender, address(weth));
 
     emit FundsDeposited(_recipient, address(weth), msg.value);
   }
@@ -136,6 +156,8 @@ contract Bank {
       .sub(_value);
     weth.withdraw(_value);
     msg.sender.transfer(_value);
+
+    updateTokenUsage(msg.sender, address(weth));
 
     emit FundsWithdrawn(msg.sender, address(weth), _value);
   }
