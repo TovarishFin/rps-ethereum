@@ -51,7 +51,6 @@ contract RockPaperScissorsCommon is Upgradeable {
   mapping(uint256 => Game) public games;
   mapping(address => uint256[]) public activeGamesOf;
   mapping(uint256 => uint256) public activeGameIndex;
-  mapping(uint256 => uint256) public rematchesFrom;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) public referredBy;
 
@@ -61,16 +60,15 @@ contract RockPaperScissorsCommon is Upgradeable {
 
   enum Stage {
     Uninitialized, // 0
-    RematchPending, // 1
-    Created, // 2
-    Cancelled, // 3
-    Ready, // 4
-    Committed, // 5
-    TimingOut, // 6
-    TimedOut, // 7
-    Tied, // 8
-    WinnerDecided, // 9
-    Paid // 10
+    Created, // 1
+    Cancelled, // 2
+    Ready, // 3
+    Committed, // 4
+    TimingOut, // 5
+    TimedOut, // 6
+    Tied, // 7
+    WinnerDecided, // 8
+    Paid // 9
   }
 
   enum Choice {
@@ -119,13 +117,6 @@ contract RockPaperScissorsCommon is Upgradeable {
   event ReferralSet(
     address indexed referrer,
     address indexed referree
-  );
-
-  event RematchProposed(
-    uint256 gameId,
-    uint256 rematchGameId,
-    address indexed addressP1,
-    address indexed addressP2
   );
 
   event MinBetUpdated(
@@ -181,16 +172,6 @@ contract RockPaperScissorsCommon is Upgradeable {
     Stage _orStage
   ) {
     require(games[_gameId].stage == _stage || games[_gameId].stage == _orStage);
-
-    _;
-  }
-
-  modifier canJoinGame(
-    uint256 _gameId
-  ) {
-    Game memory _game = games[_gameId];
-    require(_game.addressP1 != address(0));
-    require(_game.addressP2 == address(0));
 
     _;
   }

@@ -108,7 +108,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
   )
     external
     onlyGameParticipant(_gameId)
-    atEitherStage(_gameId, Stage.RematchPending, Stage.Created)
+    atStage(_gameId, Stage.Created)
     whenNotPaused
   {
     enterStage(_gameId, Stage.Cancelled);
@@ -125,16 +125,18 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     external
     payable
     atStage(_gameId, Stage.Created)
-    canJoinGame(_gameId)
     whenNotPaused
   {
     IBank _bank = getBank();
+    Game storage _game = games[_gameId];
+
+    require(_game.addressP1 != address(0));
+    require(msg.sender != _game.addressP1);
+    require(_game.addressP2 == address(0));
 
     if (msg.value > 0) {
       _bank.depositEtherFor.value(msg.value)(msg.sender);
     }
-
-    Game storage _game = games[_gameId];
     
     _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
 
@@ -202,51 +204,6 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     totalPlayCount++;
 
     emit ChoiceRevealed(_gameId, msg.sender);
-  }
-
-  function rematch(
-    uint256 _gameId
-  )
-    external
-    payable
-    onlyGameParticipant(_gameId)
-    whenNotPaused
-  {
-    IBank _bank = getBank();
-
-    if (msg.value > 0) {
-      _bank.depositEtherFor.value(msg.value)(msg.sender);
-    }
-
-    Game memory _game;
-
-    if (rematchesFrom[_gameId] == 0) {
-      _game = games[_gameId];
-      require(_game.stage == Stage.WinnerDecided || _game.stage == Stage.Paid);
-      rematchesFrom[_gameId] = _gameId;
-
-      lastGameId++;
-      games[lastGameId] = Game(
-        _game.addressP1,
-        _game.addressP2,
-        address(0),
-        _game.tokenAddress,
-        _game.bet,
-        Choice(0),
-        Choice(0),
-        0x0,
-        0x0,
-        Stage.RematchPending
-      );
-
-      emit RematchProposed(_gameId, lastGameId, _game.addressP1, _game.addressP2);
-    } else {
-      _game = games[rematchesFrom[_gameId]];
-      require(_game.stage == Stage.RematchPending);
-      enterStage(rematchesFrom[_gameId], Stage.Ready);
-    }
-
-    _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
   }
 
   //

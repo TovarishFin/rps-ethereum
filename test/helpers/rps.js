@@ -8,16 +8,15 @@ const defaultReferralFeePerMille = toBN(5)
 const defaultFeePerMille = toBN(10)
 const stages = {
   uninitialized: '0',
-  rematchPending: '1',
-  created: '2',
-  cancelled: '3',
-  ready: '4',
-  committed: '5',
-  timingOut: '6',
-  timedOut: '7',
-  tied: '8',
-  winnerDecided: '9',
-  paid: '10'
+  created: '1',
+  cancelled: '2',
+  ready: '3',
+  committed: '4',
+  timingOut: '5',
+  timedOut: '6',
+  tied: '7',
+  winnerDecided: '8',
+  paid: '9'
 }
 
 const choices = {
@@ -456,39 +455,13 @@ const computeFees = async (contracts, feePayer, betAmount) => {
   }
 }
 
-const createJoinedGame = async (contracts, betAmount, addressP1, addressP2) => {
-  const { bnk, tst } = contracts
-
-  await testDepositTokens(bnk, tst.address, betAmount, {
-    from: addressP1
-  })
-  await testDepositTokens(bnk, tst.address, betAmount, {
-    from: addressP2
-  })
-
-  const gameId = await testCreateGame(
-    contracts,
-    addressZero,
-    tst.address,
-    betAmount,
-    {
-      from: addressP1
-    }
-  )
-  await testJoinGame(contracts, addressZero, gameId, {
-    from: addressP2
-  })
-
-  return gameId
-}
-
-const createCommittedGame = async (
+const createJoinedGame = async (
   contracts,
   betAmount,
   addressP1,
   addressP2,
-  choiceP1,
-  choiceP2
+  referrerP1 = addressZero,
+  referrerP2 = addressZero
 ) => {
   const { bnk, tst } = contracts
 
@@ -501,14 +474,49 @@ const createCommittedGame = async (
 
   const gameId = await testCreateGame(
     contracts,
-    addressZero,
+    referrerP1,
     tst.address,
     betAmount,
     {
       from: addressP1
     }
   )
-  await testJoinGame(contracts, addressZero, gameId, {
+  await testJoinGame(contracts, referrerP2, gameId, {
+    from: addressP2
+  })
+
+  return gameId
+}
+
+const createCommittedGame = async (
+  contracts,
+  betAmount,
+  addressP1,
+  addressP2,
+  choiceP1,
+  choiceP2,
+  referrerP1 = addressZero,
+  referrerP2 = addressZero
+) => {
+  const { bnk, tst } = contracts
+
+  await testDepositTokens(bnk, tst.address, betAmount, {
+    from: addressP1
+  })
+  await testDepositTokens(bnk, tst.address, betAmount, {
+    from: addressP2
+  })
+
+  const gameId = await testCreateGame(
+    contracts,
+    referrerP1,
+    tst.address,
+    betAmount,
+    {
+      from: addressP1
+    }
+  )
+  await testJoinGame(contracts, referrerP2, gameId, {
     from: addressP2
   })
   const p1Data = await testCommitChoice(contracts, gameId, choiceP1, {
@@ -531,7 +539,9 @@ const createRevealedGame = async (
   addressP1,
   addressP2,
   choiceP1,
-  choiceP2
+  choiceP2,
+  referrerP1 = addressZero,
+  referrerP2 = addressZero
 ) => {
   const { bnk, tst } = contracts
 
@@ -544,14 +554,14 @@ const createRevealedGame = async (
 
   const gameId = await testCreateGame(
     contracts,
-    addressZero,
+    referrerP1,
     tst.address,
     betAmount,
     {
       from: addressP1
     }
   )
-  await testJoinGame(contracts, addressZero, gameId, {
+  await testJoinGame(contracts, referrerP2, gameId, {
     from: addressP2
   })
   const p1Data = await testCommitChoice(contracts, gameId, choiceP1, {
@@ -651,24 +661,40 @@ const testSettleBetWinner = async (contracts, gameId, config) => {
     tokenAddress
   )
 
+  if (referrerP1 != referrerP2) {
+    assert.equal(
+      postReferrerP1TokenBankBalance
+        .sub(preReferrerP1TokenBankBalance)
+        .toString(),
+      referralFeeP1.toString(),
+      'referrerP1 token bank balance should be incremented by referral fee'
+    )
+    assert.equal(
+      postReferrerP2TokenBankBalance
+        .sub(preReferrerP2TokenBankBalance)
+        .toString(),
+      referralFeeP2.toString(),
+      'referrerP2 token bank balance should be incremented by referral fee'
+    )
+  } else {
+    assert.equal(
+      postReferrerP1TokenBankBalance.toString(),
+      postReferrerP2TokenBankBalance.toString(),
+      'balance for the same referrer should match'
+    )
+    assert.equal(
+      postReferrerP1TokenBankBalance
+        .sub(preReferrerP1TokenBankBalance)
+        .toString(),
+      referralFeeP1.add(referralFeeP2).toString(),
+      'referrer balance should be incremented by both referral fees'
+    )
+  }
+
   assert.equal(
     postOwnerTokenBankBalance.sub(preOwnerTokenBankBalance).toString(),
     ownerFeeP1.add(ownerFeeP2).toString(),
     'owner token bank balance should be incremented by both player owner fees'
-  )
-  assert.equal(
-    postReferrerP1TokenBankBalance
-      .sub(preReferrerP1TokenBankBalance)
-      .toString(),
-    referralFeeP1.toString(),
-    'referrerP1 token bank balance should be incremented by referral fee'
-  )
-  assert.equal(
-    postReferrerP2TokenBankBalance
-      .sub(preReferrerP2TokenBankBalance)
-      .toString(),
-    referralFeeP2.toString(),
-    'referrerP2 token bank balance should be incremented by referral fee'
   )
   assert.equal(
     postWinnerTokenBankBalance.sub(preWinnerTokenBankBalance).toString(),
@@ -790,20 +816,37 @@ const testSettleBetTied = async (contracts, gameId, config) => {
     ownerFeeP1.add(ownerFeeP2).toString(),
     'owner token bank balance should be incremented by both player owner fees'
   )
-  assert.equal(
-    postReferrerP1TokenBankBalance
-      .sub(preReferrerP1TokenBankBalance)
-      .toString(),
-    referralFeeP1.toString(),
-    'referrerP1 token bank balance should be incremented by referral fee'
-  )
-  assert.equal(
-    postReferrerP2TokenBankBalance
-      .sub(preReferrerP2TokenBankBalance)
-      .toString(),
-    referralFeeP2.toString(),
-    'referrerP2 token bank balance should be incremented by referral fee'
-  )
+
+  if (referrerP1 != referrerP2) {
+    assert.equal(
+      postReferrerP1TokenBankBalance
+        .sub(preReferrerP1TokenBankBalance)
+        .toString(),
+      referralFeeP1.toString(),
+      'referrerP1 token bank balance should be incremented by referral fee'
+    )
+    assert.equal(
+      postReferrerP2TokenBankBalance
+        .sub(preReferrerP2TokenBankBalance)
+        .toString(),
+      referralFeeP2.toString(),
+      'referrerP2 token bank balance should be incremented by referral fee'
+    )
+  } else {
+    assert.equal(
+      postReferrerP1TokenBankBalance.toString(),
+      postReferrerP2TokenBankBalance.toString(),
+      'balance for the same referrer should match'
+    )
+    assert.equal(
+      postReferrerP1TokenBankBalance
+        .sub(preReferrerP1TokenBankBalance)
+        .toString(),
+      referralFeeP1.add(referralFeeP2).toString(),
+      'referrer balance should be incremented by both referral fees'
+    )
+  }
+
   assert.equal(
     postAddressP1TokenBankBalance.sub(preAddressP1TokenBankBalance).toString(),
     betAfterFeeP1.toString(),
@@ -1016,6 +1059,92 @@ const testTimeoutGame = async (contracts, gameId, config) => {
   )
 }
 
+const testPause = async (contracts, config) => {
+  const { rps } = contracts
+
+  const prePaused = await rps.paused()
+
+  await rps.pause(config)
+
+  const postPaused = await rps.paused()
+
+  assert(!prePaused, 'prePaused should be false')
+  assert(postPaused, 'postPaused should be true')
+}
+
+const testUnpause = async (contracts, config) => {
+  const { rps } = contracts
+
+  const prePaused = await rps.paused()
+
+  await rps.unpause(config)
+
+  const postPaused = await rps.paused()
+
+  assert(prePaused, 'prePaued should be true')
+  assert(!postPaused, 'postPaused should be false')
+}
+
+const testUpdateMinBet = async (contracts, minBet, config) => {
+  const { rps } = contracts
+
+  await rps.updateMinBet(minBet, config)
+
+  const postMinBet = await rps.minBet()
+
+  assert.equal(
+    postMinBet.toString(),
+    minBet.toString(),
+    'postMinBet should match minBet'
+  )
+}
+
+const testUpdateTimeout = async (contracts, timeout, config) => {
+  const { rps } = contracts
+
+  await rps.updateTimeout(timeout, config)
+
+  const postTimeout = await rps.timeoutInSeconds()
+
+  assert.equal(
+    postTimeout.toString(),
+    timeout.toString(),
+    'postTimeout should match timeout'
+  )
+}
+
+const testUpdateReferralFeePerMille = async (
+  contracts,
+  referralFeePerMille,
+  config
+) => {
+  const { rps } = contracts
+
+  await rps.updateReferralFeePerMille(referralFeePerMille, config)
+
+  const postReferralFeePerMille = await rps.referralFeePerMille()
+
+  assert.equal(
+    postReferralFeePerMille.toString(),
+    referralFeePerMille.toString(),
+    'postReferralFeePerMille should match referralFeePerMille'
+  )
+}
+
+const testUpdateFeePerMille = async (contracts, feePerMille, config) => {
+  const { rps } = contracts
+
+  await rps.updateFeePerMille(feePerMille, config)
+
+  const postFeePerMille = await rps.feePerMille()
+
+  assert.equal(
+    postFeePerMille.toString(),
+    feePerMille.toString(),
+    'postFeePerMille should match feePerMille'
+  )
+}
+
 module.exports = {
   stages,
   choices,
@@ -1038,5 +1167,11 @@ module.exports = {
   createRevealedGame,
   testCancelGame,
   testStartGameTimeout,
-  testTimeoutGame
+  testTimeoutGame,
+  testPause,
+  testUnpause,
+  testUpdateMinBet,
+  testUpdateTimeout,
+  testUpdateReferralFeePerMille,
+  testUpdateFeePerMille
 }

@@ -16,6 +16,7 @@ const owner = accounts[0]
 const ethUser = accounts[1]
 const tokenUser = accounts[2]
 const referrer = accounts[3]
+const referrerAlt = accounts[4]
 const decimals18 = new BN(10).pow(new BN(18))
 const bigZero = new BN(0)
 const addressZero = `0x${'0'.repeat(40)}`
@@ -149,9 +150,9 @@ const send = (method, params = []) =>
 const timeWarp = async (seconds, logResults) => {
   if (seconds > 0) {
     await send('evm_increaseTime', [seconds])
-    const previousTimestamp = await getCurrentBlockTime()
+    const { timestamp: previousTimestamp } = await web3.eth.getBlock('latest')
     await send('evm_mine')
-    const currentTimestamp = await await getCurrentBlockTime()
+    const { timestamp: currentTimestamp } = await web3.eth.getBlock('latest')
 
     /* eslint-disable no-console */
     if (logResults) {
@@ -221,6 +222,7 @@ module.exports = {
   ethUser,
   tokenUser,
   referrer,
+  referrerAlt,
   decimals18,
   bigZero,
   addressZero,

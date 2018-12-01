@@ -45,7 +45,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     external
     onlyOwner
   {
-    require(_newTimeoutInSeconds >= 1 * 60);
+    require(_newTimeoutInSeconds >= 60);
 
     uint256 _oldTimeoutInSeconds = timeoutInSeconds;
     timeoutInSeconds = _newTimeoutInSeconds;
@@ -168,7 +168,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     Game memory _game = games[_gameId];
     // IMPORTANT: ensure this matches when/if stages are updated!
     // ensure that Stage is any of: TimedOut, Tied, WinnerDecided
-    require(uint256(_game.stage) >= 7 && uint256(_game.stage) <= 9);
+    require(uint256(_game.stage) >= 6 && uint256(_game.stage) <= 8);
     uint256 _bet1AfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
     uint256 _bet2AfterFees = processFee(_game.addressP2, _game.tokenAddress, _game.bet);
 

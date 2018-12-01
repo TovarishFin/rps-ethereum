@@ -55,7 +55,6 @@ contract IRockPaperScissors {
   mapping(uint256 => Game) public games;
   mapping(address => uint256[]) public activeGamesOf;
   mapping(uint256 => uint256) public activeGameIndex;
-  mapping(uint256 => uint256) public rematchesFrom;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) public referredBy;
 
@@ -65,16 +64,15 @@ contract IRockPaperScissors {
 
   enum Stage {
     Uninitialized, // 0
-    RematchPending, // 1
-    Created, // 2
-    Cancelled, // 3
-    Ready, // 4
-    Committed, // 5
-    TimingOut, // 6
-    TimedOut, // 7
-    Tied, // 8
-    WinnerDecided, // 9
-    Paid // 10
+    Created, // 1
+    Cancelled, // 2
+    Ready, // 3
+    Committed, // 4
+    TimingOut, // 5
+    TimedOut, // 6
+    Tied, // 7
+    WinnerDecided, // 8
+    Paid // 9
   }
 
   enum Choice {
@@ -128,13 +126,6 @@ contract IRockPaperScissors {
   event ReferralSet(
     address indexed referrer,
     address indexed referree
-  );
-
-  event RematchProposed(
-    uint256 gameId,
-    uint256 rematchGameId,
-    address indexed addressP1,
-    address indexed addressP2
   );
 
   //
@@ -234,12 +225,6 @@ contract IRockPaperScissors {
     bytes _sig
   )
     external;
-
-  function rematch(
-    uint256 _gameId
-  )
-    external
-    payable;
 
   //
   // end game actions
