@@ -185,7 +185,7 @@ contract IRockPaperScissors {
     Choice _choice,
     bytes _sig
   )
-    public
+    internal
     view
     returns (bool);
 

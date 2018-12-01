@@ -33,7 +33,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     Choice _choice,
     bytes _sig
   )
-    public
+    internal
     view
     returns (bool)
   {
@@ -97,8 +97,8 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
       _value,
       Choice(0),
       Choice(0),
-      0x0,
-      0x0,
+      bytes32(0),
+      bytes32(0),
       Stage.Created
     );
   }
@@ -164,18 +164,22 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
   {
     Game storage _game = games[_gameId];
     if (msg.sender == _game.addressP1) {
+      require(_game.choiceSecretP1 == bytes32(0));
       _game.choiceSecretP1 = _hash;
     } else {
+      require(_game.choiceSecretP2 == bytes32(0));
       _game.choiceSecretP2 = _hash;
     }
 
-    if (_game.choiceSecretP1 != 0x0 && _game.choiceSecretP2 != 0x0) {
+    if (_game.choiceSecretP1 != bytes32(0) && _game.choiceSecretP2 != bytes32(0)) {
       enterStage(_gameId, Stage.Committed);
     }
 
     emit ChoiceCommitted(_gameId, msg.sender);
   }
 
+  // TODO: DOUBLE CHECK THAT TIMING OUT DOESN'T ENABLE GOING BACK TO COMMIT STAGE!
+  // WRITE TESTS PROVING IT!!!
   function revealChoice(
     uint256 _gameId,
     Choice _choice,
@@ -186,14 +190,16 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     onlyGameParticipant(_gameId)
     whenNotPaused
   {
+    Game storage _game = games[_gameId];
+    require(_game.choiceSecretP1 != bytes32(0));
+    require(_game.choiceSecretP2 != bytes32(0));
     require(choiceSecretMatches(_gameId, _choice, _sig));
 
-    Game storage _game = games[_gameId];
     if (msg.sender == _game.addressP1) {
+      require(_game.choiceP1 == Choice.Undecided);
       _game.choiceP1 = _choice;
-    }
-
-    if (msg.sender == _game.addressP2) {
+    } else {
+      require(_game.choiceP2 == Choice.Undecided);
       _game.choiceP2 = _choice;
     }
 

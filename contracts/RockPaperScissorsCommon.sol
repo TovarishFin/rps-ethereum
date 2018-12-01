@@ -182,8 +182,8 @@ contract RockPaperScissorsCommon is Upgradeable {
     Game memory _game = games[_gameId];
 
     if (_game.stage == Stage.Ready) {
-      require(_game.choiceSecretP1 == 0x0 || _game.choiceSecretP2 == 0x0);
-      require(_game.choiceSecretP1 != 0x0 || _game.choiceSecretP2 != 0x0);
+      require(_game.choiceSecretP1 == bytes32(0) || _game.choiceSecretP2 == bytes32(0));
+      require(_game.choiceSecretP1 != bytes32(0) || _game.choiceSecretP2 != bytes32(0));
     } 
     
     if (_game.stage == Stage.Committed) {

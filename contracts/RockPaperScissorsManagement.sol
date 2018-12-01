@@ -114,8 +114,8 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     require(block.timestamp >= timingOutGames[_gameId]);
     Game storage _game = games[_gameId];
     
-    if (_game.choiceSecretP1 == 0x0 || _game.choiceSecretP2 == 0x0) {
-      _game.winner = _game.choiceSecretP1 == 0x0 
+    if (_game.choiceSecretP1 == bytes32(0) || _game.choiceSecretP2 == bytes32(0)) {
+      _game.winner = _game.choiceSecretP1 == bytes32(0) 
         ? _game.addressP2 
         : _game.addressP1;
     } else if (_game.choiceP1 == Choice.Undecided || _game.choiceP2 == Choice.Undecided) {

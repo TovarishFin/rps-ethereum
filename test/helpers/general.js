@@ -130,7 +130,7 @@ const sendTransaction = args => {
 const send = (method, params = []) =>
   web3.currentProvider.send(
     {
-      id: new Date().getSeconds(),
+      id: 'a' + new Date().getSeconds(),
       jsonrpc: '2.0',
       method,
       params
