@@ -7,7 +7,7 @@ import "./interfaces/IWrappedEther.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-contract BankStub {
+contract Bank {
   using SafeMath for uint256;
 
   IRegistry public registry;

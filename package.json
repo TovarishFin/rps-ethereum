@@ -12,7 +12,7 @@
     "lint:sol": "solium -d ./contracts",
     "test:e2e": "vue-cli-service test:e2e",
     "test:dapp": "vue-cli-service test:unit",
-    "start:blockchain": "ganache-cli -g 5e9 -l 6500000",
+    "start:blockchain": "ganache-cli -g 5e9 -l 6500000 -d -m 'resource leg moment usage square town husband gain diary bitter muscle diagram'",
     "test:contracts": "truffle test --reset",
     "test:contracts:gas-reporter": "GAS_REPORTER=true yarn run test:contracts",
     "migrate:dev": "truffle migrate --reset --network dev",
