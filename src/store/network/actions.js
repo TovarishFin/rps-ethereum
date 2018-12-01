@@ -53,13 +53,12 @@ export const setupWeb3Ws = async ({ commit, getters }) => {
   commit('setWeb3Ready', true)
 }
 
-export const getCoinbase = async ({ commit, dispatch, getters }) => {
+export const getCoinbase = async ({ commit, getters }) => {
   const { web3 } = getters
   const accounts = await web3.eth.getAccounts()
   const coinbase = accounts[0]
 
   commit('setCoinbase', coinbase)
-  dispatch('getCoinbaseIsVoter')
   commit('setCoinbaseReady', coinbase === addressZero ? false : true)
 }
 
