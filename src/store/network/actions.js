@@ -51,7 +51,7 @@ export const setupWeb3Ws = async ({ commit, getters }) => {
   let web3Ws
 
   if (network === 'private') {
-    web3Ws = new Web3('http://localhost:8546')
+    web3Ws = new Web3('ws://localhost:8545')
   } else {
     web3Ws = new Web3(`wss://${network}.infura.io/ws`)
   }
@@ -131,7 +131,7 @@ export const watchNetwork = async ({ getters, commit }) => {
   )
 }
 
-export const bootstrapEth = async ({ dispatch, commit, getters }) => {
+export const bootstrapEth = async ({ dispatch, commit }) => {
   await dispatch('setupWeb3')
   await dispatch('getNetworkData')
   await dispatch('setupWeb3Ws')
@@ -147,9 +147,6 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
   // TODO: REMOVE THIS (for initial testing for now...)
   await dispatch('getWethAddress')
   await dispatch('getCoinbaseTokenUsage')
-  const { wethAddress } = getters
-  await dispatch('getCoinbaseTokenBalance', wethAddress)
-  await dispatch('getCoinbaseAllocatedTokens', wethAddress)
   dispatch('watchCoinbase')
   dispatch('watchNetwork')
 }

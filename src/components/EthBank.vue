@@ -1,0 +1,100 @@
+<template>
+  <span>
+    <v-form ref="deposit-form" class="pt-4 pb-4">
+      <p class="display-1">Deposit Ether</p>
+      <v-text-field
+        v-model="depositAmount"
+        label="Deposit Amount"
+        placeholder="0"
+        :rules="valueRules"
+        type="number"
+        required
+      />
+      <v-btn @click="deposit">submit</v-btn>
+      <v-btn @click="clearDeposit">clear</v-btn>
+    </v-form>
+    <v-form ref="withdraw-form" class="pt-4 pb-4">
+      <p class="display-1">Withdraw Ether</p>
+      <v-text-field
+        v-model="withdrawAmount"
+        label="Withdraw Amount"
+        placeholder="0"
+        type="number"
+        :rules="valueRules"
+        required
+      />
+      <v-btn @click="withdraw">submit</v-btn>
+      <v-btn @click="clearWithdraw">clear</v-btn>
+    </v-form>
+  </span>
+</template>
+<script>
+import { mapActions } from 'vuex'
+import * as VForm from 'vuetify/es5/components/VForm'
+import * as VTextField from 'vuetify/es5/components/VTextField'
+import * as VBtn from 'vuetify/es5/components/VBtn'
+
+export default {
+  components: {
+    ...VTextField,
+    ...VForm,
+    ...VBtn
+  },
+  data() {
+    return {
+      addressRules: [v => this.isAddress(v) || 'must be a valid address'],
+      valueRules: [v => parseFloat(v) > 0 || 'must be non zero value'],
+      depositAmount: 0,
+      withdrawAmount: 0,
+      tokenHeaders: [
+        {
+          text: 'Use',
+          sortable: false
+        },
+        {
+          text: 'Name',
+          align: 'left',
+          value: 'name'
+        },
+        {
+          text: 'Address',
+          value: 'address'
+        },
+        {
+          text: 'Symbol',
+          value: 'symbol'
+        },
+        {
+          text: 'Balance',
+          value: 'balance'
+        },
+        {
+          text: 'Deposited Balance',
+          value: 'depositedBalance'
+        }
+      ]
+    }
+  },
+  methods: {
+    ...mapActions(['depositEther', 'withdrawEther']),
+    clearDeposit() {
+      this.depositAmount = 0
+    },
+    clearWithdraw() {
+      this.withdrawAmount = 0
+    },
+    deposit() {
+      if (this.$refs['deposit-form'].validate()) {
+        this.depositEther(this.ethToWei(this.depositAmount))
+        this.clearDeposit()
+      }
+    },
+    withdraw() {
+      if (this.$refs['withdraw-form'].validate()) {
+        this.withdrawEther(this.ethToWei(this.withdrawAmount))
+        this.clearWithdraw()
+      }
+    }
+  }
+}
+</script>

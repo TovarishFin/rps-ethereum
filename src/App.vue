@@ -1,13 +1,15 @@
 <template>
-  <v-app>
+  <v-app dark>
     <app-drawer />
     <app-toolbar />
 
     <v-content>
-      <v-slide-y-transition mode="out-in">
-        <!-- <router-view /> -->
-        <router-handler />
-      </v-slide-y-transition>
+      <v-container fluid>
+        <v-slide-y-transition mode="out-in">
+          <!-- <router-view /> -->
+          <router-handler />
+        </v-slide-y-transition>
+      </v-container>
     </v-content>
 
     <app-notifier />

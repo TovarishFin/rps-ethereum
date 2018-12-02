@@ -1,11 +1,11 @@
-import { BN } from 'web3-utils'
+import { toBN } from 'web3-utils'
 import sha3 from 'crypto-js/sha3'
 
 export default {
   methods: {
     weiToEthCurrencyFormat(wei) {
       return wei
-        ? `Ξ${new BN(wei)
+        ? `Ξ${toBN(wei)
             .mul(this.decimalsAccuracy)
             .div(this.decimals18)
             .toNumber() / 1e5}`
@@ -13,23 +13,25 @@ export default {
     },
     ethToWei(eth) {
       if (!eth) {
-        return new BN(0)
+        return toBN(0)
       } else {
         const integer = Math.floor(eth)
         const decimals = eth - integer
         const decimalsLength = decimals.toString().replace('0.').length
         const raisedEth = eth * Math.pow(10, decimalsLength)
-        const raisedBN = new BN(raisedEth)
+        const raisedBN = toBN(raisedEth)
         const correctedBN = raisedBN
           .mul(this.decimals18)
-          .div(new BN(10).pow(new BN(decimalsLength)))
+          .div(toBN(10).pow(toBN(decimalsLength)))
         return correctedBN
       }
     },
     weiToEth(wei) {
       return wei
-        ? new BN(wei).div(this.decimals18).toNumber()
-        : new BN(0).toNumber()
+        ? toBN(wei)
+            .div(this.decimals18)
+            .toNumber()
+        : toBN(0).toNumber()
     },
     networkIdToName(id) {
       switch (id) {
@@ -88,7 +90,7 @@ export default {
   computed: {
     addressZero: () => '0x' + '0'.repeat(40),
     bytes32Zero: () => '0x' + '0'.repeat(64),
-    decimals18: () => new BN(10).pow(new BN(18)),
-    decimalsAccuracy: () => new BN(10).pow(new BN(5))
+    decimals18: () => toBN(10).pow(toBN(18)),
+    decimalsAccuracy: () => toBN(10).pow(toBN(5))
   }
 }

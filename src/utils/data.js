@@ -7,6 +7,15 @@ export const addressZero = '0x' + '0'.repeat(40)
 
 export const bytes32Zero = '0x' + '0'.repeat(64)
 
+export const tokenZero = {
+  name: 'Not Found',
+  symbol: 'N/A',
+  address: addressZero,
+  balance: 0,
+  depositedBalance: 0,
+  allocatedBalance: 0
+}
+
 export const decimals18 = new BN(10).pow(new BN(18))
 
 export const decimalsAccuracy = new BN(10).pow(new BN(5))

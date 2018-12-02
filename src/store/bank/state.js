@@ -9,6 +9,6 @@ export default {
   testTokenWs: null,
   wethAddress: addressZero,
   coinbaseTokenUsage: [],
-  coinbaseTokenBalance: {},
-  coinbaseAllocatedTokens: {}
+  selectedTokenAddress: addressZero,
+  tokenData: {}
 }

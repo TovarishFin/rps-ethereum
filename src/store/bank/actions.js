@@ -1,7 +1,7 @@
 import Bank from '@/../contractsBuild/Bank'
 import TestToken from '@/../contractsBuild/TestToken'
 import WrappedEther from '@/../contractsBuild/WrappedEther'
-import IERC20 from '@/../contractsBuild/IERC20'
+import IERC20Extended from '@/../contractsBuild/IERC20Extended'
 
 //
 // start setup related
@@ -87,26 +87,36 @@ export const getCoinbaseTokenUsage = async ({ commit, getters }) => {
   commit('setCoinbaseTokenUsage', usage)
 }
 
-export const getCoinbaseTokenBalance = async (
-  { commit, getters },
-  tokenAddress
-) => {
-  const { bank, coinbase } = getters
-  const balance = await bank.methods
-    .tokenBalanceOf(coinbase, tokenAddress)
-    .call()
-  commit('setCoinbaseTokenBalance', { tokenAddress, balance })
+export const getTokenDataOf = async ({ commit, getters }, tokenAddress) => {
+  const { web3Ws, bank, coinbase } = getters
+  const erc20 = new web3Ws.eth.Contract(IERC20Extended.abi, tokenAddress)
+  const data = await Promise.all([
+    erc20.methods.name().call(),
+    erc20.methods.symbol().call(),
+    erc20.methods.balanceOf(coinbase).call(),
+    bank.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
+    bank.methods.allocatedTokensOf(coinbase, tokenAddress).call()
+  ])
+  const tokenData = {
+    name: data[0],
+    symbol: data[1],
+    balance: data[2],
+    depositedBalance: data[3],
+    allocatedBalance: data[4],
+    address: tokenAddress
+  }
+
+  commit('setTokenDataOf', tokenData)
 }
 
-export const getCoinbaseAllocatedTokens = async (
-  { commit, getters },
-  tokenAddress
-) => {
-  const { bank, coinbase } = getters
-  const amount = await bank.methods
-    .allocatedTokensOf(coinbase, tokenAddress)
-    .call()
-  commit('setCoinbaseAllocatedTokens', { tokenAddress, amount })
+export const populateTokenData = async ({ dispatch, getters }) => {
+  const { coinbaseTokenUsage } = getters
+  const promises = []
+  for (const tokenAddress of coinbaseTokenUsage) {
+    promises.push(dispatch('getTokenDataOf', tokenAddress))
+  }
+
+  await Promise.all(promises)
 }
 
 //
@@ -121,7 +131,7 @@ export const depositEtherFor = async ({ getters }, { userAddress, value }) => {
   const { bank, coinbase } = getters
   await bank.methods.depositEtherFor(userAddress).send({
     from: coinbase,
-    value
+    value: value.toString()
   })
 }
 
@@ -129,27 +139,27 @@ export const depositEther = async ({ getters }, value) => {
   const { bank, coinbase } = getters
   await bank.methods.depositEther().send({
     from: coinbase,
-    value
+    value: value.toString()
   })
 }
 
 export const withdrawEther = async ({ getters }, value) => {
   const { bank, coinbase } = getters
-  await bank.methods.withdrawEther(value).send({
+  await bank.methods.withdrawEther(value.toString()).send({
     from: coinbase
   })
 }
 
 export const depositTokens = async ({ getters }, { tokenAddress, value }) => {
   const { bank, coinbase } = getters
-  await bank.methods.depositTokens(tokenAddress, value).send({
+  await bank.methods.depositTokens(tokenAddress, value.toString()).send({
     from: coinbase
   })
 }
 
 export const withdrawTokens = async ({ getters }, { tokenAddress, value }) => {
   const { bank, coinbase } = getters
-  await bank.methods.withdrawTokens(tokenAddress, value).send({
+  await bank.methods.withdrawTokens(tokenAddress, value.toString()).send({
     from: coinbase
   })
 }
@@ -159,14 +169,14 @@ export const batchDepositTokens = async (
   { tokenAddress, value }
 ) => {
   const { web3, bank, coinbase } = getters
-  const erc20 = new web3.eth.Contract(IERC20.abi, tokenAddress)
+  const erc20 = new web3.eth.Contract(IERC20Extended.abi, tokenAddress)
   const batch = new web3.BatchRequest()
 
   const approve = erc20.methods
-    .approve(bank._address, value)
+    .approve(bank._address, value.toString())
     .send.request({ from: coinbase })
   const deposit = bank.methods
-    .depositTokens(tokenAddress, value)
+    .depositTokens(tokenAddress, value.toString())
     .send.request({ from: coinbase })
 
   await batch.add(deposit)
@@ -177,4 +187,20 @@ export const batchDepositTokens = async (
 
 //
 // end contract setters
+//
+
+//
+// start local state setters
+//
+
+export const setSelectedTokenAddress = ({ commit }, tokenAddress) => {
+  commit('setSelectedTokenAddress', tokenAddress)
+}
+
+export const deleteTokenData = ({ commit }) => {
+  commit('setTokenData', {})
+}
+
+//
+// end local state setters
 //

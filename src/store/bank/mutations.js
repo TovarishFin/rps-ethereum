@@ -30,10 +30,14 @@ export const setCoinbaseTokenUsage = (state, tokenUsage) => {
   state.coinbaseTokenUsage = tokenUsage
 }
 
-export const setCoinbaseTokenBalance = (state, { tokenAddress, balance }) => {
-  state.coinbaseTokenBalance[tokenAddress] = balance
+export const setSelectedTokenAddress = (state, tokenAddress) => {
+  state.selectedTokenAddress = tokenAddress
 }
 
-export const setCoinbaseAllocatedTokens = (state, { tokenAddress, amount }) => {
-  state.coinbaseAllocatedTokens[tokenAddress] = amount
+export const setTokenData = (state, tokenData) => {
+  state.tokenData = tokenData
+}
+
+export const setTokenDataOf = (state, tokenDataOf) => {
+  state.tokenData = { ...state.tokenData, [tokenDataOf.address]: tokenDataOf }
 }

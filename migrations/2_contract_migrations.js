@@ -83,9 +83,12 @@ module.exports = (deployer, network, accounts) => {
         )
         for (const account of accounts) {
           const mintAmount = toBN(5e18)
+          const deplositAmount = mintAmount.sub(toBN(2e18))
           await tst.mint(account, mintAmount, { from: account })
-          await tst.approve(bnk.address, mintAmount, { from: account })
-          await bnk.depositTokens(tst.address, mintAmount, { from: account })
+          await tst.approve(bnk.address, deplositAmount, { from: account })
+          await bnk.depositTokens(tst.address, deplositAmount, {
+            from: account
+          })
           await bnk.depositEther({ from: account, value: mintAmount })
         }
 
