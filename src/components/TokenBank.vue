@@ -1,7 +1,7 @@
 <template>
   <span>
     <token-data-of />
-    <v-form class="pt-4 pb-4">
+    <v-form ref="deposit-form" class="pt-4 pb-4">
       <p class="display-1">Deposit Tokens</p>
       <v-text-field
         v-model="tokenAddress"
@@ -18,11 +18,11 @@
         :rules="valueRules"
         required
       />
-      <v-btn>submit</v-btn>
-      <v-btn>clear</v-btn>
+      <v-btn @click="deposit">submit</v-btn>
+      <v-btn @click="clearDeposit">clear</v-btn>
     </v-form>
 
-    <v-form class="pt-4 pb-4">
+    <v-form ref="withdraw-form" class="pt-4 pb-4">
       <p class="display-1">Withdraw Tokens</p>
       <v-text-field
         v-model="tokenAddress"
@@ -33,14 +33,14 @@
       ></v-text-field>
       <v-text-field
         v-model="withdrawAmount"
-        label="Deposit Amount"
+        label="Withdraw Amount"
         placeholder="0"
         type="number"
         :rules="valueRules"
         required
       />
-      <v-btn>submit</v-btn>
-      <v-btn>clear</v-btn>
+      <v-btn @click="withdraw">submit</v-btn>
+      <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
 </template>
@@ -81,7 +81,36 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setSelectedTokenAddress', 'getTokenDataOf'])
+    ...mapActions([
+      'setSelectedTokenAddress',
+      'getTokenDataOf',
+      'batchDepositTokens',
+      'withdrawTokens'
+    ]),
+    clearDeposit() {
+      this.depositAmount = 0
+    },
+    clearWithdraw() {
+      this.withdrawAmount = 0
+    },
+    deposit() {
+      if (this.$refs['deposit-form'].validate()) {
+        this.batchDepositTokens({
+          tokenAddress: this.tokenAddress,
+          value: this.ethToWei(this.depositAmount)
+        })
+        this.clearDeposit()
+      }
+    },
+    withdraw() {
+      if (this.$refs['withdraw-form'].validate()) {
+        this.withdrawTokens({
+          tokenAddress: this.tokenAddress,
+          value: this.ethToWei(this.withdrawAmount)
+        })
+        this.clearWithdraw()
+      }
+    }
   },
   watch: {
     tokenAddress() {

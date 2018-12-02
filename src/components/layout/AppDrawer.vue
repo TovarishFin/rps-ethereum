@@ -55,6 +55,11 @@ export default {
           to: '/about'
         },
         {
+          icon: 'mdi-coins',
+          title: 'Play Money',
+          to: '/play-money'
+        },
+        {
           icon: 'mdi-bank',
           title: 'Bank',
           to: '/bank'

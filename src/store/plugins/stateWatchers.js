@@ -1,9 +1,18 @@
+import { isAddress } from '@/utils/data'
+
 const actionIdWatcher = store => {
-  store.subscribe(async mutation => {
-    switch (mutation.type) {
+  store.subscribe(async ({ type, payload }) => {
+    switch (type) {
       case 'setCoinbaseTokenUsage':
         await store.dispatch('deleteTokenData')
-        await store.dispatch('populateTokenData')
+        store.dispatch('populateTokenData')
+        break
+
+      case 'setSelectedTokenAddress':
+        if (isAddress(payload)) {
+          store.dispatch('getTokenDataOf', payload)
+        }
+
         break
 
       default:

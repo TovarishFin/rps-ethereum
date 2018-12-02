@@ -2,6 +2,7 @@ import Bank from '@/../contractsBuild/Bank'
 import TestToken from '@/../contractsBuild/TestToken'
 import WrappedEther from '@/../contractsBuild/WrappedEther'
 import IERC20Extended from '@/../contractsBuild/IERC20Extended'
+import { toBN } from 'web3-utils'
 
 //
 // start setup related
@@ -87,26 +88,33 @@ export const getCoinbaseTokenUsage = async ({ commit, getters }) => {
   commit('setCoinbaseTokenUsage', usage)
 }
 
-export const getTokenDataOf = async ({ commit, getters }, tokenAddress) => {
+export const getTokenDataOf = async (
+  { commit, getters, dispatch },
+  tokenAddress
+) => {
   const { web3Ws, bank, coinbase } = getters
-  const erc20 = new web3Ws.eth.Contract(IERC20Extended.abi, tokenAddress)
-  const data = await Promise.all([
-    erc20.methods.name().call(),
-    erc20.methods.symbol().call(),
-    erc20.methods.balanceOf(coinbase).call(),
-    bank.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
-    bank.methods.allocatedTokensOf(coinbase, tokenAddress).call()
-  ])
-  const tokenData = {
-    name: data[0],
-    symbol: data[1],
-    balance: data[2],
-    depositedBalance: data[3],
-    allocatedBalance: data[4],
-    address: tokenAddress
-  }
+  try {
+    const erc20 = new web3Ws.eth.Contract(IERC20Extended.abi, tokenAddress)
+    const data = await Promise.all([
+      erc20.methods.name().call(),
+      erc20.methods.symbol().call(),
+      erc20.methods.balanceOf(coinbase).call(),
+      bank.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
+      bank.methods.allocatedTokensOf(coinbase, tokenAddress).call()
+    ])
+    const tokenData = {
+      name: data[0],
+      symbol: data[1],
+      balance: data[2],
+      depositedBalance: data[3],
+      allocatedBalance: data[4],
+      address: tokenAddress
+    }
 
-  commit('setTokenDataOf', tokenData)
+    commit('setTokenDataOf', tokenData)
+  } catch (err) {
+    dispatch('createNotification', 'that is NOT valid ERC20 token address.')
+  }
 }
 
 export const populateTokenData = async ({ dispatch, getters }) => {
@@ -183,6 +191,13 @@ export const batchDepositTokens = async (
   await batch.add(approve)
 
   await batch.execute()
+}
+
+export const mintTestToken = async ({ getters }) => {
+  const { testToken, coinbase } = getters
+  await testToken.methods.mint(coinbase, toBN(5e18).toString()).send({
+    from: coinbase
+  })
 }
 
 //

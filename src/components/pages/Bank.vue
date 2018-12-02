@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedTokenAddress', 'tokenDataOf']),
+    ...mapGetters(['selectedTokenAddress']),
     tokenAddress: {
       get() {
         return this.selectedTokenAddress
@@ -73,14 +73,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setSelectedTokenAddress', 'getTokenDataOf'])
-  },
-  watch: {
-    tokenAddress() {
-      if (this.isAddress(this.tokenAddress)) {
-        this.getTokenDataOf(this.tokenAddress)
-      }
-    }
+    ...mapActions(['setSelectedTokenAddress'])
   }
 }
 </script>

@@ -20,10 +20,8 @@
     >
       <template slot="items" slot-scope="props">
         <td>
-          <v-btn
-            :disabled="isInUse(props.item.address)"
-            @click="setSelectedTokenAddress(props.item.address)"
-            >{{ isInUse(props.item.address) ? 'in use' : 'use' }}</v-btn
+          <v-btn @click="setSelectedTokenAddress(props.item.address)"
+            >use / update</v-btn
           >
         </td>
         <td>{{ props.item.name }}</td>

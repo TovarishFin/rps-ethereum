@@ -24,19 +24,24 @@ export default new Router({
       component: () => import('@/components/pages/Bank.vue')
     },
     {
+      path: '/play-money',
+      name: 'PlayMoney',
+      component: () => import('@/components/pages/PlayMoney.vue')
+    },
+    {
       path: '/no-account',
       name: 'No Account',
-      component: () => import('./components/layout/NoAccount.vue')
+      component: () => import('@/components/layout/NoAccount.vue')
     },
     {
       path: '/no-web3',
       name: 'No Web3',
-      component: () => import('./components/layout/NoWeb3.vue')
+      component: () => import('@/components/layout/NoWeb3.vue')
     },
     {
       path: '*',
       name: 'Not Found',
-      component: () => import('./components/layout/NotFound.vue')
+      component: () => import('@/components/layout/NotFound.vue')
     }
   ]
 })
