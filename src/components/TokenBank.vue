@@ -1,5 +1,6 @@
 <template>
   <span>
+    <token-deposit-warnings />
     <token-data-of />
     <v-form ref="deposit-form" class="pt-4 pb-4">
       <p class="display-1">Deposit Tokens</p>
@@ -18,7 +19,7 @@
         :rules="valueRules"
         required
       />
-      <v-btn @click="deposit">submit</v-btn>
+      <v-btn @click="deposit">deposit tokens</v-btn>
       <v-btn @click="clearDeposit">clear</v-btn>
     </v-form>
 
@@ -30,7 +31,7 @@
         :placeholder="addressZero"
         :rules="addressRules"
         required
-      ></v-text-field>
+      />
       <v-text-field
         v-model="withdrawAmount"
         label="Withdraw Amount"
@@ -39,7 +40,7 @@
         :rules="valueRules"
         required
       />
-      <v-btn @click="withdraw">submit</v-btn>
+      <v-btn @click="withdraw">deposit tokens</v-btn>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
@@ -49,19 +50,33 @@ import { mapGetters, mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VBtn from 'vuetify/es5/components/VBtn'
+import * as VCheckbox from 'vuetify/es5/components/VCheckbox'
 import TokenDataOf from './TokenDataOf.vue'
+import TokenDepositWarnings from './TokenDepositWarnings'
+import { toBN } from 'web3-utils'
 
 export default {
   components: {
     ...VTextField,
     ...VForm,
     ...VBtn,
-    TokenDataOf
+    ...VCheckbox,
+    TokenDataOf,
+    TokenDepositWarnings
   },
   data() {
     return {
       addressRules: [v => this.isAddress(v) || 'must be a valid address'],
-      valueRules: [v => parseFloat(v) > 0 || 'must be non zero value'],
+      valueRules: [
+        v => {
+          const wei = this.ethToWei(v)
+          // console.log(wei, wei.toString(), wei.gt(0))
+          return (
+            (!wei.isZero() && wei.lte(toBN(this.tokenData.balance))) ||
+            'must be non zero value and less than or equal to your token balance'
+          )
+        }
+      ],
       depositAmount: 0,
       withdrawAmount: 0
     }
@@ -85,7 +100,8 @@ export default {
       'setSelectedTokenAddress',
       'getTokenDataOf',
       'batchDepositTokens',
-      'withdrawTokens'
+      'withdrawTokens',
+      'createNotification'
     ]),
     clearDeposit() {
       this.depositAmount = 0
@@ -95,6 +111,14 @@ export default {
     },
     deposit() {
       if (this.$refs['deposit-form'].validate()) {
+        if (this.tokenData.decimals !== '18') {
+          this.createNotification(
+            'Tokens must use 18 decimals in order to be used.'
+          )
+
+          return
+        }
+
         this.batchDepositTokens({
           tokenAddress: this.tokenAddress,
           value: this.ethToWei(this.depositAmount)

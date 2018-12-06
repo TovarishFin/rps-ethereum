@@ -1,5 +1,6 @@
 <template>
   <span>
+    <ether-deposit-warnings />
     <v-form ref="deposit-form" class="pt-4 pb-4">
       <p class="display-1">Deposit Ether</p>
       <v-text-field
@@ -10,7 +11,7 @@
         type="number"
         required
       />
-      <v-btn @click="deposit">submit</v-btn>
+      <v-btn @click="deposit">deposit ether</v-btn>
       <v-btn @click="clearDeposit">clear</v-btn>
     </v-form>
     <v-form ref="withdraw-form" class="pt-4 pb-4">
@@ -23,7 +24,7 @@
         :rules="valueRules"
         required
       />
-      <v-btn @click="withdraw">submit</v-btn>
+      <v-btn @click="withdraw">deposit ether</v-btn>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
@@ -33,12 +34,14 @@ import { mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VBtn from 'vuetify/es5/components/VBtn'
+import EtherDepositWarnings from './EtherDepositWarnings'
 
 export default {
   components: {
     ...VTextField,
     ...VForm,
-    ...VBtn
+    ...VBtn,
+    EtherDepositWarnings
   },
   data() {
     return {

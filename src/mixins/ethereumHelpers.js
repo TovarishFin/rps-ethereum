@@ -1,6 +1,21 @@
 import { toBN } from 'web3-utils'
 import sha3 from 'crypto-js/sha3'
 
+const big18 = toBN(10).pow(toBN(18))
+
+const ethFloatToWei = eth => {
+  const ethStr = eth.toString()
+  const [int, decimals] = ethStr.split('.')
+  const safeDecimals = decimals.toString().slice(0, 18)
+
+  const bigInt = toBN(int).mul(toBN(10).pow(toBN(18 + safeDecimals.length)))
+  const bigDecimals = toBN(safeDecimals).mul(toBN(10).pow(toBN(18)))
+  const lowerAmount = toBN(10).pow(toBN(safeDecimals.length))
+  const adjusted = bigInt.add(bigDecimals).div(lowerAmount)
+
+  return adjusted
+}
+
 export default {
   methods: {
     weiToEthCurrencyFormat(wei) {
@@ -12,26 +27,31 @@ export default {
         : 'Ξ0.0'
     },
     ethToWei(eth) {
-      if (!eth) {
-        return toBN(0)
-      } else {
-        const integer = Math.floor(eth)
-        const decimals = eth - integer
-        const decimalsLength = decimals.toString().replace('0.').length
-        const raisedEth = eth * Math.pow(10, decimalsLength)
-        const raisedBN = toBN(raisedEth)
-        const correctedBN = raisedBN
-          .mul(this.decimals18)
-          .div(toBN(10).pow(toBN(decimalsLength)))
-        return correctedBN
+      const ethStr = eth.toString()
+
+      switch (true) {
+        case !eth:
+          return toBN(0)
+
+        case ethStr.includes('.'):
+          return ethFloatToWei(eth)
+
+        case !ethStr.includes('.'):
+          return toBN(eth).mul(big18)
+        default:
+          throw new Error('this shouldn not happen')
       }
     },
     weiToEth(wei) {
-      return wei
-        ? toBN(wei)
-            .div(this.decimals18)
-            .toNumber()
-        : toBN(0).toNumber()
+      const { div: valueDiv, mod: valueMod } = toBN(wei).divmod(this.decimals18)
+
+      if (valueMod.toString() === '0') {
+        return valueDiv.toString()
+      } else {
+        const divString = valueDiv.toString()
+        const modString = valueMod.toString().replace(/[0]+$/, '')
+        return divString + '.' + modString
+      }
     },
     networkIdToName(id) {
       switch (id) {

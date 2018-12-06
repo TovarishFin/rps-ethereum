@@ -27,9 +27,14 @@
         <td>{{ props.item.name }}</td>
         <td class="text-xs-left">{{ shortenAddress(props.item.address) }}</td>
         <td class="text-xs-left">{{ props.item.symbol }}</td>
-        <td class="text-xs-left">{{ props.item.balance }}</td>
-        <td class="text-xs-left">{{ props.item.depositedBalance }}</td>
-        <td class="text-xs-left">{{ props.item.allocatedBalance }}</td>
+        <td class="text-xs-left">{{ props.item.decimals }}</td>
+        <td class="text-xs-left">{{ weiToEth(props.item.balance) }}</td>
+        <td class="text-xs-left">
+          {{ weiToEth(props.item.depositedBalance) }}
+        </td>
+        <td class="text-xs-left">
+          {{ weiToEth(props.item.allocatedBalance) }}
+        </td>
       </template>
       <template slot="no-results">
         <p class="display-1 pa-4">no results found</p>
@@ -76,6 +81,10 @@ export default {
         {
           text: 'Symbol',
           value: 'symbol'
+        },
+        {
+          text: 'Decimals',
+          value: 'decimals'
         },
         {
           text: 'Balance',

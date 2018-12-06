@@ -98,6 +98,7 @@ export const getTokenDataOf = async (
     const data = await Promise.all([
       erc20.methods.name().call(),
       erc20.methods.symbol().call(),
+      erc20.methods.decimals().call(),
       erc20.methods.balanceOf(coinbase).call(),
       bank.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
       bank.methods.allocatedTokensOf(coinbase, tokenAddress).call()
@@ -105,15 +106,19 @@ export const getTokenDataOf = async (
     const tokenData = {
       name: data[0],
       symbol: data[1],
-      balance: data[2],
-      depositedBalance: data[3],
-      allocatedBalance: data[4],
+      decimals: data[2],
+      balance: data[3],
+      depositedBalance: data[4],
+      allocatedBalance: data[5],
       address: tokenAddress
     }
 
     commit('setTokenDataOf', tokenData)
   } catch (err) {
-    dispatch('createNotification', 'that is NOT valid ERC20 token address.')
+    dispatch(
+      'createNotification',
+      'that is NOT valid ERC20 token address which uses 18 decimals, has a name, and has a symbol.'
+    )
   }
 }
 

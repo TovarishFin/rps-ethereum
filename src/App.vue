@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import AppDrawer from './components/layout/AppDrawer.vue'
-import AppToolbar from './components/layout/AppToolbar.vue'
-import AppFooter from './components/layout/AppFooter.vue'
-import AppNotifier from './components/layout/AppNotifier.vue'
-import RouterHandler from './components/layout/RouterHandler.vue'
-import store from './store'
+import AppDrawer from '@/components/layout/AppDrawer.vue'
+import AppToolbar from '@/components/layout/AppToolbar.vue'
+import AppFooter from '@/components/layout/AppFooter.vue'
+import AppNotifier from '@/components/layout/AppNotifier.vue'
+import RouterHandler from '@/components/layout/RouterHandler.vue'
+import store from '@/store'
 
 export default {
   components: {
