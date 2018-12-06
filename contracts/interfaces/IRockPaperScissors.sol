@@ -53,9 +53,9 @@ contract IRockPaperScissors {
   //
 
   mapping(uint256 => Game) public games;
-  mapping(address => uint256[]) public activeGamesOf;
   uint256[] public openGames;
   mapping(uint256 => uint256) public openGameIndex;
+  mapping(address => uint256[]) public activeGamesOf;
   mapping(uint256 => uint256) public activeGameOfIndex;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) public referredBy;

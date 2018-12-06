@@ -9,5 +9,5 @@ export default {
   totalWinCount: 0,
   totalReferralVolume: 0,
   games: null,
-  activeGames: []
+  openGames: []
 }
