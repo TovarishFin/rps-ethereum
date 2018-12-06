@@ -7,10 +7,16 @@ const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
 const RockPaperScissorsManagement = artifacts.require(
   'RockPaperScissorsManagement'
 )
+const IRockPaperScissors = artifacts.require('IRockPaperScissors')
 const { toBN } = require('web3-utils')
 const chalk = require('chalk')
 const fs = require('fs')
 const path = require('path')
+
+const defaultMinBet = toBN(1e16)
+const defaultTimeoutInSeconds = toBN(60 * 60) // 1 hour
+const defaultReferralFeePerMille = toBN(100)
+const defaultFeePerMille = toBN(200)
 
 /* eslint-disable no-console */
 /* eslint-disable security/detect-non-literal-fs-filename */
@@ -94,6 +100,22 @@ module.exports = (deployer, network, accounts) => {
 
         console.log(chalk.cyan('minting/depositing complete'))
 
+        console.log(chalk.yellow('initializing proxied contract...'))
+
+        const rpsMasked = await IRockPaperScissors.at(rpsProxy.address)
+        await rpsMasked.initialize(
+          reg.address,
+          defaultMinBet,
+          defaultTimeoutInSeconds,
+          defaultReferralFeePerMille,
+          defaultFeePerMille,
+          {
+            from: owner
+          }
+        )
+
+        console.log(chalk.cyan('proxy initialization complete'))
+
         console.log(
           chalk.yellow('masking multi proxy setup as single contract...')
         )
@@ -106,7 +128,9 @@ module.exports = (deployer, network, accounts) => {
         )
         const iRpsBuild = JSON.parse(fs.readFileSync(iRpsBuildPath))
         const networkId = await web3.eth.net.getId()
-        iRpsBuild.networks[networkId] = rpsProxy.address
+        iRpsBuild.networks[networkId] = {}
+        iRpsBuild.networks[networkId].address = rpsProxy.address
+
         fs.writeFileSync(iRpsBuildPath, JSON.stringify(iRpsBuild, null, 2))
 
         console.log(chalk.cyan('masking complete'))

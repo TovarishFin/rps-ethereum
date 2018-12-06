@@ -4,7 +4,7 @@ export const rockPaperScissors = state =>
   pathOr(null, ['rockPaperScissors'], state)
 
 export const rockPaperScissorsWs = state =>
-  pathOr(null, ['rockPaperScissorsWsZ'], state)
+  pathOr(null, ['rockPaperScissorsWs'], state)
 
 export const paused = state => pathOr(false, ['paused'], state)
 

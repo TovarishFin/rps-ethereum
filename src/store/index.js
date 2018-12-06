@@ -4,6 +4,7 @@ import network from './network'
 import layout from './layout'
 import route from './route'
 import bank from './bank'
+import rockPaperScissors from './rockPaperScissors'
 import stateWatchers from './plugins/stateWatchers'
 
 Vue.use(Vuex)
@@ -17,7 +18,8 @@ export default new Store({
     network,
     layout,
     route,
-    bank
+    bank,
+    rockPaperScissors
   },
   plugins: [stateWatchers]
 })

@@ -1,5 +1,6 @@
 import RockPaperScissors from '@/../contractsBuild/IRockPaperScissors'
 import { toBN } from 'web3-utils'
+import { addressZero } from '@/utils/data'
 
 //
 // start contract state setup functions
@@ -7,7 +8,7 @@ import { toBN } from 'web3-utils'
 
 export const setupRockPaperScissors = async ({ getters, commit }) => {
   const { web3, networkId } = getters
-  const rockPaperScissors = new web3.eth.Contract(
+  const rockPaperScissors = await new web3.eth.Contract(
     RockPaperScissors.abi,
     RockPaperScissors.networks[networkId].address
   )
@@ -17,7 +18,7 @@ export const setupRockPaperScissors = async ({ getters, commit }) => {
 
 export const setupRockPaperScissorsWs = async ({ getters, commit }) => {
   const { web3Ws, networkId } = getters
-  const rockPaperScissorsWs = new web3Ws.eth.Contract(
+  const rockPaperScissorsWs = await new web3Ws.eth.Contract(
     RockPaperScissors.abi,
     RockPaperScissors.networks[networkId].address
   )
@@ -114,7 +115,7 @@ export const getOpenGames = async ({ getters, commit }) => {
 
 export const createGame = async (
   { getters },
-  { referrer, tokenAddress, value }
+  { referrer = addressZero, tokenAddress, value }
 ) => {
   const { rockPaperScissors, coinbase } = getters
   await rockPaperScissors.methods

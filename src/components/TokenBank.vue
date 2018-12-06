@@ -8,6 +8,7 @@
         v-model="tokenAddress"
         label="Token Address"
         :placeholder="addressZero"
+        type="text"
         :rules="addressRules"
         required
       />
@@ -29,6 +30,7 @@
         v-model="tokenAddress"
         label="Token Address"
         :placeholder="addressZero"
+        type="text"
         :rules="addressRules"
         required
       />

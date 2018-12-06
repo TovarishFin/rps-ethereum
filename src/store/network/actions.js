@@ -135,12 +135,25 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
   await dispatch('setupWeb3')
   await dispatch('getNetworkData')
   await dispatch('setupWeb3Ws')
-  await dispatch('setupBank')
-  await dispatch('setupBankWs')
-  await dispatch('setupWrappedEther')
-  await dispatch('setupWrappedEtherWs')
-  await dispatch('setupTestToken')
-  await dispatch('setupTestTokenWs')
+  await Promise.all([
+    dispatch('setupBank'),
+    dispatch('setupBankWs'),
+    dispatch('setupRockPaperScissors'),
+    dispatch('setupRockPaperScissorsWs'),
+    dispatch('setupWrappedEther'),
+    dispatch('setupWrappedEtherWs'),
+    dispatch('setupTestToken'),
+    dispatch('setupTestTokenWs')
+  ])
+  await Promise.all([
+    dispatch('getPaused'),
+    dispatch('getTimeoutInSeconds'),
+    dispatch('getReferralFeePerMille'),
+    dispatch('getFeePerMille'),
+    dispatch('getTotalPlayCount'),
+    dispatch('getTotalWinCount'),
+    dispatch('getTotalReferralVolume')
+  ])
   await dispatch('getCoinbase')
   await commit('setEthReady', true)
 
