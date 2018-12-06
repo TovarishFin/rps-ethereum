@@ -49,8 +49,10 @@ contract RockPaperScissorsCommon is Upgradeable {
   //
 
   mapping(uint256 => Game) public games;
+  uint256[] public openGames;
+  mapping(uint256 => uint256) public openGameIndex;
   mapping(address => uint256[]) public activeGamesOf;
-  mapping(uint256 => uint256) public activeGameIndex;
+  mapping(uint256 => uint256) public activeGameOfIndex;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) public referredBy;
 
@@ -225,7 +227,7 @@ contract RockPaperScissorsCommon is Upgradeable {
   )
     internal
   {
-    uint256 _index = activeGameIndex[_gameId];
+    uint256 _index = activeGameOfIndex[_gameId];
 
     activeGamesOf[_player][_index] = activeGamesOf[_player][activeGamesOf[_player].length - 1];
 
@@ -243,13 +245,29 @@ contract RockPaperScissorsCommon is Upgradeable {
   
   function enterStage(
     uint256 _gameId,
-    Stage _stage
+    Stage _newStage
   ) 
     internal
   {
-    games[_gameId].stage = _stage;
+    Stage _oldStage = games[_gameId].stage;
 
-    emit StageChanged(_gameId, uint256(_stage));
+    // add gameId to openGames if newly created
+    if (_oldStage == Stage.Uninitialized && _newStage == Stage.Created) {
+      openGames.push(_gameId);
+    }
+
+    // remove gameId from openGames if leaving created status (someone joins/cancels)
+    if (_oldStage == Stage.Created && _newStage != Stage.Created) {
+      uint256 _operatingIndex = openGameIndex[_gameId];
+      uint256 _replacingGameId = openGames[openGames.length.sub(1)];
+      openGames[_operatingIndex] = _replacingGameId;
+      openGames.length = openGames.length.sub(1);
+      openGameIndex[_replacingGameId] = _operatingIndex;
+    }
+
+    games[_gameId].stage = _newStage;
+
+    emit StageChanged(_gameId, uint256(_newStage));
   }
 
   function computeWinner(

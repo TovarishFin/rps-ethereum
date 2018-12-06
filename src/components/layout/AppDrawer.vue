@@ -63,6 +63,11 @@ export default {
           icon: 'mdi-bank',
           title: 'Bank',
           to: '/bank'
+        },
+        {
+          icon: 'mdi-rocket',
+          title: 'Create Game',
+          to: '/create-game'
         }
       ]
     }

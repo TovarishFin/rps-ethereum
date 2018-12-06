@@ -54,7 +54,9 @@ contract IRockPaperScissors {
 
   mapping(uint256 => Game) public games;
   mapping(address => uint256[]) public activeGamesOf;
-  mapping(uint256 => uint256) public activeGameIndex;
+  uint256[] public openGames;
+  mapping(uint256 => uint256) public openGameIndex;
+  mapping(uint256 => uint256) public activeGameOfIndex;
   mapping(uint256 => uint256) public timingOutGames;
   mapping(address => address) public referredBy;
 
@@ -188,6 +190,17 @@ contract IRockPaperScissors {
     uint256 _feePerMille
   )
     external;
+
+
+  function allOpenGames()
+    external
+    view
+    returns (uint256[]);
+
+  function openGamesLength()
+    external
+    view
+    returns (uint256);
 
   //
   // start game actions

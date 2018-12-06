@@ -10,7 +10,7 @@
         :placeholder="addressZero"
         :rules="addressRules"
         required
-      ></v-text-field>
+      />
       <v-text-field
         v-model="depositAmount"
         label="Deposit Amount"

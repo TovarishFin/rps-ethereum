@@ -135,6 +135,8 @@ const testCreateGame = async (
   const { from: creator, value: etherDesposit } = config
   const { rps, bnk, weth } = contracts
 
+  const preOpenGames = await rps.allOpenGames()
+  const preOpenGamesLength = await rps.openGamesLength()
   const preAllocatedTokens = await bnk.allocatedTokensOf(creator, tokenAddress)
   const preBankWethBalance = await bnk.tokenBalanceOf(creator, weth.address)
   const preLastGameId = await rps.lastGameId()
@@ -147,6 +149,8 @@ const testCreateGame = async (
   const postLastGameId = await rps.lastGameId()
   const postGame = await rps.games(preLastGameId.add(toBN(1)))
   const postReferredBy = await rps.referredBy(creator)
+  const postOpenGames = await rps.allOpenGames()
+  const postOpenGamesLength = await rps.openGamesLength()
 
   if (tokenAddress == weth.address) {
     assert.equal(
@@ -159,6 +163,19 @@ const testCreateGame = async (
     )
   }
 
+  assert(
+    !preOpenGames.map(bn => bn.toString()).includes(postLastGameId.toString()),
+    'newly created gameId (postLastGameId) should NOT be included in openGames before creation'
+  )
+  assert(
+    postOpenGames.map(bn => bn.toString()).includes(postLastGameId.toString()),
+    'newly created gameId (postLastGameId) should be included in openGames after creation'
+  )
+  assert.equal(
+    postOpenGamesLength.sub(preOpenGamesLength).toString(),
+    '1',
+    'openGamesLength should be incremented by 1'
+  )
   assert.equal(
     postAllocatedTokens.sub(preAllocatedTokens).toString(),
     tokenDeposit.toString(),
@@ -220,18 +237,21 @@ const testJoinGame = async (contracts, referrer, gameId, config) => {
   const { from: joiner, value: etherDesposit } = config
   const { rps, bnk, weth } = contracts
 
+  const preOpenGames = await rps.allOpenGames()
+  const preOpenGamesLength = await rps.openGamesLength()
   const preGame = await rps.games(gameId)
   const { tokenAddress, bet: betAmount } = preGame
 
   const preAllocatedTokens = await bnk.allocatedTokensOf(joiner, tokenAddress)
   const preBankWethBalance = await bnk.tokenBalanceOf(joiner, weth.address)
-
   await rps.joinGame(referrer, gameId, config)
 
   const postGame = await rps.games(gameId)
   const postAllocatedTokens = await bnk.allocatedTokensOf(joiner, tokenAddress)
   const postBankWethBalance = await bnk.tokenBalanceOf(joiner, weth.address)
   const postReferredBy = await rps.referredBy(joiner)
+  const postOpenGames = await rps.allOpenGames()
+  const postOpenGamesLength = await rps.openGamesLength()
 
   if (tokenAddress == weth.address) {
     assert.equal(
@@ -244,6 +264,19 @@ const testJoinGame = async (contracts, referrer, gameId, config) => {
     )
   }
 
+  assert(
+    preOpenGames.map(bn => bn.toString()).includes(gameId.toString()),
+    'gameId should be included in openGames before joining'
+  )
+  assert(
+    !postOpenGames.map(bn => bn.toString()).includes(gameId.toString()),
+    'gameId should NOT be included in openGames after joining'
+  )
+  assert.equal(
+    preOpenGamesLength.sub(postOpenGamesLength).toString(),
+    '1',
+    'openGamesLength should be decremented by 1'
+  )
   assert.equal(
     postAllocatedTokens.sub(preAllocatedTokens).toString(),
     betAmount.toString(),

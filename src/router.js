@@ -29,6 +29,11 @@ export default new Router({
       component: () => import('@/components/pages/PlayMoney.vue')
     },
     {
+      path: '/create-game',
+      name: 'Create Game',
+      component: () => import('@/components/pages/CreateGame.vue')
+    },
+    {
       path: '/no-account',
       name: 'No Account',
       component: () => import('@/components/layout/NoAccount.vue')

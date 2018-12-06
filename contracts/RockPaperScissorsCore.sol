@@ -6,28 +6,6 @@ import "./RockPaperScissorsCommon.sol";
 
 contract RockPaperScissorsCore is RockPaperScissorsCommon {
 
-  function initialize(
-    address _registryAddress,
-    uint256 _minBet,
-    uint256 _timeoutInSeconds,
-    uint256 _referralFeePerMille,
-    uint256 _feePerMille
-  )
-    external
-    initOneTimeOnly
-  {
-    require(isContract(_registryAddress));
-    require(_timeoutInSeconds >= 1 * 60);
-    require(_referralFeePerMille <= _feePerMille);
-    require(_feePerMille >= _referralFeePerMille);
-
-    registry = IRegistry(_registryAddress);
-    minBet = _minBet;
-    timeoutInSeconds = _timeoutInSeconds;
-    referralFeePerMille = _referralFeePerMille;
-    feePerMille = _feePerMille;
-  }
-
   function choiceSecretMatches(
     uint256 _gameId,
     Choice _choice,
@@ -54,6 +32,44 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
         uint256(_choice),
         _sig
     )) == _secret;
+  }
+
+  function initialize(
+    address _registryAddress,
+    uint256 _minBet,
+    uint256 _timeoutInSeconds,
+    uint256 _referralFeePerMille,
+    uint256 _feePerMille
+  )
+    external
+    initOneTimeOnly
+  {
+    require(isContract(_registryAddress));
+    require(_timeoutInSeconds >= 1 * 60);
+    require(_referralFeePerMille <= _feePerMille);
+    require(_feePerMille >= _referralFeePerMille);
+
+    registry = IRegistry(_registryAddress);
+    minBet = _minBet;
+    timeoutInSeconds = _timeoutInSeconds;
+    referralFeePerMille = _referralFeePerMille;
+    feePerMille = _feePerMille;
+  }
+
+  function allOpenGames()
+    external
+    view
+    returns (uint256[])
+  {
+    return openGames;
+  }
+
+  function openGamesLength()
+    external
+    view
+    returns (uint256)
+  {
+    return openGames.length;
   }
 
   //
@@ -89,18 +105,13 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     }
 
     lastGameId++;
-    games[lastGameId] = Game(
-      msg.sender,
-      address(0),
-      address(0),
-      _tokenAddress,
-      _value,
-      Choice(0),
-      Choice(0),
-      bytes32(0),
-      bytes32(0),
-      Stage.Created
-    );
+
+    Game storage _newGame = games[lastGameId];
+    _newGame.addressP1 = msg.sender;
+    _newGame.tokenAddress = _tokenAddress;
+    _newGame.bet = _value;
+
+    enterStage(lastGameId, Stage.Created);
   }
 
   function cancelGame(
