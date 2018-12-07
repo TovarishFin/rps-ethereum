@@ -89,6 +89,15 @@ export const getTotalWinCount = async ({ getters, commit }) => {
   commit('setTotalWinCount', totalWinCount)
 }
 
+export const getTotalWinVolume = async ({ getters, commit }) => {
+  const { rockPaperScissorsWs } = getters
+  const totalWinVolume = await rockPaperScissorsWs.methods
+    .totalWinVolume()
+    .call()
+
+  commit('setTotalWinVolume', totalWinVolume)
+}
+
 export const getTotalReferralVolume = async ({ getters, commit }) => {
   const { rockPaperScissorsWs } = getters
   const totalReferralVolume = await rockPaperScissorsWs.methods
@@ -101,15 +110,26 @@ export const getTotalReferralVolume = async ({ getters, commit }) => {
 export const getGame = async ({ getters, commit }, gameId) => {
   const { rockPaperScissorsWs } = getters
   const game = await rockPaperScissorsWs.methods.games(gameId).call()
+  game.gameId = gameId
 
   commit('setGame', { gameId, game })
 }
 
 export const getOpenGames = async ({ getters, commit }) => {
   const { rockPaperScissors } = getters
-  const openGames = await rockPaperScissors.methods.allOpenGames().call()
+  const openGameIds = await rockPaperScissors.methods.allOpenGames().call()
 
-  commit('setOpenGames', openGames)
+  commit('setOpenGames', openGameIds)
+}
+
+export const populateGames = async ({ getters, dispatch }) => {
+  const { openGameIds } = getters
+  const promises = []
+  for (const gameId of openGameIds) {
+    promises.push(dispatch('getGame', gameId))
+  }
+
+  await Promise.all(promises)
 }
 
 //
@@ -242,4 +262,16 @@ export const updateFeePerMille = async ({ getters }, newFeePerMille) => {
 
 //
 // end owner contract state setters
+//
+
+//
+// start local state setters
+//
+
+export const setSelectedGameId = ({ commit }, gameId) => {
+  commit('setSelectedGameId', gameId)
+}
+
+//
+// end local state setters
 //

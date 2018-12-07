@@ -34,6 +34,10 @@ export const setTotalWinCount = (state, totalWinCount) => {
   state.totalWinCount = totalWinCount
 }
 
+export const setTotalWinVolume = (state, totalWinVolume) => {
+  state.totalWinVolume = totalWinVolume
+}
+
 export const setTotalReferralVolume = (state, totalReferralVolume) => {
   state.totalReferralVolume = totalReferralVolume
 }
@@ -42,6 +46,10 @@ export const setGame = (state, { gameId, game }) => {
   state.games = { ...state.games, [gameId]: game }
 }
 
-export const setOpenGames = (state, openGames) => {
-  state.openGames = openGames
+export const setOpenGames = (state, openGameIds) => {
+  state.openGameIds = openGameIds
+}
+
+export const setSelectedGameId = (state, selectedGameId) => {
+  state.selectedGameId = selectedGameId
 }

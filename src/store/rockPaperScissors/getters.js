@@ -1,4 +1,5 @@
 import { pathOr } from 'ramda'
+import { gameZero } from '@/utils/data'
 
 export const rockPaperScissors = state =>
   pathOr(null, ['rockPaperScissors'], state)
@@ -21,9 +22,17 @@ export const totalPlayCount = state => pathOr(0, ['totalPlayCount'], state)
 
 export const totalWinCount = state => pathOr(0, ['totalWinCount'], state)
 
+export const totalWinVolume = state => pathOr(0, ['totalWinVolume'], state)
+
 export const totalReferralVolume = state =>
   pathOr(0, ['totalReferralVolume'], state)
 
-export const game = state => gameId => pathOr(null, ['games', gameId], state)
+export const game = state => gameId =>
+  pathOr(gameZero, ['games', gameId], state)
 
-export const openGames = state => pathOr([], ['openGames'], state)
+export const openGameIds = state => pathOr([], ['openGameIds'], state)
+
+export const openGames = state =>
+  openGameIds(state).map(gameId => game(state)(gameId))
+
+export const selectedGameId = state => pathOr(0, ['selectedGameId'], state)

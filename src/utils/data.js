@@ -16,6 +16,40 @@ export const tokenZero = {
   allocatedBalance: 0
 }
 
+export const gameZero = {
+  addressP1: addressZero,
+  addressP2: addressZero,
+  winner: addressZero,
+  tokenAddress: addressZero,
+  bet: 0,
+  choiceP1: 0,
+  choiceP2: 0,
+  choiceSecretP1: bytes32Zero,
+  choiceSecretP2: bytes32Zero,
+  stage: 0,
+  gameId: 0
+}
+
+export const stageEnum = {
+  '0': 'Uninitialized',
+  '1': 'Created',
+  '2': 'Cancelled',
+  '3': 'Ready',
+  '4': 'Committed',
+  '5': 'Timing Out',
+  '6': 'Timed Out',
+  '7': 'Tied',
+  '8': 'Winner Decided',
+  '9': 'Paid'
+}
+
+export const choiceEnum = {
+  '0': 'Undecided',
+  '1': 'Rock',
+  '2': 'Paper',
+  '3': 'Scissors'
+}
+
 export const decimals18 = new BN(10).pow(new BN(18))
 
 export const decimalsAccuracy = new BN(10).pow(new BN(5))

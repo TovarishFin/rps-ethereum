@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/pages/Home.vue'
 
 Vue.use(Router)
 
@@ -11,7 +10,7 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: () => import('@/components/pages/Home.vue')
     },
     {
       path: '/about',
@@ -32,6 +31,11 @@ export default new Router({
       path: '/create-game',
       name: 'Create Game',
       component: () => import('@/components/pages/CreateGame.vue')
+    },
+    {
+      path: '/game/:gameId',
+      name: 'Game',
+      component: () => import('@/components/pages/Game.vue')
     },
     {
       path: '/no-account',

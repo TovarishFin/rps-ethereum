@@ -152,14 +152,15 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
     dispatch('getFeePerMille'),
     dispatch('getTotalPlayCount'),
     dispatch('getTotalWinCount'),
-    dispatch('getTotalReferralVolume')
+    dispatch('getTotalWinVolume'),
+    dispatch('getTotalReferralVolume'),
+    dispatch('getOpenGames'),
+    dispatch('getWethAddress'),
+    dispatch('getCoinbaseTokenUsage')
   ])
   await dispatch('getCoinbase')
   await commit('setEthReady', true)
 
-  // TODO: REMOVE THIS (for initial testing for now...)
-  await dispatch('getWethAddress')
-  await dispatch('getCoinbaseTokenUsage')
   dispatch('watchCoinbase')
   dispatch('watchNetwork')
 }

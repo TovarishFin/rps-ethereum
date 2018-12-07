@@ -8,7 +8,9 @@ export default {
   feePerMille: 0,
   totalPlayCount: 0,
   totalWinCount: 0,
+  totalWinVolume: 0,
   totalReferralVolume: 0,
   games: null,
-  openGames: []
+  openGameIds: [],
+  selectedGameId: 0
 }
