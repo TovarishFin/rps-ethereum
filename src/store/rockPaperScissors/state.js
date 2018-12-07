@@ -2,6 +2,7 @@ export default {
   rockPaperScissors: null,
   rockPaperScissorsWs: null,
   paused: false,
+  minBet: 0,
   timeoutInSeconds: 0,
   referralFeePerMille: 0,
   feePerMille: 0,

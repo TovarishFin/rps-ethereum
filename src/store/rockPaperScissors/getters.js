@@ -8,6 +8,8 @@ export const rockPaperScissorsWs = state =>
 
 export const paused = state => pathOr(false, ['paused'], state)
 
+export const minBet = state => pathOr(false, ['minBet'], state)
+
 export const timeoutInSeconds = state => pathOr(0, ['timeoutInSeconds'], state)
 
 export const referralFeePerMille = state =>

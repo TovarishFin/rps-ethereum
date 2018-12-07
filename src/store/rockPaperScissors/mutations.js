@@ -10,6 +10,10 @@ export const setPaused = (state, paused) => {
   state.paused = paused
 }
 
+export const setMinBet = (state, minBet) => {
+  state.minBet = minBet
+}
+
 export const setTimeoutInSeconds = (state, timeoutInSeconds) => {
   state.timeoutInSeconds = timeoutInSeconds
 }

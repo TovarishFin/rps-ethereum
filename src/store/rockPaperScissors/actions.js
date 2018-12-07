@@ -41,6 +41,13 @@ export const getPaused = async ({ getters, commit }) => {
   commit('setPaused', paused)
 }
 
+export const getMinBet = async ({ getters, commit }) => {
+  const { rockPaperScissorsWs } = getters
+  const paused = await rockPaperScissorsWs.methods.minBet().call()
+
+  commit('setMinBet', paused)
+}
+
 export const getTimeoutInSeconds = async ({ getters, commit }) => {
   const { rockPaperScissorsWs } = getters
   const timeoutInSeconds = await rockPaperScissorsWs.methods

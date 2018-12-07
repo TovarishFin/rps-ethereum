@@ -45,37 +45,10 @@ export default {
   },
   data() {
     return {
-      addressRules: [v => this.isAddress(v) || 'must be a valid address'],
-      valueRules: [v => parseFloat(v) > 0 || 'must be non zero value'],
       depositAmount: 0,
       withdrawAmount: 0,
-      tokenHeaders: [
-        {
-          text: 'Use',
-          sortable: false
-        },
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'name'
-        },
-        {
-          text: 'Address',
-          value: 'address'
-        },
-        {
-          text: 'Symbol',
-          value: 'symbol'
-        },
-        {
-          text: 'Balance',
-          value: 'balance'
-        },
-        {
-          text: 'Deposited Balance',
-          value: 'depositedBalance'
-        }
-      ]
+      addressRules: [v => this.isAddress(v) || 'must be a valid address'],
+      valueRules: [v => parseFloat(v) > 0 || 'must be non zero value']
     }
   },
   methods: {

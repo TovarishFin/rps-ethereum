@@ -48,6 +48,7 @@
   </span>
 </template>
 <script>
+import { toBN } from 'web3-utils'
 import { mapGetters, mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
@@ -55,7 +56,6 @@ import * as VBtn from 'vuetify/es5/components/VBtn'
 import * as VCheckbox from 'vuetify/es5/components/VCheckbox'
 import TokenDataOf from './TokenDataOf.vue'
 import TokenDepositWarnings from './TokenDepositWarnings'
-import { toBN } from 'web3-utils'
 
 export default {
   components: {
@@ -68,19 +68,18 @@ export default {
   },
   data() {
     return {
+      depositAmount: 0,
+      withdrawAmount: 0,
       addressRules: [v => this.isAddress(v) || 'must be a valid address'],
       valueRules: [
         v => {
           const wei = this.ethToWei(v)
-          // console.log(wei, wei.toString(), wei.gt(0))
           return (
-            (!wei.isZero() && wei.lte(toBN(this.tokenData.balance))) ||
-            'must be non zero value and less than or equal to your token balance'
+            (!wei.isZero() && wei.lte(toBN(this.tokenData.depositedBalance))) ||
+            'must be non zero value and less than or equal to your deposited token balance'
           )
         }
-      ],
-      depositAmount: 0,
-      withdrawAmount: 0
+      ]
     }
   },
   computed: {
@@ -100,7 +99,6 @@ export default {
   methods: {
     ...mapActions([
       'setSelectedTokenAddress',
-      'getTokenDataOf',
       'batchDepositTokens',
       'withdrawTokens',
       'createNotification'
@@ -135,13 +133,6 @@ export default {
           value: this.ethToWei(this.withdrawAmount)
         })
         this.clearWithdraw()
-      }
-    }
-  },
-  watch: {
-    tokenAddress() {
-      if (this.isAddress(this.tokenAddress)) {
-        this.getTokenDataOf(this.tokenAddress)
       }
     }
   }
