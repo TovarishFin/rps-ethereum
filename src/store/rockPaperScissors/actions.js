@@ -160,7 +160,10 @@ export const cancelGame = async ({ getters }, gameId) => {
   })
 }
 
-export const joinGame = async ({ getters }, { referrer, gameId, value }) => {
+export const joinGame = async (
+  { getters },
+  { referrer = addressZero, gameId, value }
+) => {
   const { rockPaperScissors, coinbase } = getters
   await rockPaperScissors.methods.joinGame(referrer, gameId).send({
     from: coinbase,

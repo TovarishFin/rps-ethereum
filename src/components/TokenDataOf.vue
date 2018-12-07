@@ -29,13 +29,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VDataTable from 'vuetify/es5/components/VDataTable'
 import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
   components: {
-    ...VTextField,
     ...VDataTable,
     ...VCard
   },
