@@ -7,6 +7,7 @@ import "./interfaces/IWrappedEther.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+// TODO: tokenUsage is getting added more than once somewhere! check on this!
 contract Bank {
   using SafeMath for uint256;
 
