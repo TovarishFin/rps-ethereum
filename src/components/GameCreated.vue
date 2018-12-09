@@ -1,7 +1,18 @@
 <template>
   <span>
-    <p class="display-1">Join the game</p>
-    <v-btn @click="validateAndJoinGame">join game</v-btn>
+    <span v-show="!coinbaseIsCreator">
+      <p class="display-1">Join the game</p>
+      <v-btn @click="validateAndJoinGame">join game</v-btn>
+    </span>
+
+    <span v-show="coinbaseIsCreator">
+      <p class="display-1">Waiting on Player to Join Game...</p>
+      <p>
+        If it is taking too long for someone to join, you can canel your game
+        any time before another player joins.
+      </p>
+      <v-btn @click="cancelGame(gameData.gameId)">cancel game</v-btn>
+    </span>
   </span>
 </template>
 
@@ -27,10 +38,13 @@ export default {
     },
     tokenData() {
       return this.tokenDataOf(this.selectedTokenAddress)
+    },
+    coinbaseIsCreator() {
+      return this.coinbase === this.gameData.addressP1
     }
   },
   methods: {
-    ...mapActions(['joinGame', 'createNotification']),
+    ...mapActions(['joinGame', 'createNotification', 'cancelGame']),
     validateAndJoinGame() {
       const { bet, addressP1 } = this.gameData
       const { depositedBalance } = this.tokenData
@@ -46,7 +60,7 @@ export default {
         })
       } else {
         this.createNotification(
-          'Your deposited token balance is too low to join or you are trying to join your own game... you cannot do that...'
+          'Your deposited token balance is too low to join.'
         )
       }
     }

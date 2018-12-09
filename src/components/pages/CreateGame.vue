@@ -22,9 +22,9 @@
         :rules="betAmountRules"
         required
       />
+      <v-btn @click="validateAndCreateBet">create game</v-btn>
+      <v-btn @click="clearForm">clear</v-btn>
     </v-form>
-    <v-btn @click="validateAndCreateBet">create game</v-btn>
-    <v-btn @click="clearForm">clear</v-btn>
   </div>
 </template>
 

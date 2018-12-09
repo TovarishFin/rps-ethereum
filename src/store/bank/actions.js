@@ -77,14 +77,14 @@ export const setupTestTokenWs = async ({ commit, getters }) => {
 //
 
 export const getWethAddress = async ({ commit, getters }) => {
-  const { bank } = getters
-  const wethAddress = await bank.methods.weth().call()
+  const { bankWs } = getters
+  const wethAddress = await bankWs.methods.weth().call()
   commit('setWethAddress', wethAddress)
 }
 
 export const getCoinbaseTokenUsage = async ({ commit, getters }) => {
-  const { bank, coinbase } = getters
-  const usage = await bank.methods.getAllUsedTokens(coinbase).call()
+  const { bankWs, coinbase } = getters
+  const usage = await bankWs.methods.getAllUsedTokens(coinbase).call()
   commit('setCoinbaseTokenUsage', usage)
 }
 
@@ -92,7 +92,7 @@ export const getTokenDataOf = async (
   { commit, getters, dispatch },
   tokenAddress
 ) => {
-  const { web3Ws, bank, coinbase } = getters
+  const { web3Ws, bankWs, coinbase } = getters
   try {
     const erc20 = new web3Ws.eth.Contract(IERC20Extended.abi, tokenAddress)
     const data = await Promise.all([
@@ -100,8 +100,8 @@ export const getTokenDataOf = async (
       erc20.methods.symbol().call(),
       erc20.methods.decimals().call(),
       erc20.methods.balanceOf(coinbase).call(),
-      bank.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
-      bank.methods.allocatedTokensOf(coinbase, tokenAddress).call()
+      bankWs.methods.tokenBalanceOf(coinbase, tokenAddress).call(),
+      bankWs.methods.allocatedTokensOf(coinbase, tokenAddress).call()
     ])
     const tokenData = {
       name: data[0],

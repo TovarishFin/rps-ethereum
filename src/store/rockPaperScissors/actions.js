@@ -1,5 +1,5 @@
 import RockPaperScissors from '@/../contractsBuild/IRockPaperScissors'
-import { toBN } from 'web3-utils'
+import { toBN, soliditySha3 } from 'web3-utils'
 import { addressZero } from '@/utils/data'
 
 //
@@ -116,8 +116,8 @@ export const getGame = async ({ getters, commit }, gameId) => {
 }
 
 export const getOpenGames = async ({ getters, commit }) => {
-  const { rockPaperScissors } = getters
-  const openGameIds = await rockPaperScissors.methods.allOpenGames().call()
+  const { rockPaperScissorsWs } = getters
+  const openGameIds = await rockPaperScissorsWs.methods.allOpenGames().call()
 
   commit('setOpenGames', openGameIds)
 }
@@ -171,8 +171,18 @@ export const joinGame = async (
   })
 }
 
-export const commitChoice = async ({ getters }, { gameId, commitHash }) => {
-  const { rockPaperScissors, coinbase } = getters
+export const commitChoice = async ({ getters }, { gameId, choice }) => {
+  const { rockPaperScissors, coinbase, web3Ws } = getters
+  const sigParams = await web3Ws.eth.abi.encodeParameters(
+    ['uint256', 'uint256'],
+    [gameId, choice]
+  )
+  const sig = await web3Ws.eth.sign(sigParams, coinbase)
+  const commitHash = soliditySha3(
+    { t: 'uint256', v: gameId },
+    { t: 'uint256', v: choice },
+    { t: 'bytes', v: sig }
+  )
   await rockPaperScissors.methods.commitChoice(gameId, commitHash).send({
     from: coinbase
   })

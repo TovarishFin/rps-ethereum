@@ -135,6 +135,7 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
   await dispatch('setupWeb3')
   await dispatch('getNetworkData')
   await dispatch('setupWeb3Ws')
+  await dispatch('getCoinbase')
   await Promise.all([
     dispatch('setupBank'),
     dispatch('setupBankWs'),
@@ -158,7 +159,6 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
     dispatch('getWethAddress'),
     dispatch('getCoinbaseTokenUsage')
   ])
-  await dispatch('getCoinbase')
   await commit('setEthReady', true)
 
   dispatch('watchCoinbase')
