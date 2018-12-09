@@ -72,6 +72,16 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     return openGames.length;
   }
 
+  function gameHasTimedOut(
+    uint256 _gameId
+  )
+    external
+    view
+    returns (bool)
+  {
+    return block.timestamp >= timingOutGames[_gameId];
+  }
+
   //
   // start game actions
   //

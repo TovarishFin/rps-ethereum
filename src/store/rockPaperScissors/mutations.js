@@ -53,3 +53,11 @@ export const setOpenGames = (state, openGameIds) => {
 export const setSelectedGameId = (state, selectedGameId) => {
   state.selectedGameId = selectedGameId
 }
+
+export const setCommits = (state, choiceCommits) => {
+  state.choiceCommits = choiceCommits
+}
+
+export const setCommit = (state, { choiceCommit, gameId }) => {
+  state.choiceCommits = { ...state.choiceCommits, [gameId]: choiceCommit }
+}

@@ -36,3 +36,10 @@ export const openGames = state =>
   openGameIds(state).map(gameId => game(state)(gameId))
 
 export const selectedGameId = state => pathOr(0, ['selectedGameId'], state)
+
+export const referrer = state => pathOr(null, ['referrer'], state)
+
+export const choiceCommits = state => pathOr({}, ['choiceCommits'], state)
+
+export const choiceCommit = state => gameId =>
+  pathOr(null, ['choiceCommits', gameId], state)

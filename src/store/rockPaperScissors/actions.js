@@ -172,7 +172,7 @@ export const joinGame = async (
   })
 }
 
-export const commitChoice = async ({ getters }, { gameId, choice }) => {
+export const commitChoice = async ({ getters, commit }, { gameId, choice }) => {
   const { rockPaperScissors, coinbase, web3Ws } = getters
   const sigParams = await web3Ws.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
@@ -187,6 +187,16 @@ export const commitChoice = async ({ getters }, { gameId, choice }) => {
   await rockPaperScissors.methods.commitChoice(gameId, commitHash).send({
     from: coinbase
   })
+
+  const choiceCommit = {
+    gameId,
+    choice,
+    sigParams,
+    sig,
+    commitHash
+  }
+
+  commit('setCommit', { choiceCommit, gameId })
 }
 
 export const revealChoice = async ({ getters }, { gameId, choice, sig }) => {
@@ -194,6 +204,20 @@ export const revealChoice = async ({ getters }, { gameId, choice, sig }) => {
   await rockPaperScissors.methods.revealChoice(gameId, choice, sig).send({
     from: coinbase
   })
+}
+
+export const rebuildAndRevealChoice = async (
+  { getters },
+  { gameId, choice }
+) => {
+  const { coinbase, web3Ws } = getters
+  const sigParams = await web3Ws.eth.abi.encodeParameters(
+    ['uint256', 'uint256'],
+    [gameId, choice]
+  )
+  const sig = await web3Ws.eth.sign(sigParams, coinbase)
+
+  await revealChoice({ getters }, { gameId, choice, sig })
 }
 
 export const startGameTimeout = async ({ getters }, gameId) => {

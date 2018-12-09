@@ -12,5 +12,7 @@ export default {
   totalReferralVolume: 0,
   games: null,
   openGameIds: [],
-  selectedGameId: 0
+  selectedGameId: 0,
+  referrer: null,
+  choiceCommits: {}
 }

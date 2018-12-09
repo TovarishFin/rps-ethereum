@@ -19,6 +19,9 @@
       class="elevation-1 mb-4"
     >
       <template slot="items" slot-scope="props">
+        <td class="text-xs-left">
+          <v-btn @click="goToGame(props.item.gameId)">view game</v-btn>
+        </td>
         <td class="text-xs-left">{{ props.item.gameId }}</td>
         <td class="text-xs-left">
           {{ shortenAddress(props.item.tokenAddress) }}
@@ -55,6 +58,10 @@ export default {
       gameSearch: '',
       gameHeaders: [
         {
+          text: 'View Game',
+          value: ''
+        },
+        {
           text: 'Game ID',
           value: 'gameId'
         },
@@ -83,6 +90,11 @@ export default {
       'totalWinVolume',
       'openGames'
     ])
+  },
+  methods: {
+    goToGame(gameId) {
+      this.$router.push({ name: 'Game', params: { gameId } })
+    }
   }
 }
 </script>
