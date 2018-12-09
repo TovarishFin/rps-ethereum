@@ -55,8 +55,7 @@ export default {
 
       if (valid) {
         this.joinGame({
-          gameId: this.selectedGameId,
-          value: wager
+          gameId: this.selectedGameId
         })
       } else {
         this.createNotification(

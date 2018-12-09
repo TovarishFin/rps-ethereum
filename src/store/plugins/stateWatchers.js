@@ -1,4 +1,4 @@
-import { isAddress } from '@/utils/data'
+import { isAddress, addressZero } from '@/utils/data'
 
 const actionIdWatcher = store => {
   store.subscribe(async ({ type, payload }) => {
@@ -9,7 +9,7 @@ const actionIdWatcher = store => {
         break
 
       case 'setSelectedTokenAddress':
-        if (isAddress(payload)) {
+        if (isAddress(payload) && payload !== addressZero) {
           store.dispatch('getTokenDataOf', payload)
         }
 

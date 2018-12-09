@@ -202,6 +202,13 @@ contract IRockPaperScissors {
     view
     returns (uint256);
 
+  function gameHasTimedOut(
+    uint256 _gameId
+  )
+    external
+    view
+    returns (bool);
+
   //
   // start game actions
   //

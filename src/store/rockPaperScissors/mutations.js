@@ -61,3 +61,7 @@ export const setCommits = (state, choiceCommits) => {
 export const setCommit = (state, { choiceCommit, gameId }) => {
   state.choiceCommits = { ...state.choiceCommits, [gameId]: choiceCommit }
 }
+
+export const setGameTimedOut = (state, { timedOut, gameId }) => {
+  state.games[gameId] = { ...state.games[gameId], timedOut }
+}

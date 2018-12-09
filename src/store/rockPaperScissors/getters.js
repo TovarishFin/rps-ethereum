@@ -43,3 +43,6 @@ export const choiceCommits = state => pathOr({}, ['choiceCommits'], state)
 
 export const choiceCommit = state => gameId =>
   pathOr(null, ['choiceCommits', gameId], state)
+
+export const gameTimedOut = state => gameId =>
+  pathOr(false, ['games', gameId, 'timedOut'], state)

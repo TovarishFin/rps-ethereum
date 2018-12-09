@@ -6,7 +6,7 @@
           Once when enough time has passed, you can timeout the game and win by
           default!
         </p>
-        <v-btn :disabled="canTimeoutGame" @click="timeoutGame(selectedGameId)"
+        <v-btn :disabled="!canTimeoutGame" @click="timeoutGame(selectedGameId)"
           >time out game</v-btn
         >
       </span>
@@ -31,7 +31,50 @@
       </span>
 
       <span v-show="canReveal">
-        <!-- TODO: implement reveal functionality and then put in here as well -->
+        <p class="headline">Reveal your choice on the blockchain</p>
+
+        <span v-show="choiceCommitDataExists">
+          <p>
+            You committed to {{ savedChoice }} for this game. This data is saved
+            locally on your device.
+          </p>
+          <p>click the button below to reveal your choice.</p>
+          <v-btn @click="revealChoice(choiceCommitData)"
+            >reveal your choice</v-btn
+          >
+        </span>
+
+        <span v-show="!choiceCommitDataExists">
+          <p>
+            Oh no! It looks like your commit data cannot be found locally on
+            your device. We can try to reconstruct it manually in order to
+            reveal it on the blockchain.
+          </p>
+
+          <p>
+            If you remember the choice that you made earlier, you can simply
+            select that and we should be able to reconstruct the needed data. If
+            you cannot remember, you can try different choices (rock, paper, or
+            scissors). One of them should work in order to reveal correctly. If
+            MetaMask shows that the transaction will likely fail, click "reject"
+            and try a different choice until you get a transaction that looks
+            like it will succeed.
+          </p>
+
+          <v-form ref="reveal-choice-form">
+            <v-select
+              v-model="choice"
+              :items="choices"
+              item-text="label"
+              item-value="value"
+              label="your choice"
+              :rules="choiceRules"
+              :return-object="false"
+              required
+            />
+            <v-btn @click="validateAndRevealChoice">commit your choice</v-btn>
+          </v-form>
+        </span>
       </span>
     </span>
 
@@ -65,12 +108,23 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['coinbase', 'selectedGameId', 'game']),
+    ...mapGetters(['coinbase', 'selectedGameId', 'game', 'choiceCommit']),
     choices() {
       return Object.keys(this.choiceEnum).map(val => ({
         value: val,
         label: this.choiceEnum[val]
       }))
+    },
+    choiceCommitData() {
+      return this.choiceCommit(this.selectedGameId)
+    },
+    choiceCommitDataExists() {
+      return this.choiceCommitData != null
+    },
+    savedChoice() {
+      return this.choiceCommitDataExists
+        ? this.choiceEnum[this.choiceCommitData.choice]
+        : ''
     },
     gameData() {
       return this.game(this.selectedGameId)
@@ -88,7 +142,8 @@ export default {
       }
     },
     canTimeoutGame() {
-      return true // TODO: properly validate this!
+      console.log(this.gameData.timedOut)
+      return this.gameData.timedOut
     },
     canCommit() {
       const { choiceSecretP1, choiceSecretP2 } = this.gameData
@@ -120,10 +175,25 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['timeoutGame', 'commitChoice', 'revealChoice']),
+    ...mapActions([
+      'timeoutGame',
+      'commitChoice',
+      'revealChoice',
+      'rebuildAndRevealChoice'
+    ]),
     validateAndCommitChoice() {
       if (this.$refs['commit-choice-form'].validate()) {
         this.commitChoice({
+          gameId: this.selectedGameId,
+          choice: this.choice
+        })
+
+        this.clearForm()
+      }
+    },
+    validateAndRevealChoice() {
+      if (this.$refs['reveal-choice-form'].validate()) {
+        this.rebuildAndRevealChoice({
           gameId: this.selectedGameId,
           choice: this.choice
         })

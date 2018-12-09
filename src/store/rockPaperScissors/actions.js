@@ -1,5 +1,5 @@
 import RockPaperScissors from '@/../contractsBuild/IRockPaperScissors'
-import { toBN, soliditySha3 } from 'web3-utils'
+import { soliditySha3 } from 'web3-utils'
 import { addressZero } from '@/utils/data'
 
 //
@@ -107,12 +107,14 @@ export const getTotalReferralVolume = async ({ getters, commit }) => {
   commit('setTotalReferralVolume', totalReferralVolume)
 }
 
-export const getGame = async ({ getters, commit }, gameId) => {
+export const getGame = async ({ getters, commit, dispatch }, gameId) => {
   const { rockPaperScissorsWs } = getters
   const game = await rockPaperScissorsWs.methods.games(gameId).call()
   game.gameId = gameId
 
   commit('setGame', { gameId, game })
+
+  await dispatch('checkGameTimeout', gameId)
 }
 
 export const getOpenGames = async ({ getters, commit }) => {
@@ -132,6 +134,14 @@ export const populateGames = async ({ getters, dispatch }) => {
   await Promise.all(promises)
 }
 
+export const checkGameTimeout = async ({ getters, commit }, gameId) => {
+  const { rockPaperScissorsWs } = getters
+  const timedOut = await rockPaperScissorsWs.methods
+    .gameHasTimedOut(gameId)
+    .call()
+  commit('setGameTimedOut', { timedOut, gameId })
+}
+
 //
 // end contract state getters
 //
@@ -148,8 +158,7 @@ export const createGame = async (
   await rockPaperScissors.methods
     .createGame(referrer, tokenAddress, value)
     .send({
-      from: coinbase,
-      value: toBN(value)
+      from: coinbase
     })
 }
 
@@ -160,15 +169,13 @@ export const cancelGame = async ({ getters }, gameId) => {
   })
 }
 
-// TODO: double check... we probably don't need value in config!!!
 export const joinGame = async (
   { getters },
-  { referrer = addressZero, gameId, value }
+  { referrer = addressZero, gameId }
 ) => {
   const { rockPaperScissors, coinbase } = getters
   await rockPaperScissors.methods.joinGame(referrer, gameId).send({
-    from: coinbase,
-    value: toBN(value)
+    from: coinbase
   })
 }
 
