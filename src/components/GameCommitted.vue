@@ -96,7 +96,6 @@ export default {
       }))
     },
     choiceCommitData() {
-      console.log(this.choiceCommit(this.selectedGameId))
       return this.choiceCommit(this.selectedGameId)
     },
     choiceCommitDataExists() {
