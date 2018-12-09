@@ -14,6 +14,15 @@ module.exports = async function(callback) {
   const tst = await TestToken.deployed()
   const rps = await RockPaperScissors.deployed()
   const betAmount = toBN(1e18)
+  let gameId
+  let choice1
+  let sigParams1
+  let sig1
+  let commitHash1
+  let choice2
+  let sigParams2
+  let sig2
+  let commitHash2
 
   //
   // start created
@@ -30,7 +39,6 @@ module.exports = async function(callback) {
   console.log(chalk.yellow('creating game...'))
 
   await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
-
   gameId = await rps.lastGameId()
 
   console.log(chalk.cyan('game creation complete'))
@@ -57,7 +65,7 @@ module.exports = async function(callback) {
 
   await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
 
-  let gameId = await rps.lastGameId()
+  gameId = await rps.lastGameId()
 
   console.log(chalk.cyan('game creation complete'))
 
@@ -141,26 +149,26 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('committing rock for acc 1 and paper for acc2...'))
 
-  let choice1 = '1'
-  let sigParams1 = await web3.eth.abi.encodeParameters(
+  choice1 = '1'
+  sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
     [gameId, choice1]
   )
-  let sig1 = await web3.eth.sign(sigParams1, creator)
-  let commitHash1 = soliditySha3(
+  sig1 = await web3.eth.sign(sigParams1, creator)
+  commitHash1 = soliditySha3(
     { t: 'uint256', v: gameId },
     { t: 'uint256', v: choice1 },
     { t: 'bytes', v: sig1 }
   )
   await rps.commitChoice(gameId, commitHash1, { from: creator })
 
-  let choice2 = '2'
-  let sigParams2 = await web3.eth.abi.encodeParameters(
+  choice2 = '2'
+  sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
     [gameId, choice2]
   )
-  let sig2 = await web3.eth.sign(sigParams2, creator)
-  let commitHash2 = soliditySha3(
+  sig2 = await web3.eth.sign(sigParams2, creator)
+  commitHash2 = soliditySha3(
     { t: 'uint256', v: gameId },
     { t: 'uint256', v: choice2 },
     { t: 'bytes', v: sig2 }
