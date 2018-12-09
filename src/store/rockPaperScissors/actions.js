@@ -124,6 +124,15 @@ export const getOpenGames = async ({ getters, commit }) => {
   commit('setOpenGames', openGameIds)
 }
 
+export const getCoinbaseActiveGames = async ({ getters, commit }) => {
+  const { rockPaperScissorsWs, coinbase } = getters
+  const activeGamesOf = await rockPaperScissorsWs.methods
+    .allActiveGamesOf(coinbase)
+    .call()
+
+  commit('setCoinbaseActiveGames', activeGamesOf)
+}
+
 export const populateGames = async ({ getters, dispatch }) => {
   const { openGameIds } = getters
   const promises = []

@@ -21,7 +21,7 @@ contract Bank {
   mapping(address => mapping(address => uint256)) public allocatedTokensOf;
 
   event FundsDeposited(
-    address indexed depositer,
+    address indexed depositor,
     address tokenAddress,
     uint256 value
   );

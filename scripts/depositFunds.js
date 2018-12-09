@@ -16,17 +16,21 @@ module.exports = async function(callback) {
     chalk.yellow('minting tst, depositing eth, deposting tokens in bank...')
   )
   for (const account of accounts) {
-    const mintAmount = toBN(5e18)
-    const deplositAmount = mintAmount.sub(toBN(2e18))
+    const mintAmount = toBN(20e18)
+    const depositAmount = mintAmount.sub(toBN(5e18))
     await tst.mint(account, mintAmount, { from: account })
-    await tst.approve(bnk.address, deplositAmount, { from: account })
-    await bnk.depositTokens(tst.address, deplositAmount, {
+    console.log(chalk.cyan(`minting complete for address ${account}`))
+    await tst.approve(bnk.address, depositAmount, { from: account })
+    console.log(chalk.cyan(`approve complete for address ${account}`))
+    await bnk.depositTokens(tst.address, depositAmount, {
       from: account
     })
-    await bnk.depositEther({ from: account, value: mintAmount })
+    console.log(chalk.cyan(`deposit tokens complete for address ${account}`))
+    await bnk.depositEther({ from: account, value: depositAmount })
+    console.log(chalk.cyan(`deposit ether complete for address ${account}`))
   }
 
-  console.log(chalk.cyan('minting/depositing complete'))
+  console.log(chalk.magenta('minting/depositing complete'))
 
   callback()
 }

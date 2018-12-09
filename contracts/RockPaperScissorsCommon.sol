@@ -106,6 +106,22 @@ contract RockPaperScissorsCommon is Upgradeable {
     uint256 indexed stage
   );
 
+  event GameCreated(
+    uint256 indexed gameId,
+    address indexed creator
+  );
+
+  event GameCancelled(
+    uint256 indexed gameId,
+    address indexed cancellor
+  );
+
+  event GameJoined(
+    uint256 indexed gameId,
+    address indexed creator,
+    address indexed joiner
+  );
+
   event ChoiceCommitted(
     uint256 indexed gameId,
     address committer
@@ -114,6 +130,30 @@ contract RockPaperScissorsCommon is Upgradeable {
   event ChoiceRevealed(
     uint256 indexed gameId,
     address committer
+  );
+
+  event TimeoutStarted(
+    uint256 indexed gameId,
+    address indexed initiator,
+    address indexed delayer
+  );
+
+  event TimedOut(
+    uint256 indexed gameId,
+    address indexed winner,
+    address indexed loser
+  );
+
+  event Tied(
+    uint256 indexed gameId,
+    address indexed player1,
+    address indexed player2
+  );
+
+  event WinnerDecided(
+    uint256 indexed gameId,
+    address indexed winner,
+    address indexed loser
   );
 
   event ReferralSet(
@@ -227,6 +267,7 @@ contract RockPaperScissorsCommon is Upgradeable {
   )
     internal
   {
+    require(activeGamesOf[_player].length > 0);
     uint256 _index = activeGameOfIndex[_gameId];
 
     activeGamesOf[_player][_index] = activeGamesOf[_player][activeGamesOf[_player].length - 1];
@@ -283,6 +324,9 @@ contract RockPaperScissorsCommon is Upgradeable {
 
     if (_c1 == _c2) {
       enterStage(_gameId, Stage.Tied);
+
+      emit Tied(_gameId, _a1, _a2);
+
       return;
     } else if (_c1 == Choice.Rock && _c2 == Choice.Paper) {
       _game.winner = _a2;
@@ -301,6 +345,10 @@ contract RockPaperScissorsCommon is Upgradeable {
     enterStage(_gameId, Stage.WinnerDecided);
 
     totalWinCount++;
+
+    address _loser = _game.winner == _a1 ? _a2 : _a1;
+
+    emit WinnerDecided(_gameId, _game.winner, _loser);
   }
 
   function processFee(

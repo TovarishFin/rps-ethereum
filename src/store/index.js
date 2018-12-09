@@ -6,6 +6,7 @@ import layout from './layout'
 import route from './route'
 import bank from './bank'
 import rockPaperScissors from './rockPaperScissors'
+import contractEvents from './contractEvents'
 import stateWatchers from './plugins/stateWatchers'
 
 Vue.use(Vuex)
@@ -34,7 +35,8 @@ export default new Store({
     layout,
     route,
     bank,
-    rockPaperScissors
+    rockPaperScissors,
+    contractEvents
   },
   plugins: [stateWatchers, vuexLocal.plugin]
 })

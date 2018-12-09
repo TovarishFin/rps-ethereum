@@ -65,3 +65,7 @@ export const setCommit = (state, { choiceCommit, gameId }) => {
 export const setGameTimedOut = (state, { timedOut, gameId }) => {
   state.games[gameId] = { ...state.games[gameId], timedOut }
 }
+
+export const setCoinbaseActiveGames = (state, coinbaseActiveGames) => {
+  state.coinbaseActiveGames = coinbaseActiveGames
+}

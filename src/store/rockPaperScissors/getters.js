@@ -46,3 +46,6 @@ export const choiceCommit = state => gameId =>
 
 export const gameTimedOut = state => gameId =>
   pathOr(false, ['games', gameId, 'timedOut'], state)
+
+export const coinbaseActiveGames = state =>
+  pathOr([], ['coinbaseActiveGames'], state)

@@ -157,10 +157,14 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
     dispatch('getTotalReferralVolume'),
     dispatch('getOpenGames'),
     dispatch('getWethAddress'),
-    dispatch('getCoinbaseTokenUsage')
+    dispatch('getCoinbaseTokenUsage'),
+    dispatch('getCoinbaseActiveGames')
   ])
+
   await commit('setEthReady', true)
 
   dispatch('watchCoinbase')
   dispatch('watchNetwork')
+  dispatch('watchBankEvents')
+  dispatch('watchRockPaperScissorsEvents')
 }

@@ -15,8 +15,8 @@ const path = require('path')
 
 const defaultMinBet = toBN(1e16)
 const defaultTimeoutInSeconds = toBN(5) // 5 seconds... ONLY USED FOR TESTING!
-const defaultReferralFeePerMille = toBN(100)
-const defaultFeePerMille = toBN(200)
+const defaultReferralFeePerMille = toBN(25)
+const defaultFeePerMille = toBN(50)
 
 /* eslint-disable no-console */
 /* eslint-disable security/detect-non-literal-fs-filename */

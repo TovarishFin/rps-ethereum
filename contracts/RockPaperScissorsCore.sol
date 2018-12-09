@@ -72,6 +72,26 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     return openGames.length;
   }
 
+  function allActiveGamesOf(
+    address _address
+  )
+    external
+    view
+    returns (uint256[])
+  {
+    return activeGamesOf[_address];
+  }
+
+  function allActiveGamesOfLength(
+    address _address
+  )
+    external
+    view
+    returns (uint256)
+  {
+    return activeGamesOf[_address].length;
+  }
+
   function gameHasTimedOut(
     uint256 _gameId
   )
@@ -122,6 +142,10 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     _newGame.bet = _value;
 
     enterStage(lastGameId, Stage.Created);
+
+    addActiveGameOf(msg.sender, lastGameId);
+
+    emit GameCreated(lastGameId, msg.sender);
   }
 
   function cancelGame(
@@ -137,6 +161,10 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     uint256 _refundAfterFees = processFee(_game.addressP1, _game.tokenAddress, _game.bet);
 
     getBank().deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _refundAfterFees);
+
+    removeActiveGameOf(msg.sender, _gameId);
+
+    emit GameCancelled(_gameId, msg.sender);
   }
 
   function joinGame(
@@ -172,6 +200,10 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     _game.addressP2 = msg.sender;
 
     enterStage(_gameId, Stage.Ready);
+
+    addActiveGameOf(msg.sender, _gameId);
+
+    emit GameJoined(_gameId, _game.addressP1, msg.sender);
   }
 
   function commitChoice(
@@ -199,8 +231,6 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     emit ChoiceCommitted(_gameId, msg.sender);
   }
 
-  // TODO: DOUBLE CHECK THAT TIMING OUT DOESN'T ENABLE GOING BACK TO COMMIT STAGE!
-  // WRITE TESTS PROVING IT!!!
   function revealChoice(
     uint256 _gameId,
     Choice _choice,

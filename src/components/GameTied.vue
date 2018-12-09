@@ -15,7 +15,7 @@ import * as VBtn from 'vuetify/es5/components/VBtn'
 
 export default {
   components: {
-    VBtn
+    ...VBtn
   },
   computed: {
     ...mapGetters(['coinbase', 'selectedGameId', 'game']),

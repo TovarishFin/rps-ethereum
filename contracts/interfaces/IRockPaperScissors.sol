@@ -101,18 +101,34 @@ contract IRockPaperScissors {
   // start events
   //
 
-  event Pause();
-
-  event Unpause();
-
   event ProxyUpgraded(
     address upgradedFrom, 
     address upgradedTo
   );
 
+  event Paused();
+
+  event Unpaused();
+
   event StageChanged(
     uint256 indexed gameId,
     uint256 indexed stage
+  );
+
+  event GameCreated(
+    uint256 indexed gameId,
+    address indexed creator
+  );
+
+  event GameCancelled(
+    uint256 indexed gameId,
+    address indexed cancellor
+  );
+
+  event GameJoined(
+    uint256 indexed gameId,
+    address indexed creator,
+    address indexed joiner
   );
 
   event ChoiceCommitted(
@@ -122,12 +138,56 @@ contract IRockPaperScissors {
 
   event ChoiceRevealed(
     uint256 indexed gameId,
-    address committer
+    address revealer
+  );
+
+  event TimeoutStarted(
+    uint256 indexed gameId,
+    address indexed initiator,
+    address indexed delayer
+  );
+
+  event TimedOut(
+    uint256 indexed gameId,
+    address indexed winner,
+    address indexed loser
+  );
+
+  event Tied(
+    uint256 indexed gameId,
+    address indexed player1,
+    address indexed player2
+  );
+
+  event WinnerDecided(
+    uint256 indexed gameId,
+    address indexed winner,
+    address indexed loser
   );
 
   event ReferralSet(
     address indexed referrer,
     address indexed referree
+  );
+
+  event MinBetUpdated(
+    uint256 oldMinBet,
+    uint256 newMinBet
+  );
+
+  event TimeoutUpdated(
+    uint256 oldTimeout,
+    uint256 newTimeout
+  );
+
+  event ReferralFeeUpdated(
+    uint256 oldReferralFee,
+    uint256 newReferralFee
+  );
+
+  event FeeUpdated(
+    uint256 oldFee,
+    uint256 newFee
   );
 
   //
@@ -198,6 +258,20 @@ contract IRockPaperScissors {
     returns (uint256[]);
 
   function openGamesLength()
+    external
+    view
+    returns (uint256);
+
+  function allActiveGamesOf(
+    address _address
+  )
+    external
+    view
+    returns (uint256[]);
+
+  function allActiveGamesOfLength(
+    address _address
+  )
     external
     view
     returns (uint256);

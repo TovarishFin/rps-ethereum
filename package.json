@@ -13,6 +13,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "test:dapp": "vue-cli-service test:unit",
     "start:blockchain": "ganache-cli -g 5e9 -l 6500000 -d -m 'resource leg moment usage square town husband gain diary bitter muscle diagram'",
+    "start:blockchain:delayed": "ganache-cli -b 5 -g 5e9 -l 6500000 -d -m 'resource leg moment usage square town husband gain diary bitter muscle diagram'",
     "test:contracts": "truffle test --reset",
     "test:contracts:gas-reporter": "GAS_REPORTER=true yarn run test:contracts",
     "migrate:dev": "truffle migrate --reset --network dev",
@@ -36,9 +37,9 @@
     "vuex": "^3.0.1",
     "vuex-persist": "^2.0.0",
     "vuex-router-sync": "^5.0.0",
-    "web3": "^1.0.0-beta.36",
+    "web3": "^1.0.0-beta.37",
     "web3-provider-engine": "^14.1.0",
-    "web3-utils": "^1.0.0-beta.36"
+    "web3-utils": "^1.0.0-beta.37"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^3.0.0",

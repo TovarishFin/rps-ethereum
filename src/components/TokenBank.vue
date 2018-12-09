@@ -17,7 +17,7 @@
         label="Deposit Amount"
         placeholder="0"
         type="number"
-        :rules="valueRules"
+        :rules="valueDepositRules"
         required
       />
       <v-btn @click="deposit">deposit tokens</v-btn>
@@ -39,10 +39,10 @@
         label="Withdraw Amount"
         placeholder="0"
         type="number"
-        :rules="valueRules"
+        :rules="valueWithdrawRules"
         required
       />
-      <v-btn @click="withdraw">deposit tokens</v-btn>
+      <v-btn @click="withdraw">withdraw tokens</v-btn>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
@@ -71,7 +71,16 @@ export default {
       depositAmount: 0,
       withdrawAmount: 0,
       addressRules: [v => this.isAddress(v) || 'must be a valid address'],
-      valueRules: [
+      valueDepositRules: [
+        v => {
+          const wei = this.ethToWei(v)
+          return (
+            (!wei.isZero() && wei.lte(toBN(this.tokenData.balance))) ||
+            'must be non zero value and less than or equal to your token balance'
+          )
+        }
+      ],
+      valueWithdrawRules: [
         v => {
           const wei = this.ethToWei(v)
           return (

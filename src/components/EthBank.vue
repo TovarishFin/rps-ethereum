@@ -24,7 +24,7 @@
         :rules="valueRules"
         required
       />
-      <v-btn @click="withdraw">deposit ether</v-btn>
+      <v-btn @click="withdraw">withdraw ether</v-btn>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
