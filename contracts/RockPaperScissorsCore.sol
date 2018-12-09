@@ -45,7 +45,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     initOneTimeOnly
   {
     require(isContract(_registryAddress));
-    require(_timeoutInSeconds >= 1 * 60);
+    require(_timeoutInSeconds >= 5);
     require(_referralFeePerMille <= _feePerMille);
     require(_feePerMille >= _referralFeePerMille);
 

@@ -59,7 +59,7 @@ export default {
         case 'Timed Out':
           return 'GameTimedOut'
         case 'Tied':
-          return 'Game Tied'
+          return 'GameTied'
         case 'Winner Decided':
           return 'GameWinnerDecided'
         case 'Paid':

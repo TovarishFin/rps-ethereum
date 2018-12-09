@@ -14,7 +14,7 @@ const fs = require('fs')
 const path = require('path')
 
 const defaultMinBet = toBN(1e16)
-const defaultTimeoutInSeconds = toBN(60 * 60) // 1 hour
+const defaultTimeoutInSeconds = toBN(5) // 5 seconds... ONLY USED FOR TESTING!
 const defaultReferralFeePerMille = toBN(100)
 const defaultFeePerMille = toBN(200)
 
@@ -74,31 +74,12 @@ module.exports = (deployer, network, accounts) => {
         await deployer.deploy(TestToken, {
           from: owner
         })
-        const tst = await TestToken.deployed()
         console.log(chalk.cyan('TestToken deployed'))
 
         console.log(chalk.yellow('updating registry entries...'))
         await reg.updateEntry('Bank', bnk.address)
         await reg.updateEntry('RockPaperScissors', rpsProxy.address)
         console.log(chalk.cyan('registry updates complete'))
-
-        console.log(
-          chalk.yellow(
-            'minting tst, depositing eth, deposting tokens in bank...'
-          )
-        )
-        for (const account of accounts) {
-          const mintAmount = toBN(5e18)
-          const deplositAmount = mintAmount.sub(toBN(2e18))
-          await tst.mint(account, mintAmount, { from: account })
-          await tst.approve(bnk.address, deplositAmount, { from: account })
-          await bnk.depositTokens(tst.address, deplositAmount, {
-            from: account
-          })
-          await bnk.depositEther({ from: account, value: mintAmount })
-        }
-
-        console.log(chalk.cyan('minting/depositing complete'))
 
         console.log(chalk.yellow('initializing proxied contract...'))
 

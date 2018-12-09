@@ -160,6 +160,7 @@ export const cancelGame = async ({ getters }, gameId) => {
   })
 }
 
+// TODO: double check... we probably don't need value in config!!!
 export const joinGame = async (
   { getters },
   { referrer = addressZero, gameId, value }
