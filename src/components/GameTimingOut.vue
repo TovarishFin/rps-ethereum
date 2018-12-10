@@ -142,7 +142,6 @@ export default {
       }
     },
     canTimeoutGame() {
-      console.log(this.gameData.timedOut)
       return this.gameData.timedOut
     },
     canCommit() {
