@@ -1,5 +1,5 @@
 export default {
-  gameLogs: {}
+  gamesLogs: {}
 }
 /*
   what do we want in here?

@@ -70,11 +70,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setSelectedGameId'])
+    ...mapActions(['setSelectedGameId', 'getGameLogs'])
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.setSelectedGameId(to.params.gameId)
+      vm.getGameLogs(to.params.gameId)
     })
   }
 }

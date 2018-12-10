@@ -3,7 +3,7 @@ import { weiToEth, choiceEnum, bytes32Zero } from '@/utils/data'
 const eventWatchRetryTime = 5000
 
 //
-// start bank related
+// start bank watcher related
 //
 
 export const watchBankEvents = context => {
@@ -33,7 +33,6 @@ export const watchBankEvents = context => {
 
 export const handleBankEvents = (context, bankEvent) => {
   const { event: eventName, returnValues } = bankEvent
-  console.log(eventName)
   switch (eventName) {
     case 'FundsDeposited':
       return handleFundsDeposited(context, returnValues)
@@ -173,11 +172,11 @@ export const handleTokenUsageUpdated = (
 }
 
 //
-// end bank related
+// end bank watcher related
 //
 
 //
-// start rps related
+// start rps watcher related
 //
 
 export const watchRockPaperScissorsEvents = context => {
@@ -209,7 +208,6 @@ export const watchRockPaperScissorsEvents = context => {
 
 export const handleRockPaperScissorsEvents = (context, rpsEvent) => {
   const { event: eventName, returnValues } = rpsEvent
-  console.log(eventName)
   switch (eventName) {
     case 'ProxyUpgraded':
       return handleProxyUpgraded(context, returnValues)
@@ -528,5 +526,89 @@ export const handleFeeUpdated = async ({ dispatch }, { oldFee, newFee }) => {
 }
 
 //
-// end rps related
+// end rps watcher related
+//
+
+//
+// start rps retrieval related
+//
+
+// TODO: see if there is a better workaround to this... right now allEvents filter does not seem to work...
+export const getGameLogs = async ({ getters, commit }, gameId) => {
+  const { rockPaperScissorsWs } = getters
+  const fromBlock = 0
+  const toBlock = 'latest'
+  const filter = { gameId }
+
+  const options = {
+    filter,
+    fromBlock,
+    toBlock
+  }
+
+  const stage = rockPaperScissorsWs.getPastEvents('StageChanged', options)
+  const created = rockPaperScissorsWs.getPastEvents('GameCreated', options)
+  const cancelled = rockPaperScissorsWs.getPastEvents('GameCancelled', options)
+  const gameJoined = rockPaperScissorsWs.getPastEvents('GameJoined', options)
+  const choiceCommitted = rockPaperScissorsWs.getPastEvents(
+    'ChoiceCommitted',
+    options
+  )
+  const choiceRevealed = rockPaperScissorsWs.getPastEvents(
+    'ChoiceRevealed',
+    options
+  )
+  const timeoutStarted = rockPaperScissorsWs.getPastEvents(
+    'TimeoutStarted',
+    options
+  )
+  const timedOut = rockPaperScissorsWs.getPastEvents('TimedOut', options)
+  const tied = rockPaperScissorsWs.getPastEvents('Tied', options)
+  const winnerDecided = rockPaperScissorsWs.getPastEvents(
+    'WinnerDecided',
+    options
+  )
+
+  const [
+    stageLogs,
+    createdLogs,
+    cancelledLogs,
+    gameJoinedLogs,
+    choiceCommittedLogs,
+    choiceRevealedLogs,
+    timeoutStartedLogs,
+    timedOutLogs,
+    tiedLogs,
+    winnerDecidedLogs
+  ] = await Promise.all([
+    stage,
+    created,
+    cancelled,
+    gameJoined,
+    choiceCommitted,
+    choiceRevealed,
+    timeoutStarted,
+    timedOut,
+    tied,
+    winnerDecided
+  ])
+
+  const gameLogs = [
+    ...stageLogs,
+    ...createdLogs,
+    ...cancelledLogs,
+    ...gameJoinedLogs,
+    ...choiceCommittedLogs,
+    ...choiceRevealedLogs,
+    ...timeoutStartedLogs,
+    ...timedOutLogs,
+    ...tiedLogs,
+    ...winnerDecidedLogs
+  ].sort((a, b) => (a.blockNumber + a.logIndex) - (b.blockNumber + b.logIndex)) // prettier-ignore
+
+  commit('setGameLogs', { gameId, gameLogs })
+}
+
+//
+// end rps retreiveal related
 //
