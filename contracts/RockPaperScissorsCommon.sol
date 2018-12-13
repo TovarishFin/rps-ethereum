@@ -167,6 +167,13 @@ contract RockPaperScissorsCommon is Upgradeable {
     address indexed referree
   );
 
+  event ReferralPaid(
+    address indexed tokenAddress,
+    address referred,
+    address indexed referrer,
+    uint256 value
+  );
+
   event MinBetUpdated(
     uint256 oldMinBet,
     uint256 newMinBet
@@ -396,6 +403,13 @@ contract RockPaperScissorsCommon is Upgradeable {
     _bank.transferAllocatedTokensOf(
       _feePayer,
       _tokenAddress,
+      _referrer,
+      _referralFee
+    );
+
+    emit ReferralPaid(
+      _tokenAddress,
+      _feePayer,
       _referrer,
       _referralFee
     );

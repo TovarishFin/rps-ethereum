@@ -158,7 +158,7 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
     dispatch('getOpenGames'),
     dispatch('getWethAddress'),
     dispatch('getCoinbaseTokenUsage'),
-    dispatch('getCoinbaseActiveGames')
+    dispatch('getCoinbaseActiveGameIds')
   ])
 
   await commit('setEthReady', true)

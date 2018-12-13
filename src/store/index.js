@@ -20,7 +20,8 @@ const vuexLocal = new VuexPersistence({
     },
     layout: {
       hideTokenDepositWarnings: state.layout.hideTokenDepositWarnings,
-      hideEtherDepositWarnings: state.layout.hideEtherDepositWarnings
+      hideEtherDepositWarnings: state.layout.hideEtherDepositWarnings,
+      drawerOpen: state.layout.drawerOpen
     }
   })
 })

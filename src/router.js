@@ -38,6 +38,11 @@ export default new Router({
       component: () => import('@/components/pages/Game.vue')
     },
     {
+      path: '/account',
+      name: 'Account',
+      component: () => import('@/components/pages/Account.vue')
+    },
+    {
       path: '/no-account',
       name: 'No Account',
       component: () => import('@/components/layout/NoAccount.vue')

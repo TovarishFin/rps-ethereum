@@ -242,6 +242,7 @@ contract Bank {
       .add(_value);
 
     updateTokenUsage(_fundsOwner, _tokenAddress);
+    updateTokenUsage(_recipient, _tokenAddress);
 
     emit FundsTransferred(_fundsOwner, _recipient, _tokenAddress, _value);
   }

@@ -3,13 +3,13 @@ const TestToken = artifacts.require('TestToken')
 const RockPaperScissors = artifacts.require('IRockPaperScissors')
 const chalk = require('chalk')
 const { toBN } = require('web3-utils')
-const { addressZero } = require('./helpers')
 
 /* eslint-disable no-console */
 
 module.exports = async function(callback) {
   const accounts = await web3.eth.getAccounts()
   const creator = accounts[0]
+  const referrer = accounts[2]
   const bnk = await Bank.deployed()
   const tst = await TestToken.deployed()
   const rps = await RockPaperScissors.deployed()
@@ -27,7 +27,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 

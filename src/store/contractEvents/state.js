@@ -1,5 +1,6 @@
 export default {
-  gamesLogs: {}
+  gamesLogs: {},
+  referralPayments: []
 }
 /*
   what do we want in here?

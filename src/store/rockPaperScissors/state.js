@@ -16,6 +16,6 @@ export default {
   openGameIds: [],
   selectedGameId: 0,
   choiceCommits: {},
-  coinbaseActiveGames: [],
+  coinbaseActiveGameIds: [],
   coinbaseReferrer: addressZero
 }

@@ -5,3 +5,7 @@ export const setGamesLogs = (state, gamesLogs) => {
 export const setGameLogs = (state, { gameId, gameLogs }) => {
   state.gamesLogs = { ...state.gamesLogs, [gameId]: gameLogs }
 }
+
+export const setReferralPayments = (state, referralPayments) => {
+  state.referralPayments = referralPayments
+}

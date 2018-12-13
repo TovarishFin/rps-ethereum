@@ -3,13 +3,13 @@ const TestToken = artifacts.require('TestToken')
 const RockPaperScissors = artifacts.require('IRockPaperScissors')
 const chalk = require('chalk')
 const { toBN, soliditySha3 } = require('web3-utils')
-const { addressZero } = require('./helpers')
 
 /* eslint-disable no-console */
 module.exports = async function(callback) {
   const accounts = await web3.eth.getAccounts()
   const creator = accounts[0]
   const joiner = accounts[1]
+  const referrer = accounts[2]
   const bnk = await Bank.deployed()
   const tst = await TestToken.deployed()
   const rps = await RockPaperScissors.deployed()
@@ -38,7 +38,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
+  await rps.createGame(referrer, tst.address, betAmount, { from: creator })
   gameId = await rps.lastGameId()
 
   console.log(chalk.cyan('game creation complete'))
@@ -63,7 +63,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
+  await rps.createGame(referrer, tst.address, betAmount, { from: creator })
 
   gameId = await rps.lastGameId()
 
@@ -99,7 +99,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
+  await rps.createGame(referrer, tst.address, betAmount, { from: creator })
 
   gameId = await rps.lastGameId()
 
@@ -107,7 +107,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, { from: joiner })
+  await rps.joinGame(referrer, gameId, { from: joiner })
 
   console.log(chalk.cyan('game joined'))
 
@@ -135,7 +135,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
+  await rps.createGame(referrer, tst.address, betAmount, { from: creator })
 
   gameId = await rps.lastGameId()
 
@@ -143,7 +143,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, { from: joiner })
+  await rps.joinGame(referrer, gameId, { from: joiner })
 
   console.log(chalk.cyan('game joined'))
 
@@ -205,7 +205,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 
@@ -215,7 +215,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, {
+  await rps.joinGame(referrer, gameId, {
     from: joiner
   })
 
@@ -295,7 +295,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 
@@ -305,7 +305,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, {
+  await rps.joinGame(referrer, gameId, {
     from: joiner
   })
 
@@ -385,7 +385,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 
@@ -395,7 +395,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, {
+  await rps.joinGame(referrer, gameId, {
     from: joiner
   })
 
@@ -483,7 +483,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 
@@ -493,7 +493,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, {
+  await rps.joinGame(referrer, gameId, {
     from: joiner
   })
 
@@ -554,7 +554,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, {
+  await rps.createGame(referrer, tst.address, betAmount, {
     from: creator
   })
 
@@ -564,7 +564,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, {
+  await rps.joinGame(referrer, gameId, {
     from: joiner
   })
 
@@ -644,7 +644,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('creating game as acc 1...'))
 
-  await rps.createGame(addressZero, tst.address, betAmount, { from: creator })
+  await rps.createGame(referrer, tst.address, betAmount, { from: creator })
 
   gameId = await rps.lastGameId()
 
@@ -652,7 +652,7 @@ module.exports = async function(callback) {
 
   console.log(chalk.yellow('joining game as acc 2...'))
 
-  await rps.joinGame(addressZero, gameId, { from: joiner })
+  await rps.joinGame(referrer, gameId, { from: joiner })
 
   console.log(chalk.cyan('game joined'))
 

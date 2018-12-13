@@ -9,8 +9,7 @@
         label="search for a token"
         single-line
         hide-details
-      >
-      </v-text-field>
+      />
     </v-card-title>
     <v-data-table
       :headers="tokenHeaders"

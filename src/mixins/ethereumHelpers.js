@@ -42,9 +42,9 @@ export default {
           throw new Error('this shouldn not happen')
       }
     },
+    // TODO: this doesn't seem to be giving correct values... fix it!!!
     weiToEth(wei) {
       const { div: valueDiv, mod: valueMod } = toBN(wei).divmod(this.decimals18)
-
       if (valueMod.toString() === '0') {
         return valueDiv.toString()
       } else {

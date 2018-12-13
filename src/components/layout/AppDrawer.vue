@@ -7,14 +7,14 @@
     app
   >
     <v-list>
-      <v-list-tile value="true" target="_blank" :href="coinbaseLink">
+      <v-list-tile value="true" to="/account">
         <v-list-tile-action>
           <v-icon>account_circle</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
           <v-list-tile-title
-            v-text="`Account: ${shortenAddress(coinbase)}`"
+            v-text="`My Account: ${shortenAddress(coinbase)}`"
           ></v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>

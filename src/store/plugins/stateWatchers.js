@@ -16,9 +16,14 @@ const actionIdWatcher = store => {
         break
 
       case 'setOpenGames':
-        await store.dispatch('populateGames')
+        await store.dispatch('populateOpenGames')
 
         break
+
+      case 'setCoinbaseActiveGameIds':
+        await store.dispatch('populateCoinbaseActiveGames')
+        break
+
       case 'setSelectedGameId':
         await store.dispatch('getGame', payload)
         break

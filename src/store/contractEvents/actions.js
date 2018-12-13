@@ -293,7 +293,7 @@ export const handleGameCreated = async (
   const { coinbase } = getters
 
   if (coinbase == creator) {
-    await dispatch('getCoinbaseActiveGames')
+    await dispatch('getCoinbaseActiveGameIds')
     await dispatch(
       'createNotification',
       `Your game (gameId: ${gameId}) has been created.`
@@ -310,7 +310,7 @@ export const handleGameCancelled = async (
   const { coinbase } = getters
 
   if (coinbase == cancellor) {
-    await dispatch('getCoinbaseActiveGames')
+    await dispatch('getCoinbaseActiveGameIds')
     await dispatch(
       'createNotification',
       `Your game (gameId: ${gameId}) has been cancelled.`
@@ -334,7 +334,7 @@ export const handleGameJoined = async (
   }
 
   if (coinbase == joiner) {
-    await dispatch('getCoinbaseActiveGames')
+    await dispatch('getCoinbaseActiveGameIds')
     await dispatch(
       'createNotification',
       `You have joined a new game! (gameId: ${gameId})`
@@ -638,6 +638,37 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
   ].sort((a, b) => (a.blockNumber + a.logIndex) - (b.blockNumber + b.logIndex)) // prettier-ignore
 
   commit('setGameLogs', { gameId, gameLogs })
+}
+
+export const getReferralPayments = async ({ getters, commit }) => {
+  const { coinbase, rockPaperScissorsWs } = getters
+
+  const events = await rockPaperScissorsWs.getPastEvents('ReferralPaid', {
+    filter: { referrer: coinbase },
+    fromBlock: 0,
+    toBlock: 'latest'
+  })
+
+  const referralPayments = events
+    .sort((a, b) => a.blockNumber + a.logIndex - (b.blockNumber + b.logIndex))
+    .map(e => {
+      const {
+        blockNumber,
+        transactionIndex,
+        returnValues: { referred, referrer, value, tokenAddress }
+      } = e
+
+      return {
+        blockNumber,
+        transactionIndex,
+        referred,
+        referrer,
+        value,
+        tokenAddress
+      }
+    })
+
+  commit('setReferralPayments', referralPayments)
 }
 
 //

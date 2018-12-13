@@ -176,6 +176,13 @@ contract IRockPaperScissors {
     address indexed referree
   );
 
+  event ReferralPaid(
+    address indexed tokenAddress,
+    address referred,
+    address indexed referrer,
+    uint256 value
+  );
+
   event MinBetUpdated(
     uint256 oldMinBet,
     uint256 newMinBet
