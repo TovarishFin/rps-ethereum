@@ -69,3 +69,7 @@ export const setGameTimedOut = (state, { timedOut, gameId }) => {
 export const setCoinbaseActiveGames = (state, coinbaseActiveGames) => {
   state.coinbaseActiveGames = coinbaseActiveGames
 }
+
+export const setCoinbaseReferrer = (state, coinbaseReferrer) => {
+  state.coinbaseReferrer = coinbaseReferrer
+}

@@ -70,6 +70,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
   }
 
   function settleWinner(
+    uint256 _gameId,
     Game memory _game,
     uint256 _bet1AfterFees,
     uint256 _bet2AfterFees
@@ -87,9 +88,16 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
       _game.winner, 
       _transferAmount
     );
+
+    emit BetSettled(
+      _gameId,
+      _game.winner,
+      _deAllocationAmount.add(_transferAmount)
+    );
   }
 
   function settleTied(
+    uint256 _gameId,
     Game memory _game,
     uint256 _bet1AfterFees,
     uint256 _bet2AfterFees
@@ -99,6 +107,18 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     IBank _bank = getBank();
     _bank.deAllocateTokensOf(_game.addressP1, _game.tokenAddress, _bet1AfterFees);
     _bank.deAllocateTokensOf(_game.addressP2, _game.tokenAddress, _bet2AfterFees);
+
+    emit BetSettled(
+      _gameId,
+      _game.addressP1,
+      _bet1AfterFees
+    );
+
+    emit BetSettled(
+      _gameId,
+      _game.addressP2,
+      _bet2AfterFees
+    );
   }
 
   function settleBet(
@@ -115,11 +135,11 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
     uint256 _bet2AfterFees = processFee(_game.addressP2, _game.tokenAddress, _game.bet);
 
     if (_game.stage == Stage.WinnerDecided) {
-      settleWinner(_game, _bet1AfterFees, _bet2AfterFees);
+      settleWinner(_gameId, _game, _bet1AfterFees, _bet2AfterFees);
     } else if (_game.stage == Stage.Tied) {
-      settleTied(_game, _bet1AfterFees, _bet2AfterFees);
+      settleTied(_gameId, _game, _bet1AfterFees, _bet2AfterFees);
     } else if (_game.stage == Stage.TimedOut) {
-      settleWinner(_game, _bet1AfterFees, _bet2AfterFees);
+      settleWinner(_gameId, _game, _bet1AfterFees, _bet2AfterFees);
     }
 
     enterStage(_gameId, Stage.Paid);

@@ -156,6 +156,12 @@ contract RockPaperScissorsCommon is Upgradeable {
     address indexed loser
   );
 
+  event BetSettled(
+    uint256 indexed gameId,
+    address indexed settler,
+    uint256 winnings
+  );
+
   event ReferralSet(
     address indexed referrer,
     address indexed referree

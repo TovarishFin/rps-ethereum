@@ -1,5 +1,5 @@
 import { pathOr } from 'ramda'
-import { gameZero } from '@/utils/data'
+import { gameZero, addressZero } from '@/utils/data'
 
 export const rockPaperScissors = state =>
   pathOr(null, ['rockPaperScissors'], state)
@@ -49,3 +49,6 @@ export const gameTimedOut = state => gameId =>
 
 export const coinbaseActiveGames = state =>
   pathOr([], ['coinbaseActiveGames'], state)
+
+export const coinbaseReferrer = state =>
+  pathOr(addressZero, ['coinbaseReferrer'], state)

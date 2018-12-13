@@ -235,6 +235,8 @@ export const handleRockPaperScissorsEvents = (context, rpsEvent) => {
       return handleTied(context, returnValues)
     case 'WinnerDecided':
       return handleWinnerDecided(context, returnValues)
+    case 'BetSettled':
+      return handleBetSettled(context, returnValues)
     case 'ReferralSet':
       return handleReferralSet(context, returnValues)
     case 'MinBetUpdated':
@@ -325,7 +327,10 @@ export const handleGameJoined = async (
   const { coinbase } = getters
 
   if (coinbase == creator) {
-    await dispatch(`Someone has joined your game! (gameId: ${gameId})`)
+    await dispatch(
+      'createNotification',
+      `Someone has joined your game! (gameId: ${gameId})`
+    )
   }
 
   if (coinbase == joiner) {
@@ -396,6 +401,8 @@ export const handleChoiceRevealed = async (
       }
     }
   }
+
+  await dispatch('getTotalPlayCount')
 }
 
 export const handleTimeoutStarted = async (
@@ -438,6 +445,8 @@ export const handleTimedOut = async (
       `You took too long and lost by default! ${gameId}`
     )
   }
+
+  await dispatch('getTotalWinCount')
 }
 
 export const handleTied = async (
@@ -449,6 +458,8 @@ export const handleTied = async (
   if (coinbase === player1 || coinbase === player2) {
     await dispatch('createNotification', `You tied! (gameId: ${gameId})`)
   }
+
+  await dispatch('getTotalWinCount')
 }
 
 export const handleWinnerDecided = async (
@@ -464,6 +475,26 @@ export const handleWinnerDecided = async (
   if (coinbase == loser) {
     await dispatch('createNotification', `You lost! ${gameId}`)
   }
+
+  await dispatch('getTotalWinCount')
+}
+
+export const handleBetSettled = async (
+  { getters, dispatch },
+  { gameId, settler, winnings }
+) => {
+  const { coinbase } = getters
+
+  if (coinbase === settler) {
+    await dispatch(
+      'createNotification',
+      `Bet Settled. ${weiToEth(
+        winnings
+      )} has been credited to your account. (gameId: ${gameId})`
+    )
+  }
+
+  await dispatch('getTotalWinVolume')
 }
 
 export const handleReferralSet = async (

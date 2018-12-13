@@ -160,15 +160,21 @@ export const checkGameTimeout = async ({ getters, commit }, gameId) => {
 //
 
 export const createGame = async (
-  { getters },
-  { referrer = addressZero, tokenAddress, value }
+  { getters, dispatch },
+  { tokenAddress, value }
 ) => {
-  const { rockPaperScissors, coinbase } = getters
+  const { rockPaperScissors, coinbase, coinbaseReferrer } = getters
   await rockPaperScissors.methods
-    .createGame(referrer, tokenAddress, value)
+    .createGame(coinbaseReferrer, tokenAddress, value)
     .send({
       from: coinbase
     })
+
+  // this does NOT prevent referrals from getting set again,
+  // just prevents from setting the storage again on the smart contract
+  if (coinbaseReferrer !== addressZero) {
+    await dispatch('setCoinbaseReferrer', addressZero)
+  }
 }
 
 export const cancelGame = async ({ getters }, gameId) => {
@@ -178,14 +184,17 @@ export const cancelGame = async ({ getters }, gameId) => {
   })
 }
 
-export const joinGame = async (
-  { getters },
-  { referrer = addressZero, gameId }
-) => {
-  const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.joinGame(referrer, gameId).send({
+export const joinGame = async ({ getters, dispatch }, gameId) => {
+  const { rockPaperScissors, coinbase, coinbaseReferrer } = getters
+  await rockPaperScissors.methods.joinGame(coinbaseReferrer, gameId).send({
     from: coinbase
   })
+
+  // this does NOT prevent referrals from getting set again,
+  // just prevents from setting the storage again on the smart contract
+  if (coinbaseReferrer !== addressZero) {
+    await dispatch('setCoinbaseReferrer', addressZero)
+  }
 }
 
 export const commitChoice = async ({ getters, commit }, { gameId, choice }) => {
@@ -324,6 +333,10 @@ export const updateFeePerMille = async ({ getters }, newFeePerMille) => {
 
 export const setSelectedGameId = ({ commit }, gameId) => {
   commit('setSelectedGameId', gameId)
+}
+
+export const setCoinbaseReferrer = ({ commit }, referrer) => {
+  commit('setCoinbaseReferrer', referrer)
 }
 
 //

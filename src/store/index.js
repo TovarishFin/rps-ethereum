@@ -15,7 +15,7 @@ const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   reducer: state => ({
     rockPaperScissors: {
-      referrer: state.rockPaperScissors.referrer,
+      coinbaseReferrer: state.rockPaperScissors.coinbaseReferrer,
       choiceCommits: state.rockPaperScissors.choiceCommits
     },
     layout: {

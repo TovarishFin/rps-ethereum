@@ -1,3 +1,5 @@
+import { addressZero } from '@/utils/data'
+
 export default {
   rockPaperScissors: null,
   rockPaperScissorsWs: null,
@@ -13,7 +15,7 @@ export default {
   games: null,
   openGameIds: [],
   selectedGameId: 0,
-  referrer: null,
   choiceCommits: {},
-  coinbaseActiveGames: []
+  coinbaseActiveGames: [],
+  coinbaseReferrer: addressZero
 }

@@ -54,9 +54,7 @@ export default {
       const valid = balance.gte(wager) && this.coinbase !== addressP1
 
       if (valid) {
-        this.joinGame({
-          gameId: this.selectedGameId
-        })
+        this.joinGame(this.selectedGameId)
       } else {
         this.createNotification(
           'Your deposited token balance is too low to join.'
