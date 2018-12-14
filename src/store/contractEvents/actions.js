@@ -1,4 +1,4 @@
-import { weiToEth, choiceEnum, bytes32Zero } from '@/utils/data'
+import { weiToEth, choiceEnum, bytes32Zero, shortenAddress } from '@/utils/data'
 
 const eventWatchRetryTime = 5000
 
@@ -239,6 +239,8 @@ export const handleRockPaperScissorsEvents = (context, rpsEvent) => {
       return handleBetSettled(context, returnValues)
     case 'ReferralSet':
       return handleReferralSet(context, returnValues)
+    case 'ReferralPaid':
+      return handleReferralPaid(context, returnValues)
     case 'MinBetUpdated':
       return handleMinBetUpdated(context, returnValues)
     case 'TimeoutUpdated':
@@ -507,6 +509,21 @@ export const handleReferralSet = async (
     await dispatch(
       'createNotification',
       `You have a new referral (address: ${referee}). Any future plays from this player will award you with referral fees.`
+    )
+  }
+}
+
+export const handleReferralPaid = async (
+  { getters, dispatch },
+  { referrer, referred, value }
+) => {
+  const { coinbase } = getters
+
+  if (coinbase === referrer) {
+    await dispatch(
+      `You have received a referral payment of ${weiToEth(
+        value
+      )} from your referral of ${shortenAddress(referred)}`
     )
   }
 }
