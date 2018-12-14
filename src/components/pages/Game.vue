@@ -6,7 +6,11 @@
 
     <v-divider> </v-divider>
 
-    <div class="mt-4 mb-4"><component :is="stageComponent" /></div>
+    <div class="mt-4 mb-4">
+      <v-slide-y-transition mode="out-in">
+        <component :is="stageComponent" />
+      </v-slide-y-transition>
+    </div>
 
     <v-divider> </v-divider>
 

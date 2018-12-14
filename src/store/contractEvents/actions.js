@@ -279,9 +279,9 @@ export const handleUnpaused = async ({ dispatch }) => {
 }
 
 export const handleStageChanged = async ({ getters, dispatch }, { gameId }) => {
-  const { coinbaseActiveGames, selectedGameId } = getters
+  const { coinbaseActiveGameIds, selectedGameId } = getters
 
-  if (coinbaseActiveGames.includes(gameId)) {
+  if (coinbaseActiveGameIds.includes(gameId)) {
     await dispatch('getGame', gameId)
   } else if (selectedGameId === gameId) {
     await dispatch('getGame', gameId)
@@ -350,8 +350,8 @@ export const handleChoiceCommitted = async (
   { getters, dispatch },
   { gameId, committer }
 ) => {
-  const { coinbaseActiveGames } = getters
-  if (coinbaseActiveGames.includes(gameId)) {
+  const { coinbaseActiveGameIds } = getters
+  if (coinbaseActiveGameIds.includes(gameId)) {
     await dispatch('getGame', gameId)
 
     const { coinbase, game } = getters
@@ -378,8 +378,8 @@ export const handleChoiceRevealed = async (
   { getters, dispatch },
   { gameId, revealer }
 ) => {
-  const { coinbaseActiveGames } = getters
-  if (coinbaseActiveGames.includes(gameId)) {
+  const { coinbaseActiveGameIds } = getters
+  if (coinbaseActiveGameIds.includes(gameId)) {
     await dispatch('getGame', gameId)
 
     const { coinbase, game } = getters
@@ -501,14 +501,14 @@ export const handleBetSettled = async (
 
 export const handleReferralSet = async (
   { getters, dispatch },
-  { referrer, referee }
+  { referrer, referree }
 ) => {
   const { coinbase } = getters
 
   if (coinbase === referrer) {
     await dispatch(
       'createNotification',
-      `You have a new referral (address: ${referee}). Any future plays from this player will award you with referral fees.`
+      `You have a new referral (address: ${referree}). Any future plays from this player will award you with referral fees.`
     )
   }
 }

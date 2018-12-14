@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import * as VTimeline from 'vuetify/es5/components/VTimeline'
 
 export default {
@@ -41,6 +41,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getGameLogs']),
     formatLog(gameEvent) {
       const { event: eventName } = gameEvent
       switch (eventName) {
@@ -117,7 +118,7 @@ export default {
       } = gameEvent
 
       const formattedEventName = 'Game Cancelled'
-      const text = `Game was Cancelled by creator address ${cancellor}.`
+      const text = `Game was cancelled by creator (${cancellor}).`
       const color = 'red'
       const sorter = parseInt(blockNumber * 1000) + parseInt(logIndex)
       const formattedEvent = {
@@ -324,6 +325,14 @@ export default {
         sorter
       }
       return formattedEvent
+    }
+  },
+  watch: {
+    gameData: {
+      handler() {
+        this.getGameLogs(this.selectedGameId)
+      },
+      deep: true
     }
   }
 }

@@ -45,7 +45,7 @@
               :return-object="false"
               required
             />
-            <v-btn @click="validateAndRevealChoice">commit your choice</v-btn>
+            <v-btn @click="validateAndRevealChoice">reveal your choice</v-btn>
           </v-form>
         </span>
       </span>
