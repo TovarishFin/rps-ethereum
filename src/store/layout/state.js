@@ -1,7 +1,7 @@
 export default {
   drawerOpen: false,
   notificationOpen: false,
-  notificationMessage: '',
+  notificationMessages: [],
   hideTokenDepositWarnings: false,
   hideEtherDepositWarnings: false
 }

@@ -14,8 +14,15 @@ export const setNotification = ({ commit }, notificationOpen) => {
   commit('setNotification', notificationOpen)
 }
 
-export const dismissNotification = ({ commit }) => {
-  commit('dismissNotification')
+export const dismissNotification = ({ commit, getters }) => {
+  commit('removeNotification')
+  const { messagesLength } = getters
+
+  if (messagesLength) {
+    commit('toggleNotification')
+  }
+
+  commit('toggleNotification')
 }
 
 export const setHideTokenDepositWarnings = ({ commit }, hide) => {

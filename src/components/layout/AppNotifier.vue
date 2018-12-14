@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="notificationStatus" :timeout="6000">
+  <v-snackbar v-model="notificationStatus" multi-line :timeout="0">
     {{ notificationMessage }}
     <v-btn flat @click="dismissNotification"> close </v-btn>
   </v-snackbar>

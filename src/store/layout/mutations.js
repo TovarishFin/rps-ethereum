@@ -7,7 +7,10 @@ export const setDrawer = (state, drawerOpen) => {
 }
 
 export const createNotification = (state, notificationMessage) => {
-  state.notificationMessage = notificationMessage
+  state.notificationMessages = [
+    ...state.notificationMessages,
+    notificationMessage
+  ]
   state.notificationOpen = true
 }
 
@@ -15,9 +18,12 @@ export const setNotification = (state, notificationOpen) => {
   state.notificationOpen = notificationOpen
 }
 
-export const dismissNotification = state => {
-  state.notificationOpen = false
-  state.notificationMessage = ''
+export const removeNotification = state => {
+  state.notificationMessages = [...state.notificationMessages.splice(1)]
+}
+
+export const toggleNotification = state => {
+  state.notificationOpen = !state.notificationOpen
 }
 
 export const setHideTokenDepositWarnings = (state, hide) => {
