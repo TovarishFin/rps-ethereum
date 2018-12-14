@@ -1,6 +1,8 @@
 <template>
   <span>
-    <p class="display-1">Cancelled</p>
-    <p>This game as been cancelled. Nothing else to see here...</p>
+    <p class="display-1">Game Status: Cancelled</p>
+    <p class="headline">
+      This game as been cancelled. Nothing else to see here...
+    </p>
   </span>
 </template>

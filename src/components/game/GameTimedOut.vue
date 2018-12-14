@@ -1,6 +1,9 @@
 <template>
   <span>
     <p class="display-1">Timed Out</p>
+    <p class="headline">
+      Due to inactivity by a player, the game has been timed out.
+    </p>
     <span v-show="coinbaseIsPlayer">
       <span v-show="coinbaseIsWinner">
         <p>You have won by default!</p>

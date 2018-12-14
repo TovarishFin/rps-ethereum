@@ -1,5 +1,7 @@
 <template>
   <span>
+    <p class="display-1">Game Status: Timing Out</p>
+    <p class="headline">A player is taking too long to make a move.</p>
     <span v-show="coinbaseIsPlayer">
       <span v-show="!canCommit && !canReveal">
         <p class="headline">
@@ -76,11 +78,6 @@
           </v-form>
         </span>
       </span>
-    </span>
-
-    <span v-show="!coinbaseIsPlayer">
-      <p class="display-1">This game is timing out.</p>
-      <p>You are not a player of this game.</p>
     </span>
   </span>
 </template>

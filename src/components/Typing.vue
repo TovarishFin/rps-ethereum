@@ -1,12 +1,8 @@
 <template>
-  <span style="width: 200px;" :class="computedClass">
-    <div
-      class="char-container"
-      :key="index"
-      v-for="(char, index) in currentArray"
-    >
-      <p class="char display-1 mb-0">{{ char }}</p>
-    </div>
+  <span :class="computedClass">
+    <pre class="char" :key="index" v-for="(char, index) in currentArray">
+      {{ char }}
+    </pre>
   </span>
 </template>
 
@@ -20,8 +16,7 @@ export default {
     deletingInterval: Number,
     waitTime: Number,
     tries: Number,
-    commit: Boolean,
-    reveal: Boolean,
+    undecided: Boolean,
     winner: Boolean,
     loser: Boolean,
     tie: Boolean,
@@ -64,6 +59,8 @@ export default {
           return 'winner'
         case this.loser && this.currentActivity === 'printResult':
           return 'loser'
+        case this.tie && this.currentActivity === 'printResult':
+          return 'tie'
         default:
           return ''
       }
@@ -110,7 +107,7 @@ export default {
       this.currentIndex = this.currentArray.length - 1
       this.currentActivity = 'emptyToSecret'
 
-      this.typerPromise = new Promise(res => {
+      return new Promise(res => {
         let i = 0
         this.typerInterval = setInterval(
           function() {
@@ -126,7 +123,6 @@ export default {
           this.hashingInterval
         )
       })
-      return this.typerPromise
     },
     secretToChoice() {
       this.currentArray = this.secret.split('')
@@ -204,35 +200,53 @@ export default {
           this.typingInterval
         )
       })
-    }
-  },
-  created() {
-    this.currentArray = this.emptyBytes32.split('')
-    if (this.commit) {
-      this.emptyToSecret()
-    } else if (this.reveal) {
-      this.emptyToSecret()
-        .then(() => this.secretToChoice())
-        .then(() => this.wait())
-        .then(() => this.deleteAll())
-        .then(() => this.printResult())
+    },
+    startEmptyToSecret() {
+      clearInterval(this.typerInterval)
+      switch (true) {
+        case this.currentActivity === null:
+          return this.emptyToSecret()
+        case this.currentActivity === 'emptyToSecret':
+          return
+        default:
+          return this.deleteAll().then(() => this.emptyToSecret())
+      }
+    },
+    startEmptyToResult() {
+      clearInterval(this.typerInterval)
+      switch (true) {
+        case this.currentActivity === null:
+          return this.emptyToSecret()
+            .then(() => this.secretToChoice())
+            .then(() => this.wait())
+            .then(() => this.deleteAll())
+            .then(() => this.printResult())
+        case this.currentActivity === 'emptyToChoice':
+          return
+        default:
+          return this.deleteAll()
+            .then(() => this.emptyToSecret())
+            .then(() => this.secretToChoice())
+            .then(() => this.wait())
+            .then(() => this.deleteAll())
+            .then(() => this.printResult())
+      }
     }
   }
 }
 </script>
 <style>
-.char-container {
-  display: inline-block;
-  margin: 10px;
-  text-align: center;
-}
 .char {
-  text-align: center;
+  display: inline-block;
+  white-space: pre-line;
 }
 .winner {
-  color: green;
+  color: #4caf50;
 }
 .loser {
-  color: red;
+  color: #ff5252;
+}
+.tie {
+  color: inherit;
 }
 </style>

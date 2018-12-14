@@ -4,7 +4,13 @@
 
     <game-display />
 
-    <component :is="stageComponent" />
+    <v-divider> </v-divider>
+
+    <div class="mt-4 mb-4"><component :is="stageComponent" /></div>
+
+    <v-divider> </v-divider>
+
+    <game-timeline />
   </span>
 </template>
 
@@ -22,6 +28,8 @@ import GameTied from '@/components/game/GameTied'
 import GameWinnerDecided from '@/components/game/GameWinnerDecided'
 import GamePaid from '@/components/game/GamePaid'
 import GameDisplay from '@/components/game/GameDisplay'
+import GameTimeline from '@/components/game/GameTimeline'
+import * as VDivider from 'vuetify/es5/components/VDivider'
 
 export default {
   components: {
@@ -36,7 +44,9 @@ export default {
     GameTied,
     GameWinnerDecided,
     GamePaid,
-    GameDisplay
+    GameDisplay,
+    GameTimeline,
+    ...VDivider
   },
   computed: {
     ...mapGetters(['game']),

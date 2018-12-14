@@ -224,11 +224,11 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
       _game.choiceSecretP2 = _hash;
     }
 
+    emit ChoiceCommitted(_gameId, msg.sender);
+
     if (_game.choiceSecretP1 != bytes32(0) && _game.choiceSecretP2 != bytes32(0)) {
       enterStage(_gameId, Stage.Committed);
     }
-
-    emit ChoiceCommitted(_gameId, msg.sender);
   }
 
   function revealChoice(
@@ -254,13 +254,13 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
       _game.choiceP2 = _choice;
     }
 
-    if (_game.choiceP1 != Choice.Undecided && _game.choiceP2 != Choice.Undecided) {
-      computeWinner(_gameId);
-    }
+    emit ChoiceRevealed(_gameId, msg.sender);
 
     totalPlayCount++;
 
-    emit ChoiceRevealed(_gameId, msg.sender);
+    if (_game.choiceP1 != Choice.Undecided && _game.choiceP2 != Choice.Undecided) {
+      computeWinner(_gameId);
+    }
   }
 
   //

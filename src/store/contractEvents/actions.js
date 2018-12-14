@@ -616,6 +616,7 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
     'WinnerDecided',
     options
   )
+  const betSettled = rockPaperScissorsWs.getPastEvents('BetSettled', options)
 
   const [
     stageLogs,
@@ -627,7 +628,8 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
     timeoutStartedLogs,
     timedOutLogs,
     tiedLogs,
-    winnerDecidedLogs
+    winnerDecidedLogs,
+    betSettledLogs
   ] = await Promise.all([
     stage,
     created,
@@ -638,7 +640,8 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
     timeoutStarted,
     timedOut,
     tied,
-    winnerDecided
+    winnerDecided,
+    betSettled
   ])
 
   const gameLogs = [
@@ -651,8 +654,9 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
     ...timeoutStartedLogs,
     ...timedOutLogs,
     ...tiedLogs,
-    ...winnerDecidedLogs
-  ].sort((a, b) => (a.blockNumber + a.logIndex) - (b.blockNumber + b.logIndex)) // prettier-ignore
+    ...winnerDecidedLogs,
+    ...betSettledLogs
+  ]
 
   commit('setGameLogs', { gameId, gameLogs })
 }

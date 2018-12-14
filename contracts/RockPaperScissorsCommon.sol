@@ -129,7 +129,7 @@ contract RockPaperScissorsCommon is Upgradeable {
 
   event ChoiceRevealed(
     uint256 indexed gameId,
-    address committer
+    address revealer
   );
 
   event TimeoutStarted(

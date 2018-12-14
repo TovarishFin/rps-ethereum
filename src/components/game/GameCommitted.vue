@@ -1,6 +1,7 @@
 <template>
   <span>
-    <p class="display-1">Ready</p>
+    <p class="display-1">Game Status: Committed</p>
+    <p class="headline">Each player must now reveal their choices.</p>
     <span v-show="coinbaseIsPlayer">
       <span v-show="!coinbaseHasRevealed">
         <p class="headline">Reveal your choice on the blockchain</p>

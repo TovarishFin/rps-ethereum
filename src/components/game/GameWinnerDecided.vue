@@ -1,6 +1,7 @@
 <template>
   <span>
     <p class="display-1">Winner Decided</p>
+    <p class="headinline">Hooray for the winner.</p>
     <span v-show="coinbaseIsPlayer">
       <span v-show="coinbaseIsWinner">
         <p>You won!</p>

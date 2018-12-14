@@ -1,6 +1,10 @@
 <template>
   <span>
-    <p class="display-1">Ready</p>
+    <p class="display-1">Game Status: Ready</p>
+    <p class="headline">
+      Waiting on each player to commit their choices as a secret on the
+      blockchain.
+    </p>
     <span v-show="coinbaseIsPlayer">
       <span v-show="!coinbaseHasCommitted">
         <p class="headline">

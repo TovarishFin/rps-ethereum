@@ -3,41 +3,31 @@
     <v-container fluid text-xs-center>
       <v-layout row fill-height align-center justify-space-around>
         <v-flex xs-4>
-          <p class="display-4">Player 1</p>
-          <p>{{ gameData.addressP1 }}</p>
+          <p class="display-2">Player 1</p>
+          <p class="subheader">{{ gameData.addressP1 }}</p>
         </v-flex>
-        <v-flex xs-4> <p class="display-4">VS</p> </v-flex>
+        <v-flex xs-4> <p class="display-3">VS</p> </v-flex>
         <v-flex xs-4>
-          <p class="display-4">Player 2</p>
-          <p>{{ gameData.addressP2 }}</p>
+          <p class="display-2">Player 2</p>
+          <p class="subheader">{{ gameData.addressP2 }}</p>
         </v-flex>
       </v-layout>
       <v-layout row>
         <v-flex xs-4>
           <typing
-            v-if="showCommits"
-            class="body"
+            ref="typing-player1"
+            class="headline"
             :secret="gameData.choiceSecretP1"
             :choice="this.choiceEnum[gameData.choiceP1]"
             :typing-interval="30"
-            :hashing-interval="50"
-            :deleting-interval="30"
-            :wait-time="2000"
-            :tries="5"
-            commit
-          />
-          <typing
-            v-if="showReveals"
-            class="body"
-            :secret="gameData.choiceSecretP1"
-            :choice="this.choiceEnum[gameData.choiceP1]"
-            :typing-interval="30"
-            :hashing-interval="10"
+            :hashing-interval="15"
             :deleting-interval="30"
             :wait-time="3000"
             :tries="5"
-            reveal
-            loser
+            :undecided="undecided"
+            :loser="!player1Wins"
+            :winner="player1Wins"
+            :tie="tie"
             player1
           />
         </v-flex>
@@ -46,31 +36,19 @@
 
         <v-flex xs-4>
           <typing
-            v-if="showCommits"
-            class="body"
-            :starting-text="bytes32Zero"
+            ref="typing-player2"
+            class="headline"
             :secret="gameData.choiceSecretP2"
             :choice="this.choiceEnum[gameData.choiceP2]"
             :typing-interval="30"
-            :hashing-interval="50"
-            :deleting-interval="30"
-            :tries="5"
-            commit
-            player2
-          />
-          <typing
-            v-if="showReveals"
-            class="body"
-            :starting-text="bytes32Zero"
-            :secret="gameData.choiceSecretP2"
-            :choice="this.choiceEnum[gameData.choiceP2]"
-            :typing-interval="30"
-            :hashing-interval="10"
+            :hashing-interval="15"
             :deleting-interval="30"
             :wait-time="3000"
             :tries="5"
-            reveal
-            winner
+            :undecided="undecided"
+            :loser="player1Wins"
+            :winner="!player1Wins"
+            :tie="tie"
             player2
           />
         </v-flex>
@@ -91,8 +69,10 @@ export default {
   },
   data() {
     return {
-      showReveals: false,
-      showCommits: false
+      player1Wins: false,
+      player2Wins: false,
+      tie: false,
+      undecided: false
     }
   },
   computed: {
@@ -125,13 +105,41 @@ export default {
     }
   },
   watch: {
-    gameData(data) {
-      const { stage } = data
-      if (parseInt(stage) > 0) {
+    gameData(newData, oldData) {
+      const {
+        stage,
+        winner,
+        addressP1,
+        addressP2,
+        choiceSecretP1,
+        choiceSecretP2,
+        choiceP1,
+        choiceP2
+      } = newData
+      const {
+        choiceSecretP1: choiceSecretP1Orig,
+        choiceSecretP2: choiceSecretP2Orig,
+        choiceP1: choiceP1Orig,
+        choiceP2: choiceP2Orig
+      } = oldData
+
+      const shouldUpdate =
+        choiceSecretP1Orig !== choiceSecretP1 ||
+        choiceSecretP2Orig !== choiceSecretP2 ||
+        choiceP1Orig !== choiceP1 ||
+        choiceP2Orig !== choiceP2
+
+      if (parseInt(stage) > 0 && shouldUpdate) {
         if (parseInt(stage) <= 3) {
-          this.showCommits = true
+          this.$refs['typing-player1'].startEmptyToSecret()
+          this.$refs['typing-player2'].startEmptyToSecret()
         } else {
-          this.showReveals = true
+          this.player1Wins = winner === addressP1
+          this.player2Wins = winner === addressP2
+          this.tie = parseInt(stage) >= 6 && winner === this.addressZero
+          this.undecided = parseInt(stage) < 6
+          this.$refs['typing-player1'].startEmptyToResult()
+          this.$refs['typing-player2'].startEmptyToResult()
         }
       }
     }

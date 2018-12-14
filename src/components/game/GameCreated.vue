@@ -1,7 +1,8 @@
 <template>
   <span>
     <span v-show="!coinbaseIsCreator">
-      <p class="display-1">Join the game</p>
+      <p class="display-1">Game Status: Created</p>
+      <p class="headline">Join the game</p>
       <v-btn @click="validateAndJoinGame">join game</v-btn>
     </span>
 
