@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-tabs grow>
+    <v-tabs grow v-model="tabsIndex">
       <v-tab ripple>My Tokens</v-tab>
       <v-tab ripple>My Games</v-tab>
       <v-tab ripple>My Referrals</v-tab>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import * as VTabs from 'vuetify/es5/components/VTabs'
 import TokenUsageTable from '@/components/TokenUsageTable'
 import AccountGames from '@/components/AccountGames'
@@ -23,6 +24,20 @@ export default {
     TokenUsageTable,
     AccountGames,
     AccountReferrals
+  },
+  computed: {
+    ...mapGetters(['accountTabs']),
+    tabsIndex: {
+      get() {
+        return this.accountTabs
+      },
+      set(index) {
+        return this.setAccountTabs(index)
+      }
+    }
+  },
+  methods: {
+    ...mapActions(['setAccountTabs'])
   }
 }
 </script>

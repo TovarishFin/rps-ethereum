@@ -32,3 +32,11 @@ export const setHideTokenDepositWarnings = ({ commit }, hide) => {
 export const setHideEtherDepositWarnings = ({ commit }, hide) => {
   commit('setHideEtherDepositWarnings', hide)
 }
+
+export const setBankTabs = ({ commit }, tabIndex) => {
+  commit('setBankTabs', tabIndex)
+}
+
+export const setAccountTabs = ({ commit }, tabIndex) => {
+  commit('setAccountTabs', tabIndex)
+}

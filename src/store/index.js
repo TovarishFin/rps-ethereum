@@ -18,11 +18,7 @@ const vuexLocal = new VuexPersistence({
       coinbaseReferrer: state.rockPaperScissors.coinbaseReferrer,
       choiceCommits: state.rockPaperScissors.choiceCommits
     },
-    layout: {
-      hideTokenDepositWarnings: state.layout.hideTokenDepositWarnings,
-      hideEtherDepositWarnings: state.layout.hideEtherDepositWarnings,
-      drawerOpen: state.layout.drawerOpen
-    }
+    layout: state.layout
   })
 })
 

@@ -3,5 +3,7 @@ export default {
   notificationOpen: false,
   notificationMessages: [],
   hideTokenDepositWarnings: false,
-  hideEtherDepositWarnings: false
+  hideEtherDepositWarnings: false,
+  bankTabs: 0,
+  accountTabs: 0
 }
