@@ -99,7 +99,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     view
     returns (bool)
   {
-    return block.timestamp >= timingOutGames[_gameId];
+    return block.timestamp >= timingOutGames[_gameId] && timingOutGames[_gameId] != 0;
   }
 
   //
