@@ -521,6 +521,7 @@ export const handleReferralPaid = async (
 
   if (coinbase === referrer) {
     await dispatch(
+      'createNotification',
       `You have received a referral payment of ${weiToEth(
         value
       )} from your referral of ${shortenAddress(referred)}`

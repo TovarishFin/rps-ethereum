@@ -1,57 +1,15 @@
-import { toBN } from 'web3-utils'
+import { toBN, toWei, fromWei } from 'web3-utils'
 import sha3 from 'crypto-js/sha3'
-
-const big18 = toBN(10).pow(toBN(18))
-
-const ethFloatToWei = eth => {
-  const ethStr = eth.toString()
-  const [int, decimals] = ethStr.split('.')
-  const safeDecimals = decimals.toString().slice(0, 18)
-
-  const bigInt = toBN(int).mul(toBN(10).pow(toBN(18 + safeDecimals.length)))
-  const bigDecimals = toBN(safeDecimals).mul(toBN(10).pow(toBN(18)))
-  const lowerAmount = toBN(10).pow(toBN(safeDecimals.length))
-  const adjusted = bigInt.add(bigDecimals).div(lowerAmount)
-
-  return adjusted
-}
 
 export default {
   methods: {
-    weiToEthCurrencyFormat(wei) {
-      return wei
-        ? `Ξ${toBN(wei)
-            .mul(this.decimalsAccuracy)
-            .div(this.decimals18)
-            .toNumber() / 1e5}`
-        : 'Ξ0.0'
-    },
     ethToWei(eth) {
-      const ethStr = eth.toString()
-
-      switch (true) {
-        case !eth:
-          return toBN(0)
-
-        case ethStr.includes('.'):
-          return ethFloatToWei(eth)
-
-        case !ethStr.includes('.'):
-          return toBN(eth).mul(big18)
-        default:
-          throw new Error('this shouldn not happen')
-      }
+      eth = eth ? eth.toString() : '0'
+      return toBN(toWei(eth))
     },
-    // TODO: this doesn't seem to be giving correct values... fix it!!!
     weiToEth(wei) {
-      const { div: valueDiv, mod: valueMod } = toBN(wei).divmod(this.decimals18)
-      if (valueMod.toString() === '0') {
-        return valueDiv.toString()
-      } else {
-        const divString = valueDiv.toString()
-        const modString = valueMod.toString().replace(/[0]+$/, '')
-        return divString + '.' + modString
-      }
+      wei = wei ? wei.toString() : '0'
+      return fromWei(wei)
     },
     networkIdToName(id) {
       switch (id) {

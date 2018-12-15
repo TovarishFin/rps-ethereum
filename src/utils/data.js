@@ -1,4 +1,4 @@
-import { toBN } from 'web3-utils'
+import { toBN, toWei, fromWei } from 'web3-utils'
 import sha3 from 'crypto-js/sha3'
 
 export const isClient = () => typeof window === 'object' && window.document
@@ -54,54 +54,12 @@ export const decimals18 = toBN(10).pow(toBN(18))
 
 export const decimalsAccuracy = toBN(10).pow(toBN(5))
 
-const ethFloatToWei = eth => {
-  const ethStr = eth.toString()
-  const [int, decimals] = ethStr.split('.')
-  const safeDecimals = decimals.toString().slice(0, 18)
-
-  const bigInt = toBN(int).mul(toBN(10).pow(toBN(18 + safeDecimals.length)))
-  const bigDecimals = toBN(safeDecimals).mul(toBN(10).pow(toBN(18)))
-  const lowerAmount = toBN(10).pow(toBN(safeDecimals.length))
-  const adjusted = bigInt.add(bigDecimals).div(lowerAmount)
-
-  return adjusted
-}
-
-export const weiToEthCurrencyFormat = wei =>
-  wei
-    ? `Ξ${toBN(wei)
-        .mul(decimalsAccuracy)
-        .div(decimals18)
-        .toNumber() / 1e5}`
-    : 'Ξ0.0'
-
 export const ethToWei = eth => {
-  const ethStr = eth.toString()
-
-  switch (true) {
-    case !eth:
-      return toBN(0)
-
-    case ethStr.includes('.'):
-      return ethFloatToWei(eth)
-
-    case !ethStr.includes('.'):
-      return toBN(eth).mul(decimals18)
-    default:
-      throw new Error('this shouldn not happen')
-  }
+  return toWei(eth)
 }
 
 export const weiToEth = wei => {
-  const { div: valueDiv, mod: valueMod } = toBN(wei).divmod(decimals18)
-
-  if (valueMod.toString() === '0') {
-    return valueDiv.toString()
-  } else {
-    const divString = valueDiv.toString()
-    const modString = valueMod.toString().replace(/[0]+$/, '')
-    return divString + '.' + modString
-  }
+  return fromWei(wei)
 }
 
 export const networkIdToName = id => {
