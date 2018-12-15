@@ -7,7 +7,7 @@
 
 <script>
 import ReferralLinkGenerator from '@/components/ReferralLinkGenerator'
-import AccountReferralStats from '@/components/AccountReferralStats'
+import AccountReferralStats from '@/components/account/AccountReferralStats'
 
 export default {
   components: {

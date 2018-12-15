@@ -1,9 +1,5 @@
 export default {
   gamesLogs: {},
-  referralPayments: []
+  referralPayments: [],
+  bankActivity: []
 }
-/*
-  what do we want in here?
-  event logs per game
-
-*/

@@ -9,3 +9,7 @@ export const setGameLogs = (state, { gameId, gameLogs }) => {
 export const setReferralPayments = (state, referralPayments) => {
   state.referralPayments = referralPayments
 }
+
+export const setBankActivity = (state, bankActivity) => {
+  state.bankActivity = bankActivity
+}

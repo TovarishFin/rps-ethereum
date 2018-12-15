@@ -99,6 +99,7 @@ export default {
   methods: {
     ...mapActions(['getReferralPayments'])
   },
+  // TODO: make this update every time entering
   mounted() {
     this.getReferralPayments()
   }

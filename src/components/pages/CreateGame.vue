@@ -93,7 +93,7 @@ export default {
       }
     },
     clearForm() {
-      this.betAmount = ''
+      this.$refs['create-game-form'].reset()
     }
   }
 }

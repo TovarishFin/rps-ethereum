@@ -130,7 +130,9 @@ export default {
     return {
       referralAddress: '',
       addressRules: [v => this.isAddress(v) || 'must be a valid address'],
-      gameIdRules: [v => parseInt(v) > 0] || 'must be a valid gameId'
+      gameIdRules: [
+        v => parseInt(v) > 0 || 'must be a valid gameId which can be joined'
+      ]
     }
   },
   computed: {

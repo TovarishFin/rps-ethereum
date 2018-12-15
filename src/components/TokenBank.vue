@@ -113,10 +113,10 @@ export default {
       'createNotification'
     ]),
     clearDeposit() {
-      this.depositAmount = 0
+      this.$refs['deposit-form'].reset()
     },
     clearWithdraw() {
-      this.withdrawAmount = 0
+      this.$refs['withdraw-form'].reset()
     },
     deposit() {
       if (this.$refs['deposit-form'].validate()) {

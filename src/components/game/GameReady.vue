@@ -117,7 +117,7 @@ export default {
       }
     },
     clearForm() {
-      this.choice = '0'
+      this.$refs['commit-choice-form'].reset()
     }
   }
 }

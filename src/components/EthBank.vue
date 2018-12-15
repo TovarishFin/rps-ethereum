@@ -52,13 +52,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['depositEther', 'withdrawEther']),
-    clearDeposit() {
-      this.depositAmount = 0
-    },
     clearWithdraw() {
-      this.withdrawAmount = 0
+      this.$refs['withdraw-form'].reset()
     },
+    clearDeposit() {
+      this.$refs['deposit-form'].reset()
+    },
+    ...mapActions(['depositEther', 'withdrawEther']),
     deposit() {
       if (this.$refs['deposit-form'].validate()) {
         this.depositEther(this.ethToWei(this.depositAmount))

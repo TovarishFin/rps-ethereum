@@ -693,6 +693,82 @@ export const getReferralPayments = async ({ getters, commit }) => {
   commit('setReferralPayments', referralPayments)
 }
 
+export const getBankActivity = async ({ getters, commit }) => {
+  const fromBlock = 0
+  const toBlock = 'latest'
+
+  const { coinbase, bankWs } = getters
+  const fundsDeposited = bankWs.getPastEvents('FundsDeposited', {
+    fromBlock,
+    toBlock,
+    filter: {
+      depositor: coinbase
+    }
+  })
+  const fundsAllocated = bankWs.getPastEvents('FundsAllocated', {
+    fromBlock,
+    toBlock,
+    filter: {
+      fundsOwner: coinbase
+    }
+  })
+  const fundsDeAllocated = bankWs.getPastEvents('FundsDeAllocated', {
+    fromBlock,
+    toBlock,
+    filter: {
+      fundsOwner: coinbase
+    }
+  })
+  const fundsTransferredFrom = bankWs.getPastEvents('FundsTransferred', {
+    fromBlock,
+    toBlock,
+    filter: {
+      from: coinbase
+    }
+  })
+  const fundsTransferredTo = bankWs.getPastEvents('FundsTransferred', {
+    fromBlock,
+    toBlock,
+    filter: {
+      to: coinbase
+    }
+  })
+  const fundsWithdrawn = bankWs.getPastEvents('FundsWithdrawn', {
+    fromBlock,
+    toBlock,
+    filter: {
+      fundsOwner: coinbase
+    }
+  })
+
+  const [
+    fundsDepositedLogs,
+    fundsAllocatedLogs,
+    fundsDeAllocatedLogs,
+    fundsTransferredFromLogs,
+    fundsTransferredToLogs,
+    fundsWithdrawnLogs
+  ] = await Promise.all([
+    fundsDeposited,
+    fundsAllocated,
+    fundsDeAllocated,
+    fundsTransferredFrom,
+    fundsTransferredTo,
+    fundsWithdrawn
+  ])
+
+  const bankActivity = [
+    ...fundsDepositedLogs,
+    ...fundsAllocatedLogs,
+    ...fundsDeAllocatedLogs,
+    ...fundsTransferredFromLogs,
+    ...fundsTransferredToLogs,
+    ...fundsWithdrawnLogs
+  ]
+
+  commit('setBankActivity', bankActivity)
+}
+
 //
 // end rps retreiveal related
 //

@@ -157,7 +157,7 @@ export default {
       }
     },
     clearForm() {
-      this.choice = '0'
+      this.$refs['reveal-choice-form'].reset()
     }
   }
 }

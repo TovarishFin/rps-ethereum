@@ -12,3 +12,5 @@ export const referralPaymentTotal = state =>
   referralPayments(state)
     .reduce((total, payment) => total.add(toBN(payment.value)), toBN(0))
     .toString()
+
+export const bankActivity = state => pathOr([], ['bankActivity'], state)
