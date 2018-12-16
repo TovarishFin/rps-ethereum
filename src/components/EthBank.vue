@@ -29,12 +29,13 @@
       <eth-button-wrapper>
         <v-btn @click="withdraw">withdraw ether</v-btn>
       </eth-button-wrapper>
+      <v-btn @click="setFullDepositedBalance">set full balance</v-btn>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VBtn from 'vuetify/es5/components/VBtn'
@@ -55,12 +56,21 @@ export default {
       valueRules: [v => parseFloat(v) > 0 || 'must be non zero value']
     }
   },
+  computed: {
+    ...mapGetters(['tokenDataOf', 'wethAddress']),
+    wethBalance() {
+      return this.weiToEth(this.tokenDataOf(this.wethAddress).depositedBalance)
+    }
+  },
   methods: {
     clearWithdraw() {
       this.$refs['withdraw-form'].reset()
     },
     clearDeposit() {
       this.$refs['deposit-form'].reset()
+    },
+    setFullDepositedBalance() {
+      this.withdrawAmount = this.wethBalance
     },
     ...mapActions(['depositEther', 'withdrawEther']),
     deposit() {
