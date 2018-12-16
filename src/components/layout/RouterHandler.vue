@@ -14,13 +14,18 @@ export default {
     NoAccount
   },
   computed: {
-    ...mapGetters(['coinbaseReady', 'web3Ready', 'ethReady']),
+    ...mapGetters([
+      'coinbaseReady',
+      'web3Ready',
+      'ethReady',
+      'hasGrantedWeb3Access'
+    ]),
     page() {
       switch (true) {
         case !this.web3Ready || !this.ethReady:
           return NoWeb3
 
-        case !this.coinbaseReady:
+        case this.hasGrantedWeb3Access && !this.coinbaseReady:
           return NoAccount
 
         default:

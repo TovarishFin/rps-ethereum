@@ -8,9 +8,14 @@
           Once when enough time has passed, you can timeout the game and win by
           default!
         </p>
-        <v-btn :disabled="!canTimeoutGame" @click="timeoutGame(selectedGameId)"
-          >time out game</v-btn
-        >
+        <eth-button-wrapper>
+          <v-btn
+            :disabled="!canTimeoutGame"
+            @click="timeoutGame(selectedGameId)"
+          >
+            time out game
+          </v-btn>
+        </eth-button-wrapper>
       </span>
 
       <span v-show="canCommit">
@@ -28,7 +33,9 @@
             :return-object="false"
             required
           />
-          <v-btn @click="validateAndCommitChoice">commit your choice</v-btn>
+          <eth-button-wrapper>
+            <v-btn @click="validateAndCommitChoice">commit your choice</v-btn>
+          </eth-button-wrapper>
         </v-form>
       </span>
 
@@ -41,9 +48,11 @@
             locally on your device.
           </p>
           <p>click the button below to reveal your choice.</p>
-          <v-btn @click="revealChoice(choiceCommitData)"
-            >reveal your choice</v-btn
-          >
+          <eth-button-wrapper>
+            <v-btn @click="revealChoice(choiceCommitData)">
+              reveal your choice
+            </v-btn>
+          </eth-button-wrapper>
         </span>
 
         <span v-show="!choiceCommitDataExists">
@@ -74,7 +83,9 @@
               :return-object="false"
               required
             />
-            <v-btn @click="validateAndRevealChoice">commit your choice</v-btn>
+            <eth-button-wrapper>
+              <v-btn @click="validateAndRevealChoice">commit your choice</v-btn>
+            </eth-button-wrapper>
           </v-form>
         </span>
       </span>
@@ -83,10 +94,6 @@
 </template>
 
 <script>
-/*
-  what do we need to do here?
-  allow players to commit/reveal here depending on where we are currently at...
-*/
 import { mapGetters, mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VBtn from 'vuetify/es5/components/VBtn'

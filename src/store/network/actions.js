@@ -5,6 +5,44 @@ import { addressZero } from '../../utils/data'
 const accountPollingDelay = 3000
 const networkPollingDelay = 15000
 
+export const setupWeb3Permissioned = async ({ commit }) => {
+  let web3
+  switch (true) {
+    case !!window.ethereum:
+      web3 = new Web3(window.ethereum)
+      try {
+        await window.ethereum.enable()
+        break
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(err)
+      }
+
+      break
+
+    case !!window.web3:
+      web3 = new Web3(window.web3.currentProvider)
+      break
+
+    default:
+      // TODO: change to mainnet when ready to go
+      web3 = new Web3(
+        ZeroClientProvider({
+          static: {
+            eth_syncing: false,
+            web3_clientVersion: 'ZeroClientProvider'
+          },
+          getAccounts: cb => cb(null, []),
+          rpcUrl: 'https://rinkeby.infura.io'
+        })
+      )
+      break
+  }
+
+  commit('setWeb3', web3)
+  return web3
+}
+
 export const setupWeb3 = ({ commit }) =>
   new Promise((resolve, reject) => {
     window.addEventListener('load', async () => {
@@ -41,7 +79,6 @@ export const setupWeb3 = ({ commit }) =>
       }
 
       commit('setWeb3', web3)
-      commit('setWeb3Ready', true)
       resolve(web3)
     })
   })
@@ -93,10 +130,10 @@ export const watchCoinbase = async ({ getters, commit }) => {
 }
 
 export const getNetworkData = async ({ commit, getters }) => {
-  const { web3 } = getters
-  const network = await web3.eth.net.getNetworkType()
-  const networkId = await web3.eth.net.getId()
-  const currentBlock = await web3.eth.getBlockNumber()
+  const { web3Ws } = getters
+  const network = await web3Ws.eth.net.getNetworkType()
+  const networkId = await web3Ws.eth.net.getId()
+  const currentBlock = await web3Ws.eth.getBlockNumber()
   commit('setNetworkData', {
     network,
     networkId,
@@ -105,11 +142,11 @@ export const getNetworkData = async ({ commit, getters }) => {
 }
 
 export const watchNetwork = async ({ getters, commit }) => {
-  const { network: oldNetwork, currentBlock: oldCurrentBlock, web3 } = getters
+  const { network: oldNetwork, currentBlock: oldCurrentBlock, web3Ws } = getters
   try {
-    const network = await web3.eth.net.getNetworkType()
-    const networkId = await web3.eth.net.getId()
-    const currentBlock = await web3.eth.getBlockNumber()
+    const network = await web3Ws.eth.net.getNetworkType()
+    const networkId = await web3Ws.eth.net.getId()
+    const currentBlock = await web3Ws.eth.getBlockNumber()
 
     if (network !== oldNetwork || currentBlock !== oldCurrentBlock) {
       commit('setNetworkData', {
@@ -131,19 +168,30 @@ export const watchNetwork = async ({ getters, commit }) => {
   )
 }
 
-export const bootstrapEth = async ({ dispatch, commit }) => {
-  await dispatch('setupWeb3')
-  await dispatch('getNetworkData')
-  await dispatch('setupWeb3Ws')
+export const getWeb3Access = async ({ dispatch }) => {
+  await dispatch('setupWeb3Permissioned')
   await dispatch('getCoinbase')
   await Promise.all([
-    dispatch('setupBank'),
-    dispatch('setupBankWs'),
     dispatch('setupRockPaperScissors'),
-    dispatch('setupRockPaperScissorsWs'),
+    dispatch('setupBank'),
     dispatch('setupWrappedEther'),
+    dispatch('setupTestToken')
+  ])
+  await Promise.all([
+    dispatch('getCoinbaseTokenUsage'),
+    dispatch('getCoinbaseActiveGameIds')
+  ])
+  dispatch('watchCoinbase')
+  dispatch('setHasGrantedWeb3Access', true)
+}
+
+export const bootstrapEth = async ({ dispatch, commit, getters }) => {
+  await dispatch('setupWeb3Ws')
+  await dispatch('getNetworkData')
+  await Promise.all([
+    dispatch('setupBankWs'),
+    dispatch('setupRockPaperScissorsWs'),
     dispatch('setupWrappedEtherWs'),
-    dispatch('setupTestToken'),
     dispatch('setupTestTokenWs')
   ])
   await Promise.all([
@@ -156,14 +204,16 @@ export const bootstrapEth = async ({ dispatch, commit }) => {
     dispatch('getTotalWinVolume'),
     dispatch('getTotalReferralVolume'),
     dispatch('getOpenGames'),
-    dispatch('getWethAddress'),
-    dispatch('getCoinbaseTokenUsage'),
-    dispatch('getCoinbaseActiveGameIds')
+    dispatch('getWethAddress')
   ])
 
   await commit('setEthReady', true)
+  const { hasGrantedWeb3Access } = getters
 
-  dispatch('watchCoinbase')
+  if (hasGrantedWeb3Access) {
+    dispatch('getWeb3Access')
+  }
+
   dispatch('watchNetwork')
   dispatch('watchBankEvents')
   dispatch('watchRockPaperScissorsEvents')

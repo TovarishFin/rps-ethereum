@@ -1,7 +1,9 @@
 <template>
   <span>
     <token-data-of />
-    <v-btn @click="mintTestToken">Give me 5 TST</v-btn>
+    <eth-button-wrapper>
+      <v-btn @click="mintTestToken">Give me 5 TST</v-btn>
+    </eth-button-wrapper>
   </span>
 </template>
 

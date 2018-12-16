@@ -12,9 +12,11 @@
             locally on your device.
           </p>
           <p>click the button below to reveal your choice.</p>
-          <v-btn @click="revealChoice(choiceCommitData)"
-            >reveal your choice</v-btn
-          >
+          <eth-button-wrapper>
+            <v-btn @click="revealChoice(choiceCommitData)">
+              reveal your choice
+            </v-btn>
+          </eth-button-wrapper>
         </span>
 
         <span v-show="!choiceCommitDataExists">
@@ -45,7 +47,9 @@
               :return-object="false"
               required
             />
-            <v-btn @click="validateAndRevealChoice">reveal your choice</v-btn>
+            <eth-button-wrapper>
+              <v-btn @click="validateAndRevealChoice">reveal your choice</v-btn>
+            </eth-button-wrapper>
           </v-form>
         </span>
       </span>
@@ -54,13 +58,15 @@
         <p>
           If the other player is taking too long feel free to start a timeout.
         </p>
+        <eth-button-wrapper>
+          <v-btn
+            :disabled="!canStartTimeout"
+            @click="startGameTimeout(selectedGameId)"
+          >
+            start timeout
+          </v-btn>
+        </eth-button-wrapper>
       </span>
-
-      <v-btn
-        :disabled="!canStartTimeout"
-        @click="startGameTimeout(selectedGameId)"
-        >start timeout</v-btn
-      >
     </span>
 
     <span v-show="!coinbaseIsPlayer">

@@ -11,7 +11,9 @@
         type="number"
         required
       />
-      <v-btn @click="deposit">deposit ether</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="deposit">deposit ether</v-btn>
+      </eth-button-wrapper>
       <v-btn @click="clearDeposit">clear</v-btn>
     </v-form>
     <v-form ref="withdraw-form" class="pt-4 pb-4">
@@ -24,7 +26,9 @@
         :rules="valueRules"
         required
       />
-      <v-btn @click="withdraw">withdraw ether</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="withdraw">withdraw ether</v-btn>
+      </eth-button-wrapper>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>

@@ -5,7 +5,9 @@
     <span v-show="coinbaseIsPlayer">
       <span v-show="coinbaseIsWinner">
         <p>You won!</p>
-        <v-btn @click="settleBet(selectedGameId)">settle your bet</v-btn>
+        <eth-button-wrapper>
+          <v-btn @click="settleBet(selectedGameId)">settle your bet</v-btn>
+        </eth-button-wrapper>
       </span>
 
       <span v-show="!coinbaseIsWinner"> <p>You lost!</p> </span>

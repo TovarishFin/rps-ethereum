@@ -8,11 +8,13 @@
       >
         <v-layout pt-3>
           <v-flex xs3>
-            <strong>Block: {{ bankEvent.blockNumber }}</strong>
+            <p class="subheading font-weight-bold">
+              Block: {{ bankEvent.blockNumber }}
+            </p>
           </v-flex>
           <v-flex>
-            <strong>{{ bankEvent.formattedEventName }}</strong>
-            <div class="caption">{{ bankEvent.text }}</div>
+            <strong class="title">{{ bankEvent.formattedEventName }}</strong>
+            <div class="body">{{ bankEvent.text }}</div>
           </v-flex>
         </v-layout>
       </v-timeline-item>
@@ -69,7 +71,7 @@ export default {
       const color = 'green'
       const text =
         symbol === 'N/A'
-          ? `${this.weitoEth(
+          ? `${this.weiToEth(
               value
             )} in tokens were deposited to the bank. The token used is a token that you no longer use in the bank. The token address is ${tokenAddress}.`
           : `${this.weiToEth(value)} ${symbol} was deposited to the bank.`
@@ -95,7 +97,7 @@ export default {
       const color = 'blue'
       const text =
         symbol === 'N/A'
-          ? `${this.weitoEth(
+          ? `${this.weiToEth(
               value
             )} in tokens were allocated for a game that you either joined or created. The token used is a token that you no longer use in the bank. The token address is ${tokenAddress}.`
           : `${this.weiToEth(
@@ -118,12 +120,12 @@ export default {
       } = bankEvent
       const { symbol } = this.tokenDataOf(tokenAddress)
 
-      const formattedEventName = 'Fudnds Deallocated'
+      const formattedEventName = 'Funds Deallocated'
       const sorter = parseInt(blockNumber * 1000) + parseInt(logIndex)
       const color = 'teal'
       const text =
         symbol === 'N/A'
-          ? `${this.weitoEth(
+          ? `${this.weiToEth(
               value
             )} were deallocated, meaning that these are now spendable. Tokens are deallocated when you either cancel or win a game. The token used is a token that you no longer use in the bank. The token address is ${tokenAddress}.`
           : `${this.weiToEth(
@@ -204,7 +206,7 @@ export default {
       } = bankEvent
       const { symbol } = this.tokenDataOf(tokenAddress)
 
-      const formattedEventName = ''
+      const formattedEventName = 'Funds Withdrawn'
       const sorter = parseInt(blockNumber * 1000) + parseInt(logIndex)
       const color = 'red'
       const text =

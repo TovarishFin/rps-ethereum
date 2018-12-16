@@ -14,16 +14,20 @@
 
     <app-notifier />
 
+    <app-modal />
+
     <app-footer />
   </v-app>
 </template>
 
 <script>
-import AppDrawer from '@/components/layout/AppDrawer.vue'
-import AppToolbar from '@/components/layout/AppToolbar.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
-import AppNotifier from '@/components/layout/AppNotifier.vue'
-import RouterHandler from '@/components/layout/RouterHandler.vue'
+import { mapGetters } from 'vuex'
+import AppDrawer from '@/components/layout/AppDrawer'
+import AppToolbar from '@/components/layout/AppToolbar'
+import AppFooter from '@/components/layout/AppFooter'
+import AppNotifier from '@/components/layout/AppNotifier'
+import AppModal from '@/components/layout/AppModal'
+import RouterHandler from '@/components/layout/RouterHandler'
 import store from '@/store'
 
 export default {
@@ -32,7 +36,11 @@ export default {
     AppToolbar,
     AppFooter,
     AppNotifier,
+    AppModal,
     RouterHandler
+  },
+  computed: {
+    ...mapGetters(['hasGrantedWeb3Permission'])
   },
   beforeCreate() {
     store.dispatch('bootstrapEth')

@@ -22,12 +22,12 @@ export default {
         return this.notificationOpen
       },
       set(status) {
-        this.setNotification(status)
+        this.setNotificationOpen(status)
       }
     }
   },
   methods: {
-    ...mapActions(['setNotification', 'dismissNotification'])
+    ...mapActions(['setNotificationOpen', 'dismissNotification'])
   }
 }
 </script>

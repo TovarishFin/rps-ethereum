@@ -4,7 +4,9 @@
     <p class="headline">Both players picked the same choice!</p>
     <span v-show="coinbaseIsPlayer">
       <p>settle the bet</p>
-      <v-btn @click="settleBet(selectedGameId)">settle bet</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="settleBet(selectedGameId)">settle bet</v-btn>
+      </eth-button-wrapper>
     </span>
     <span v-show="!coinbaseIsPlayer"> <p>You are not a player</p> </span>
   </span>

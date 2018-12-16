@@ -19,9 +19,9 @@
     >
       <template slot="items" slot-scope="props">
         <td>
-          <v-btn @click="setSelectedTokenAddress(props.item.address)"
-            >use / update</v-btn
-          >
+          <v-btn @click="setSelectedTokenAddress(props.item.address)">
+            use / update
+          </v-btn>
         </td>
         <td>{{ props.item.name }}</td>
         <td class="text-xs-left">{{ shortenAddress(props.item.address) }}</td>

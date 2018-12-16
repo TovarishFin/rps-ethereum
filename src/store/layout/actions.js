@@ -10,8 +10,8 @@ export const createNotification = ({ commit }, notificationMessage) => {
   commit('createNotification', notificationMessage)
 }
 
-export const setNotification = ({ commit }, notificationOpen) => {
-  commit('setNotification', notificationOpen)
+export const setNotificationOpen = ({ commit }, notificationOpen) => {
+  commit('setNotificationOpen', notificationOpen)
 }
 
 export const dismissNotification = ({ commit, getters }) => {
@@ -23,6 +23,10 @@ export const dismissNotification = ({ commit, getters }) => {
   }
 
   commit('toggleNotification')
+}
+
+export const setModalOpen = ({ commit }, modalOpen) => {
+  commit('setModalOpen', modalOpen)
 }
 
 export const setHideTokenDepositWarnings = ({ commit }, hide) => {
@@ -39,4 +43,8 @@ export const setBankTabs = ({ commit }, tabIndex) => {
 
 export const setAccountTabs = ({ commit }, tabIndex) => {
   commit('setAccountTabs', tabIndex)
+}
+
+export const setHasGrantedWeb3Access = ({ commit }, hasGrantedWeb3Access) => {
+  commit('setHasGrantedWeb3Access', hasGrantedWeb3Access)
 }

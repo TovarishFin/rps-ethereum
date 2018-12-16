@@ -14,7 +14,7 @@ export const createNotification = (state, notificationMessage) => {
   state.notificationOpen = true
 }
 
-export const setNotification = (state, notificationOpen) => {
+export const setNotificationOpen = (state, notificationOpen) => {
   state.notificationOpen = notificationOpen
 }
 
@@ -24,6 +24,10 @@ export const removeNotification = state => {
 
 export const toggleNotification = state => {
   state.notificationOpen = !state.notificationOpen
+}
+
+export const setModalOpen = (state, modalOpen) => {
+  state.modalOpen = modalOpen
 }
 
 export const setHideTokenDepositWarnings = (state, hide) => {
@@ -40,4 +44,8 @@ export const setBankTabs = (state, tabsIndex) => {
 
 export const setAccountTabs = (state, tabsIndex) => {
   state.accountTabs = tabsIndex
+}
+
+export const setHasGrantedWeb3Access = (state, hasGrantedWeb3Access) => {
+  state.hasGrantedWeb3Access = hasGrantedWeb3Access
 }

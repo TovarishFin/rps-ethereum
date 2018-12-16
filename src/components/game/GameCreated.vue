@@ -3,7 +3,9 @@
     <span v-show="!coinbaseIsCreator">
       <p class="display-1">Game Status: Created</p>
       <p class="headline">Join the game</p>
-      <v-btn @click="validateAndJoinGame">join game</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="validateAndJoinGame">join game</v-btn>
+      </eth-button-wrapper>
     </span>
 
     <span v-show="coinbaseIsCreator">
@@ -12,7 +14,9 @@
         If it is taking too long for someone to join, you can canel your game
         any time before another player joins.
       </p>
-      <v-btn @click="cancelGame(gameData.gameId)">cancel game</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="cancelGame(gameData.gameId)">cancel game</v-btn>
+      </eth-button-wrapper>
     </span>
   </span>
 </template>

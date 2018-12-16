@@ -20,7 +20,9 @@
         :rules="valueDepositRules"
         required
       />
-      <v-btn @click="deposit">deposit tokens</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="deposit">deposit tokens</v-btn>
+      </eth-button-wrapper>
       <v-btn @click="clearDeposit">clear</v-btn>
     </v-form>
 
@@ -42,7 +44,9 @@
         :rules="valueWithdrawRules"
         required
       />
-      <v-btn @click="withdraw">withdraw tokens</v-btn>
+      <eth-button-wrapper>
+        <v-btn @click="withdraw">withdraw tokens</v-btn>
+      </eth-button-wrapper>
       <v-btn @click="clearWithdraw">clear</v-btn>
     </v-form>
   </span>
@@ -54,8 +58,8 @@ import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VBtn from 'vuetify/es5/components/VBtn'
 import * as VCheckbox from 'vuetify/es5/components/VCheckbox'
-import TokenDataOf from './TokenDataOf.vue'
-import TokenDepositWarnings from './TokenDepositWarnings'
+import TokenDataOf from '@/components/TokenDataOf.vue'
+import TokenDepositWarnings from '@/components/TokenDepositWarnings'
 
 export default {
   components: {

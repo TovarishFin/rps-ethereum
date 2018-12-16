@@ -21,7 +21,9 @@
             :return-object="false"
             required
           />
-          <v-btn @click="validateAndCommitChoice">commit your choice</v-btn>
+          <eth-button-wrapper>
+            <v-btn @click="validateAndCommitChoice">commit your choice</v-btn>
+          </eth-button-wrapper>
         </v-form>
       </span>
       <span v-show="coinbaseHasCommitted">
@@ -29,18 +31,15 @@
         <p>
           If the other player is taking too long feel free to start a timeout.
         </p>
+        <eth-button-wrapper>
+          <v-btn
+            :disabled="!canStartTimeout"
+            @click="startGameTimeout(selectedGameId)"
+          >
+            start timeout
+          </v-btn>
+        </eth-button-wrapper>
       </span>
-
-      <v-btn
-        :disabled="!canStartTimeout"
-        @click="startGameTimeout(selectedGameId)"
-        >start timeout</v-btn
-      >
-    </span>
-
-    <span v-show="!coinbaseIsPlayer">
-      <p class="headline">You are a not playing in this game.</p>
-      <p>Feel free to spectate!</p>
     </span>
   </span>
 </template>
