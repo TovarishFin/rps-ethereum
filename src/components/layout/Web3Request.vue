@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="modalOpenModel" persistent width="500">
+  <v-dialog v-model="web3RequestOpenModel" persistent width="500">
     <v-card>
       <v-card-title class="headline primary" primary-title>
         Enable MetaMask
@@ -39,24 +39,24 @@ export default {
     ...VDivider
   },
   computed: {
-    ...mapGetters(['modalOpen']),
-    modalOpenModel: {
+    ...mapGetters(['web3RequestOpen']),
+    web3RequestOpenModel: {
       get() {
-        return this.modalOpen
+        return this.web3RequestOpen
       },
-      set(modalOpen) {
-        this.setModalOpen(modalOpen)
+      set(web3RequestOpen) {
+        this.setWeb3RequestOpen(web3RequestOpen)
       }
     }
   },
   methods: {
-    ...mapActions(['setModalOpen', 'getWeb3Access']),
+    ...mapActions(['setWeb3RequestOpen', 'getWeb3Access']),
     continueWithPermission() {
       this.getWeb3Access()
-      this.setModalOpen(false)
+      this.setWeb3RequestOpen(false)
     },
     continueWithoutPermission() {
-      this.setModalOpen(false)
+      this.setWeb3RequestOpen(false)
     }
   }
 }

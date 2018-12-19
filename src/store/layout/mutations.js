@@ -26,8 +26,8 @@ export const toggleNotification = state => {
   state.notificationOpen = !state.notificationOpen
 }
 
-export const setModalOpen = (state, modalOpen) => {
-  state.modalOpen = modalOpen
+export const setWeb3RequestOpen = (state, web3RequestOpen) => {
+  state.web3RequestOpen = web3RequestOpen
 }
 
 export const setHideTokenDepositWarnings = (state, hide) => {

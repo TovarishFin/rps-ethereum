@@ -14,10 +14,10 @@ export default {
     ...mapGetters(['hasGrantedWeb3Access'])
   },
   methods: {
-    ...mapActions(['setModalOpen']),
+    ...mapActions(['setWeb3RequestOpen']),
     checkRequestAccess() {
       if (!this.hasGrantedWeb3Access) {
-        this.setModalOpen(true)
+        this.setWeb3RequestOpen(true)
       }
     }
   }

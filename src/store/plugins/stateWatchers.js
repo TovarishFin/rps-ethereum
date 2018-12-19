@@ -3,6 +3,10 @@ import { isAddress, addressZero } from '@/utils/data'
 const actionIdWatcher = store => {
   store.subscribe(async ({ type, payload }) => {
     switch (type) {
+      case 'setCoinbase':
+        store.dispatch('getCoinbaseActiveGameIds')
+        store.dispatch('getCoinbaseTokenUsage')
+        break
       case 'setCoinbaseTokenUsage':
         await store.dispatch('deleteTokenData')
         store.dispatch('populateTokenData')

@@ -4,7 +4,7 @@ export const notificationOpen = state => state.notificationOpen
 
 export const notificationMessage = state => state.notificationMessages[0]
 
-export const modalOpen = state => state.modalOpen
+export const web3RequestOpen = state => state.web3RequestOpen
 
 export const messagesLength = state => state.notificationMessages.length
 

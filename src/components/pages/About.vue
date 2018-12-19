@@ -1,3 +1,84 @@
 <template>
-  <v-layout column align-center> about page </v-layout>
+  <span>
+    <p class="display-2">Basic Info</p>
+    <p class="display-1">What is this site?</p>
+    <p>
+      I created this as an idea after thiking about wanting to create a
+      commit/reveal smart contract. I had also been interested in implementing
+      payments through token on top of ether. This site is the result of those
+      two lingering ideas that were in my head.
+    </p>
+
+    <p class="display-1">Why does it exist?</p>
+    <p>
+      I couldn't find any other dApps which allow making wagers in any ERC20
+      token. So I thought this might be a unique feature that thsi can offer.
+    </p>
+
+    <p class="display-1">Are there any future plans?</p>
+    <p>
+      I will probably be making a release that uses state channels which will
+      allow instant plays and rematches. Who knows when this will be out
+      though...
+    </p>
+
+    <v-divider class="mt-4 mb-4" />
+
+    <p class="display-2">Specific Guides</p>
+    <v-expansion-panel v-model="panel" popout>
+      <v-expansion-panel-content>
+        <div slot="header">Getting Started</div>
+        <v-card>
+          <v-card-text> testing and stuff that can go in there... </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+
+      <v-expansion-panel-content>
+        <div slot="header">How Does the Game Work?</div>
+        <v-card>
+          <v-card-text> testing and stuff that can go in there... </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+
+      <v-expansion-panel-content>
+        <div slot="header">Creating A Game</div>
+        <v-card>
+          <v-card-text> testing and stuff that can go in there... </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+
+      <v-expansion-panel-content>
+        <div slot="header">Joining A Game</div>
+        <v-card>
+          <v-card-text> testing and stuff that can go in there... </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+
+      <v-expansion-panel-content>
+        <div slot="header">Playing A Game</div>
+        <v-card>
+          <v-card-text> testing and stuff that can go in there... </v-card-text>
+        </v-card>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </span>
 </template>
+
+<script>
+import * as VExpansionPanel from 'vuetify/es5/components/VExpansionPanel'
+import * as VCard from 'vuetify/es5/components/VCard'
+import * as VDivider from 'vuetify/es5/components/VDivider'
+
+export default {
+  data() {
+    return {
+      panel: null
+    }
+  },
+  components: {
+    ...VExpansionPanel,
+    ...VCard,
+    ...VDivider
+  }
+}
+</script>

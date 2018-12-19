@@ -1,6 +1,7 @@
 import { weiToEth, choiceEnum, bytes32Zero, shortenAddress } from '@/utils/data'
 
 const eventWatchRetryTime = 5000
+const blockWatchTime = 1e5
 
 //
 // start bank watcher related
@@ -582,10 +583,10 @@ export const handleFeeUpdated = async ({ dispatch }, { oldFee, newFee }) => {
 // start rps retrieval related
 //
 
-// TODO: see if there is a better workaround to this... right now allEvents filter does not seem to work...
 export const getGameLogs = async ({ getters, commit }, gameId) => {
-  const { rockPaperScissorsWs } = getters
-  const fromBlock = 0
+  const { rockPaperScissorsWs, currentBlock } = getters
+  const fromBlock =
+    currentBlock - blockWatchTime > 0 ? currentBlock - blockWatchTime : 0
   const toBlock = 'latest'
   const filter = { gameId }
 
@@ -663,11 +664,13 @@ export const getGameLogs = async ({ getters, commit }, gameId) => {
 }
 
 export const getReferralPayments = async ({ getters, commit }) => {
-  const { coinbase, rockPaperScissorsWs } = getters
+  const { coinbase, rockPaperScissorsWs, currentBlock } = getters
+  const fromBlock =
+    currentBlock - blockWatchTime > 0 ? currentBlock - blockWatchTime : 0
 
   const events = await rockPaperScissorsWs.getPastEvents('ReferralPaid', {
     filter: { referrer: coinbase },
-    fromBlock: 0,
+    fromBlock,
     toBlock: 'latest'
   })
 
@@ -694,10 +697,11 @@ export const getReferralPayments = async ({ getters, commit }) => {
 }
 
 export const getBankActivity = async ({ getters, commit }) => {
-  const fromBlock = 0
+  const { coinbase, bankWs, currentBlock } = getters
+  const fromBlock =
+    currentBlock - blockWatchTime > 0 ? currentBlock - blockWatchTime : 0
   const toBlock = 'latest'
 
-  const { coinbase, bankWs } = getters
   const fundsDeposited = bankWs.getPastEvents('FundsDeposited', {
     fromBlock,
     toBlock,

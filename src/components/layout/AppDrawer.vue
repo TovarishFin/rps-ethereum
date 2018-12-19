@@ -13,9 +13,7 @@
         </v-list-tile-action>
 
         <v-list-tile-content>
-          <v-list-tile-title
-            v-text="`My Account: ${shortenAddress(coinbase)}`"
-          ></v-list-tile-title>
+          <v-list-tile-title>My Account</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
 
@@ -46,7 +44,7 @@ export default {
       items: [
         {
           icon: 'home',
-          title: 'Home',
+          title: 'Open Games',
           to: '/'
         },
         {
@@ -55,9 +53,9 @@ export default {
           to: '/about'
         },
         {
-          icon: 'mdi-coins',
-          title: 'Play Money',
-          to: '/play-money'
+          icon: 'mdi-rocket',
+          title: 'Create Game',
+          to: '/create-game'
         },
         {
           icon: 'mdi-bank',
@@ -65,9 +63,9 @@ export default {
           to: '/bank'
         },
         {
-          icon: 'mdi-rocket',
-          title: 'Create Game',
-          to: '/create-game'
+          icon: 'mdi-coins',
+          title: 'Play Money',
+          to: '/play-money'
         }
       ]
     }
