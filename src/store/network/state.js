@@ -9,5 +9,6 @@ export default {
   web3Ready: false,
   web3: null,
   web3Ws: null,
-  ethReady: false
+  ethReady: false,
+  sentTransactions: {}
 }

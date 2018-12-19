@@ -6,7 +6,6 @@
     <v-content>
       <v-container fluid>
         <v-slide-y-transition mode="out-in">
-          <!-- <router-view /> -->
           <router-handler />
         </v-slide-y-transition>
       </v-container>
@@ -15,19 +14,20 @@
     <app-notifier />
 
     <app-modal />
+    <app-transactions />
 
     <app-footer />
   </v-app>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import AppDrawer from '@/components/layout/AppDrawer'
 import AppToolbar from '@/components/layout/AppToolbar'
 import AppFooter from '@/components/layout/AppFooter'
 import AppNotifier from '@/components/layout/AppNotifier'
 import AppModal from '@/components/layout/AppModal'
 import RouterHandler from '@/components/layout/RouterHandler'
+import AppTransactions from '@/components/Transactions'
 import store from '@/store'
 
 export default {
@@ -37,10 +37,8 @@ export default {
     AppFooter,
     AppNotifier,
     AppModal,
-    RouterHandler
-  },
-  computed: {
-    ...mapGetters(['hasGrantedWeb3Permission'])
+    RouterHandler,
+    AppTransactions
   },
   beforeCreate() {
     store.dispatch('bootstrapEth')

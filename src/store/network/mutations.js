@@ -40,3 +40,11 @@ export const setWeb3Ws = async (state, payload) => {
 export const setEthReady = async (state, payload) => {
   state.ethReady = payload
 }
+
+export const setSentTransaction = async (state, transaction) => {
+  const { transactionHash } = transaction
+  state.sentTransactions = {
+    ...state.sentTransactions,
+    [transactionHash]: transaction
+  }
+}

@@ -18,13 +18,13 @@ export default {
     TokenDataOf
   },
   computed: {
-    ...mapGetters(['testToken'])
+    ...mapGetters(['testTokenWs'])
   },
   methods: {
     ...mapActions(['setSelectedTokenAddress', 'mintTestToken'])
   },
   created() {
-    this.setSelectedTokenAddress(this.testToken._address)
+    this.setSelectedTokenAddress(this.testTokenWs._address)
   },
   watch: {
     $route: 'this.setSelectedTokenAddress(this.testToken._address)'

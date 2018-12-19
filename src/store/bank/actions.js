@@ -140,69 +140,87 @@ export const populateTokenData = async ({ dispatch, getters }) => {
 // start contract setters
 //
 
-export const depositEtherFor = async ({ getters }, { userAddress, value }) => {
+export const depositEtherFor = async (
+  { getters, dispatch },
+  { userAddress, value }
+) => {
   const { bank, coinbase } = getters
-  await bank.methods.depositEtherFor(userAddress).send({
+  const tx = bank.methods.depositEtherFor(userAddress).send({
     from: coinbase,
     value: value.toString()
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Deposit Ether For' })
 }
 
-export const depositEther = async ({ getters }, value) => {
+export const depositEther = async ({ getters, dispatch }, value) => {
   const { bank, coinbase } = getters
-  await bank.methods.depositEther().send({
+  const tx = bank.methods.depositEther().send({
     from: coinbase,
     value: value.toString()
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Deposit Ether' })
 }
 
-export const withdrawEther = async ({ getters }, value) => {
+export const withdrawEther = async ({ getters, dispatch }, value) => {
   const { bank, coinbase } = getters
-  await bank.methods.withdrawEther(value.toString()).send({
+  const tx = bank.methods.withdrawEther(value.toString()).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Withdraw Ether' })
 }
 
-export const depositTokens = async ({ getters }, { tokenAddress, value }) => {
+export const depositTokens = async (
+  { getters, dispatch },
+  { tokenAddress, value }
+) => {
   const { bank, coinbase } = getters
-  await bank.methods.depositTokens(tokenAddress, value.toString()).send({
+  const tx = bank.methods.depositTokens(tokenAddress, value.toString()).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Deposit Tokens' })
 }
 
-export const withdrawTokens = async ({ getters }, { tokenAddress, value }) => {
+export const withdrawTokens = async (
+  { getters, dispatch },
+  { tokenAddress, value }
+) => {
   const { bank, coinbase } = getters
-  await bank.methods.withdrawTokens(tokenAddress, value.toString()).send({
+  const tx = bank.methods.withdrawTokens(tokenAddress, value.toString()).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Withdraw Tokens' })
 }
 
 export const batchDepositTokens = async (
-  { getters },
+  { getters, dispatch },
   { tokenAddress, value }
 ) => {
   const { web3, bank, coinbase } = getters
   const erc20 = new web3.eth.Contract(IERC20Extended.abi, tokenAddress)
-  const batch = new web3.BatchRequest()
 
   const approve = erc20.methods
     .approve(bank._address, value.toString())
-    .send.request({ from: coinbase })
+    .send({ from: coinbase })
   const deposit = bank.methods
     .depositTokens(tokenAddress, value.toString())
-    .send.request({ from: coinbase })
+    .send({ from: coinbase })
 
-  await batch.add(deposit)
-  await batch.add(approve)
-
-  await batch.execute()
+  dispatch('watchPendingTx', { tx: approve, description: 'Approve Tokens' })
+  dispatch('watchPendingTx', { tx: deposit, description: 'Deposit Tokens' })
 }
 
-export const mintTestToken = async ({ getters }) => {
+export const mintTestToken = async ({ getters, dispatch }) => {
   const { testToken, coinbase } = getters
-  await testToken.methods.mint(coinbase, toBN(5e18).toString()).send({
+  const tx = testToken.methods.mint(coinbase, toBN(5e18).toString()).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'mint test tokens' })
 }
 
 //

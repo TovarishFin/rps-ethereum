@@ -218,3 +218,19 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
   dispatch('watchBankEvents')
   dispatch('watchRockPaperScissorsEvents')
 }
+
+export const watchPendingTx = async ({ commit }, { tx, description }) => {
+  tx.once('transactionHash', transactionHash =>
+    commit('setSentTransaction', {
+      transactionHash,
+      status: 'pending',
+      description
+    })
+  ).once('receipt', receipt =>
+    commit('setSentTransaction', {
+      ...receipt,
+      status: 'complete',
+      description
+    })
+  )
+}

@@ -174,40 +174,49 @@ export const createGame = async (
   { tokenAddress, value }
 ) => {
   const { rockPaperScissors, coinbase, coinbaseReferrer } = getters
-  await rockPaperScissors.methods
+  const tx = rockPaperScissors.methods
     .createGame(coinbaseReferrer, tokenAddress, value)
     .send({
       from: coinbase
     })
 
+  dispatch('watchPendingTx', { tx, description: 'Create Game' })
+
   // this does NOT prevent referrals from getting set again,
   // just prevents from setting the storage again on the smart contract
   if (coinbaseReferrer !== addressZero) {
-    await dispatch('setCoinbaseReferrer', addressZero)
+    dispatch('setCoinbaseReferrer', addressZero)
   }
 }
 
-export const cancelGame = async ({ getters }, gameId) => {
+export const cancelGame = async ({ getters, dispatch }, gameId) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.cancelGame(gameId).send({
+  const tx = rockPaperScissors.methods.cancelGame(gameId).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Cancel Game' })
 }
 
 export const joinGame = async ({ getters, dispatch }, gameId) => {
   const { rockPaperScissors, coinbase, coinbaseReferrer } = getters
-  await rockPaperScissors.methods.joinGame(coinbaseReferrer, gameId).send({
+  const tx = rockPaperScissors.methods.joinGame(coinbaseReferrer, gameId).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Join Game' })
 
   // this does NOT prevent referrals from getting set again,
   // just prevents from setting the storage again on the smart contract
   if (coinbaseReferrer !== addressZero) {
-    await dispatch('setCoinbaseReferrer', addressZero)
+    dispatch('setCoinbaseReferrer', addressZero)
   }
 }
 
-export const commitChoice = async ({ getters, commit }, { gameId, choice }) => {
+export const commitChoice = async (
+  { getters, commit, dispatch },
+  { gameId, choice }
+) => {
   const { rockPaperScissors, coinbase, web3Ws } = getters
   const sigParams = await web3Ws.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
@@ -219,7 +228,7 @@ export const commitChoice = async ({ getters, commit }, { gameId, choice }) => {
     { t: 'uint256', v: choice },
     { t: 'bytes', v: sig }
   )
-  await rockPaperScissors.methods.commitChoice(gameId, commitHash).send({
+  const tx = rockPaperScissors.methods.commitChoice(gameId, commitHash).send({
     from: coinbase
   })
 
@@ -232,17 +241,24 @@ export const commitChoice = async ({ getters, commit }, { gameId, choice }) => {
   }
 
   commit('setCommit', { choiceCommit, gameId })
+
+  dispatch('watchPendingTx', { tx, description: 'Commit Choice' })
 }
 
-export const revealChoice = async ({ getters }, { gameId, choice, sig }) => {
+export const revealChoice = async (
+  { getters, dispatch },
+  { gameId, choice, sig }
+) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.revealChoice(gameId, choice, sig).send({
+  const tx = rockPaperScissors.methods.revealChoice(gameId, choice, sig).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Reveal Choice' })
 }
 
 export const rebuildAndRevealChoice = async (
-  { getters },
+  { getters, dispatch },
   { gameId, choice }
 ) => {
   const { coinbase, web3Ws } = getters
@@ -252,28 +268,36 @@ export const rebuildAndRevealChoice = async (
   )
   const sig = await web3Ws.eth.sign(sigParams, coinbase)
 
-  await revealChoice({ getters }, { gameId, choice, sig })
+  const tx = revealChoice({ getters }, { gameId, choice, sig })
+
+  dispatch('watchPendingTx', { tx, description: 'Reveal Choice' })
 }
 
-export const startGameTimeout = async ({ getters }, gameId) => {
+export const startGameTimeout = async ({ getters, dispatch }, gameId) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.startGameTimeout(gameId).send({
+  const tx = rockPaperScissors.methods.startGameTimeout(gameId).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Start Timeout' })
 }
 
-export const timeoutGame = async ({ getters }, gameId) => {
+export const timeoutGame = async ({ getters, dispatch }, gameId) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.timeoutGame(gameId).send({
+  const tx = rockPaperScissors.methods.timeoutGame(gameId).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Timeout Game' })
 }
 
-export const settleBet = async ({ getters }, gameId) => {
+export const settleBet = async ({ getters, dispatch }, gameId) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.settleBet(gameId).send({
+  const tx = rockPaperScissors.methods.settleBet(gameId).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Settle Bet' })
 }
 
 //
@@ -284,53 +308,71 @@ export const settleBet = async ({ getters }, gameId) => {
 // start owner contract state setters
 //
 
-export const pause = async ({ getters }) => {
+export const pause = async ({ getters, dispatch }) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.pause().send({
+  const tx = rockPaperScissors.methods.pause().send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Pause Game' })
 }
 
-export const unpause = async ({ getters }) => {
+export const unpause = async ({ getters, dispatch }) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.unpause().send({
+  const tx = rockPaperScissors.methods.unpause().send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Unpase Game' })
 }
 
-export const updateMinBet = async ({ getters }, newMinBet) => {
+export const updateMinBet = async ({ getters, dispatch }, newMinBet) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.newMinBet(newMinBet).send({
+  const tx = rockPaperScissors.methods.newMinBet(newMinBet).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Update Min Bet' })
 }
 
-export const updateTimeout = async ({ getters }, newTimeoutInSeconds) => {
+export const updateTimeout = async (
+  { getters, dispatch },
+  newTimeoutInSeconds
+) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods
+  const tx = rockPaperScissors.methods
     .newTimeoutInSeconds(newTimeoutInSeconds)
     .send({
       from: coinbase
     })
+
+  dispatch('watchPendingTx', { tx, description: 'Update Timeout' })
 }
 
 export const updateReferralFeePerMille = async (
-  { getters },
+  { getters, dispatch },
   newReferralFeePerMille
 ) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods
+  const tx = rockPaperScissors.methods
     .newReferralFeePerMille(newReferralFeePerMille)
     .send({
       from: coinbase
     })
+
+  dispatch('watchPendingTx', { tx, description: 'Update Referral Fee' })
 }
 
-export const updateFeePerMille = async ({ getters }, newFeePerMille) => {
+export const updateFeePerMille = async (
+  { getters, dispatch },
+  newFeePerMille
+) => {
   const { rockPaperScissors, coinbase } = getters
-  await rockPaperScissors.methods.newFeePerMille(newFeePerMille).send({
+  const tx = rockPaperScissors.methods.newFeePerMille(newFeePerMille).send({
     from: coinbase
   })
+
+  dispatch('watchPendingTx', { tx, description: 'Update New Fee' })
 }
 
 //

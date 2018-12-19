@@ -48,3 +48,7 @@ export const setAccountTabs = ({ commit }, tabIndex) => {
 export const setHasGrantedWeb3Access = ({ commit }, hasGrantedWeb3Access) => {
   commit('setHasGrantedWeb3Access', hasGrantedWeb3Access)
 }
+
+export const setShowTransactions = ({ commit }, showTransactions) => {
+  commit('setShowTransactions', showTransactions)
+}

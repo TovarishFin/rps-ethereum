@@ -7,5 +7,6 @@ export default {
   hideEtherDepositWarnings: false,
   bankTabs: 0,
   accountTabs: 0,
-  hasGrantedWeb3Access: false
+  hasGrantedWeb3Access: false,
+  showTransactions: true
 }

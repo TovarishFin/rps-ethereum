@@ -76,27 +76,13 @@ export default {
     ...mapActions(['setDrawer'])
   },
   computed: {
-    ...mapGetters(['drawerOpen', 'coinbase', 'network']),
+    ...mapGetters(['drawerOpen', 'coinbase']),
     drawerStatus: {
       get() {
         return this.drawerOpen
       },
       set(status) {
         this.setDrawer(status)
-      }
-    },
-    coinbaseLink() {
-      switch (this.network) {
-        case 3:
-          return `https://ropsten.etherscan.io/address/${this.coinbase}`
-        case 4:
-          return `https://rinkeby.etherscan.io/address/${this.coinbase}`
-        case 42:
-          return `https://kovan.etherscan.io/address/${this.coinbase}`
-        case 1:
-          return `https://etherscan.io/address/${this.coinbase}`
-        default:
-          return `https://etherscan.io/address/${this.coinbase}`
       }
     }
   }

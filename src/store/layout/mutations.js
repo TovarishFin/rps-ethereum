@@ -49,3 +49,7 @@ export const setAccountTabs = (state, tabsIndex) => {
 export const setHasGrantedWeb3Access = (state, hasGrantedWeb3Access) => {
   state.hasGrantedWeb3Access = hasGrantedWeb3Access
 }
+
+export const setShowTransactions = (state, showTransactions) => {
+  state.showTransactions = showTransactions
+}
