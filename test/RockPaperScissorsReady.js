@@ -83,7 +83,7 @@ describe('when a game is at ready stage', () => {
       const choice = choices.rock
       const sigParams = await web3.eth.abi.encodeParameters(
         ['uint256', 'uint256'],
-        [gameId, choice]
+        [gameId.toString(), choice]
       )
       const sig = await web3.eth.sign(sigParams, tokenUser)
       await assertRevert(

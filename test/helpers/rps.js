@@ -332,7 +332,7 @@ const testCommitChoice = async (contracts, gameId, choice, config) => {
 
   const sigParams = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice]
+    [gameId.toString(), choice]
   )
   const sig = await web3.eth.sign(sigParams, committer)
   const commitHash = soliditySha3(
@@ -395,7 +395,6 @@ const testCommitChoice = async (contracts, gameId, choice, config) => {
 const testRevealChoice = async (contracts, gameId, choice, sig, config) => {
   const { rps } = contracts
   const { from: revealer } = config
-
   await rps.revealChoice(gameId, choice, sig, config)
 
   const postGame = await rps.games(gameId)
