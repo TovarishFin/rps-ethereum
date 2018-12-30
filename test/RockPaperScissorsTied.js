@@ -1,5 +1,6 @@
 const {
   setupContracts,
+  initializeSupplementalProxies,
   addressZero,
   ethUser,
   tokenUser,
@@ -29,6 +30,7 @@ describe('when a game is at tied stage', () => {
 
     beforeEach('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       await testInitialization(contracts)
       gameId = await createRevealedGame(
         contracts,

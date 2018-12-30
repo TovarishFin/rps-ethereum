@@ -2,6 +2,9 @@ const Registry = artifacts.require('Registry')
 const WrappedEther = artifacts.require('WrappedEther')
 const TestToken = artifacts.require('TestToken')
 const Bank = artifacts.require('Bank')
+const Statistics = artifacts.require('Statistics')
+const Referrals = artifacts.require('Referrals')
+const Placeholder = artifacts.require('Placeholder')
 const ContractProxy = artifacts.require('Proxy')
 const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
 const RockPaperScissorsManagement = artifacts.require(
@@ -49,6 +52,63 @@ module.exports = (deployer, network, accounts) => {
         const bnk = await Bank.deployed()
         console.log(chalk.cyan('Bank deployed'))
 
+        console.log(chalk.yellow('deploying placeholder contract...'))
+
+        await deployer.deploy(Placeholder, {
+          from: owner
+        })
+        const plc = await Placeholder.deployed()
+
+        console.log(chalk.cyan('placeholder contract deployed'))
+
+        console.log(
+          chalk.yellow('setting up upgradeable Referrals Contract...')
+        )
+
+        await deployer.deploy(Referrals, {
+          from: owner
+        })
+        const refMaster = await Referrals.deployed()
+        const refProxy = await deployer.deploy(
+          ContractProxy,
+          refMaster.address,
+          plc.address,
+          {
+            from: owner
+          }
+        )
+        const ref = await Referrals.at(refProxy.address)
+        await ref.initialize(reg.address, {
+          from: owner
+        })
+
+        console.log(
+          chalk.cyan('upgreadeable Referrals contract setup complete')
+        )
+
+        console.log(
+          chalk.yellow('setting up upgradeable Statistics Contract...')
+        )
+
+        await deployer.deploy(Statistics, { from: owner })
+        const staMaster = await Statistics.deployed()
+        const staProxy = await deployer.deploy(
+          ContractProxy,
+          staMaster.address,
+          plc.address,
+          {
+            from: owner
+          }
+        )
+        const sta = await Statistics.at(staProxy.address)
+        await sta.initialize(reg.address, {
+          from: owner
+        })
+
+        console.log(
+          chalk.cyan('upgreadeable Statistics contract setup complete')
+        )
+
         console.log(chalk.yellow('deploying RockPaperScissorsCore (master)'))
         await deployer.deploy(RockPaperScissorsCore, {
           from: owner
@@ -79,6 +139,9 @@ module.exports = (deployer, network, accounts) => {
         console.log(chalk.yellow('updating registry entries...'))
         await reg.updateEntry('Bank', bnk.address)
         await reg.updateEntry('RockPaperScissors', rpsProxy.address)
+        await reg.updateEntry('Statistics', sta.address)
+        await reg.updateEntry('Referrals', ref.address)
+        await reg.addGameContract(rpsProxy.address)
         console.log(chalk.cyan('registry updates complete'))
 
         console.log(chalk.yellow('initializing proxied contract...'))
@@ -100,19 +163,51 @@ module.exports = (deployer, network, accounts) => {
         console.log(
           chalk.yellow('masking multi proxy setup as single contract...')
         )
+        const networkId = await web3.eth.net.getId()
 
         const iRpsBuildPath = path.join(
           __dirname,
           '../',
           'contractsBuild',
-          'IRockPaperScissors.json'
+          'IReferrals.json'
         )
         const iRpsBuild = JSON.parse(fs.readFileSync(iRpsBuildPath))
-        const networkId = await web3.eth.net.getId()
         iRpsBuild.networks[networkId] = {}
         iRpsBuild.networks[networkId].address = rpsProxy.address
 
         fs.writeFileSync(iRpsBuildPath, JSON.stringify(iRpsBuild, null, 2))
+
+        const iStatisticsBuildPath = path.join(
+          __dirname,
+          '../',
+          'contractsBuild',
+          'IStatistics.json'
+        )
+        const iStatisticsBuild = JSON.parse(
+          fs.readFileSync(iStatisticsBuildPath)
+        )
+        iStatisticsBuild.networks[networkId] = {}
+        iStatisticsBuild.networks[networkId].address = staProxy.address
+
+        fs.writeFileSync(
+          iStatisticsBuildPath,
+          JSON.stringify(iStatisticsBuild, null, 2)
+        )
+
+        const iReferralsBuildPath = path.join(
+          __dirname,
+          '../',
+          'contractsBuild',
+          'IRockPaperScissors.json'
+        )
+        const iReferralsBuild = JSON.parse(fs.readFileSync(iReferralsBuildPath))
+        iReferralsBuild.networks[networkId] = {}
+        iReferralsBuild.networks[networkId].address = refProxy.address
+
+        fs.writeFileSync(
+          iReferralsBuildPath,
+          JSON.stringify(iReferralsBuild, null, 2)
+        )
 
         console.log(chalk.cyan('masking complete'))
 

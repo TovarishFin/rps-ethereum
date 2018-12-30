@@ -395,6 +395,7 @@ const testCommitChoice = async (contracts, gameId, choice, config) => {
 const testRevealChoice = async (contracts, gameId, choice, sig, config) => {
   const { rps } = contracts
   const { from: revealer } = config
+
   await rps.revealChoice(gameId, choice, sig, config)
 
   const postGame = await rps.games(gameId)

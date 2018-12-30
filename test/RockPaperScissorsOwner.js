@@ -1,5 +1,6 @@
 const {
   setupContracts,
+  initializeSupplementalProxies,
   owner,
   tokenUser,
   assertRevert
@@ -21,6 +22,7 @@ describe('when performing owner functions', async () => {
 
     before('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       await testInitialization(contracts)
     })
 

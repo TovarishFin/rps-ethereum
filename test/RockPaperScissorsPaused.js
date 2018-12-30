@@ -1,5 +1,6 @@
 const {
   setupContracts,
+  initializeSupplementalProxies,
   addressZero,
   owner,
   ethUser,
@@ -34,6 +35,7 @@ describe('when pausing the contract', async () => {
 
     beforeEach('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       testInitialization(contracts)
     })
 

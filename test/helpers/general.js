@@ -20,6 +20,9 @@ const ethUser = accounts[1]
 const tokenUser = accounts[2]
 const referrer = accounts[3]
 const referrerAlt = accounts[4]
+const stubGameContract = accounts[5]
+const other = accounts[6]
+const referee = accounts[7]
 const decimals18 = new BN(10).pow(new BN(18))
 const bigZero = new BN(0)
 const addressZero = `0x${'0'.repeat(40)}`
@@ -194,9 +197,6 @@ const setupContracts = async () => {
     from: owner
   })
   const ref = await Referrals.at(refProxy.address)
-  await ref.initialize(reg.address, {
-    from: owner
-  })
   const staMaster = await Statistics.new(reg.address, {
     from: owner
   })
@@ -204,9 +204,6 @@ const setupContracts = async () => {
     from: owner
   })
   const sta = await Statistics.at(staProxy.address, plc.address)
-  await sta.initialize(reg.address, {
-    from: owner
-  })
   const rpsCore = await RockPaperScissorsCore.new({
     from: owner
   })
@@ -227,7 +224,7 @@ const setupContracts = async () => {
   await reg.updateEntry('RockPaperScissors', rps.address)
   await reg.updateEntry('Statistics', sta.address)
   await reg.updateEntry('Referrals', ref.address)
-  await reg.addGameContract(rps.address)
+  await reg.addGameContract(rpsProxy.address)
 
   for (const account of accounts) {
     await tst.mint(account, toBN(5e18), { from: account })
@@ -248,7 +245,19 @@ const setupContracts = async () => {
   }
 }
 
+const initializeSupplementalProxies = async (
+  contracts,
+  config = { from: owner }
+) => {
+  const { sta, ref, reg } = contracts
+  await sta.initialize(reg.address, config)
+  await ref.initialize(reg.address, config)
+}
+
 module.exports = {
+  referee,
+  other,
+  stubGameContract,
   owner,
   ethUser,
   tokenUser,
@@ -273,5 +282,6 @@ module.exports = {
   oneBlockWeek,
   oneBlockMonth,
   oneBlockYear,
-  setupContracts
+  setupContracts,
+  initializeSupplementalProxies
 }

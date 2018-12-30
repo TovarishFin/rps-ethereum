@@ -1,5 +1,6 @@
 const {
   setupContracts,
+  initializeSupplementalProxies,
   addressZero,
   owner,
   ethUser,
@@ -36,6 +37,7 @@ describe('when deploying RockPaperScissors', () => {
 
     beforeEach('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
     })
 
     it('it should initialize with correct values', async () => {
@@ -53,6 +55,7 @@ describe('when going through normal game flow', () => {
 
   before('setup contracts', async () => {
     contracts = await setupContracts()
+    await initializeSupplementalProxies(contracts)
     await testInitialization(contracts)
   })
 
@@ -128,6 +131,7 @@ describe('when handling unhappy paths', async () => {
 
     beforeEach('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       await testInitialization(contracts)
       await testDepositTokens(
         contracts.bnk,
@@ -576,6 +580,7 @@ describe('when settling bets', () => {
 
     beforeEach('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       await testInitialization(contracts)
     })
 
@@ -831,6 +836,7 @@ describe('when handling referrals', async () => {
 
     before('setup contracts', async () => {
       contracts = await setupContracts()
+      await initializeSupplementalProxies(contracts)
       await testInitialization(contracts)
     })
 
