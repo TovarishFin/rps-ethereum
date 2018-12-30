@@ -26,22 +26,6 @@ export const setFeePerMille = (state, feePerMille) => {
   state.feePerMille = feePerMille
 }
 
-export const setTotalPlayCount = (state, totalPlayCount) => {
-  state.totalPlayCount = totalPlayCount
-}
-
-export const setTotalWinCount = (state, totalWinCount) => {
-  state.totalWinCount = totalWinCount
-}
-
-export const setTotalWinVolume = (state, totalWinVolume) => {
-  state.totalWinVolume = totalWinVolume
-}
-
-export const setTotalReferralVolume = (state, totalReferralVolume) => {
-  state.totalReferralVolume = totalReferralVolume
-}
-
 export const setGame = (state, { gameId, game }) => {
   state.games = { ...state.games, [gameId]: game }
 }

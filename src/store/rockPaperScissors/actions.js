@@ -73,40 +73,6 @@ export const getFeePerMille = async ({ getters, commit }) => {
   commit('setFeePerMille', feePerMille)
 }
 
-export const getTotalPlayCount = async ({ getters, commit }) => {
-  const { rockPaperScissorsWs } = getters
-  const totalPlayCount = await rockPaperScissorsWs.methods
-    .totalPlayCount()
-    .call()
-
-  commit('setTotalPlayCount', totalPlayCount)
-}
-
-export const getTotalWinCount = async ({ getters, commit }) => {
-  const { rockPaperScissorsWs } = getters
-  const totalWinCount = await rockPaperScissorsWs.methods.totalWinCount().call()
-
-  commit('setTotalWinCount', totalWinCount)
-}
-
-export const getTotalWinVolume = async ({ getters, commit }) => {
-  const { rockPaperScissorsWs } = getters
-  const totalWinVolume = await rockPaperScissorsWs.methods
-    .totalWinVolume()
-    .call()
-
-  commit('setTotalWinVolume', totalWinVolume)
-}
-
-export const getTotalReferralVolume = async ({ getters, commit }) => {
-  const { rockPaperScissorsWs } = getters
-  const totalReferralVolume = await rockPaperScissorsWs.methods
-    .totalReferralVolume()
-    .call()
-
-  commit('setTotalReferralVolume', totalReferralVolume)
-}
-
 export const getGame = async ({ getters, commit, dispatch }, gameId) => {
   const { rockPaperScissorsWs } = getters
   const game = await rockPaperScissorsWs.methods.games(gameId).call()

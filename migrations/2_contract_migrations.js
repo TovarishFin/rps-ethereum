@@ -139,8 +139,8 @@ module.exports = (deployer, network, accounts) => {
         console.log(chalk.yellow('updating registry entries...'))
         await reg.updateEntry('Bank', bnk.address)
         await reg.updateEntry('RockPaperScissors', rpsProxy.address)
-        await reg.updateEntry('Statistics', sta.address)
-        await reg.updateEntry('Referrals', ref.address)
+        await reg.updateEntry('Statistics', staProxy.address)
+        await reg.updateEntry('Referrals', refProxy.address)
         await reg.addGameContract(rpsProxy.address)
         console.log(chalk.cyan('registry updates complete'))
 
@@ -169,7 +169,7 @@ module.exports = (deployer, network, accounts) => {
           __dirname,
           '../',
           'contractsBuild',
-          'IReferrals.json'
+          'IRockPaperScissors.json'
         )
         const iRpsBuild = JSON.parse(fs.readFileSync(iRpsBuildPath))
         iRpsBuild.networks[networkId] = {}
@@ -198,7 +198,7 @@ module.exports = (deployer, network, accounts) => {
           __dirname,
           '../',
           'contractsBuild',
-          'IRockPaperScissors.json'
+          'IReferrals.json'
         )
         const iReferralsBuild = JSON.parse(fs.readFileSync(iReferralsBuildPath))
         iReferralsBuild.networks[networkId] = {}

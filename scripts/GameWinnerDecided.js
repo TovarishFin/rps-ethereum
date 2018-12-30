@@ -55,7 +55,7 @@ module.exports = async function(callback) {
   const choice1 = '1'
   const sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   const sig1 = await web3.eth.sign(sigParams1, creator)
   const commitHash1 = soliditySha3(

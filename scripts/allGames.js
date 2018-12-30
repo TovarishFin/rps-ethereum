@@ -39,6 +39,7 @@ module.exports = async function(callback) {
   console.log(chalk.yellow('creating game...'))
 
   await rps.createGame(referrer, tst.address, betAmount, { from: creator })
+
   gameId = await rps.lastGameId()
 
   console.log(chalk.cyan('game creation complete'))
@@ -152,7 +153,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -165,7 +166,7 @@ module.exports = async function(callback) {
   choice2 = '2'
   sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice2]
+    [gameId.toString(), choice2]
   )
   sig2 = await web3.eth.sign(sigParams2, joiner)
   commitHash2 = soliditySha3(
@@ -226,7 +227,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -241,7 +242,7 @@ module.exports = async function(callback) {
   choice2 = '1'
   sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice2]
+    [gameId.toString(), choice2]
   )
   sig2 = await web3.eth.sign(sigParams2, joiner)
   commitHash2 = soliditySha3(
@@ -316,7 +317,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -331,7 +332,7 @@ module.exports = async function(callback) {
   choice2 = '2'
   sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice2]
+    [gameId.toString(), choice2]
   )
   sig2 = await web3.eth.sign(sigParams2, joiner)
   commitHash2 = soliditySha3(
@@ -406,7 +407,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -421,7 +422,7 @@ module.exports = async function(callback) {
   choice2 = '2'
   sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice2]
+    [gameId.toString(), choice2]
   )
   sig2 = await web3.eth.sign(sigParams2, joiner)
   commitHash2 = soliditySha3(
@@ -504,7 +505,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -575,7 +576,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
@@ -590,7 +591,7 @@ module.exports = async function(callback) {
   choice2 = '2'
   sigParams2 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice2]
+    [gameId.toString(), choice2]
   )
   sig2 = await web3.eth.sign(sigParams2, joiner)
   commitHash2 = soliditySha3(
@@ -661,7 +662,7 @@ module.exports = async function(callback) {
   choice1 = '1'
   sigParams1 = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice1]
+    [gameId.toString(), choice1]
   )
   sig1 = await web3.eth.sign(sigParams1, creator)
   commitHash1 = soliditySha3(
