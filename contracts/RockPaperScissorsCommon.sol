@@ -3,6 +3,8 @@ pragma solidity ^0.4.25;
 // interfaces
 import "./interfaces/IRegistry.sol";
 import "./interfaces/IBank.sol";
+import "./interfaces/IStatistics.sol";
+import "./interfaces/IReferrals.sol";
 // libraries
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 // contracts
@@ -31,20 +33,6 @@ contract RockPaperScissorsCommon is Upgradeable {
   //
 
   //
-  // start stats
-  //
-
-  uint256 public totalPlayCount;
-  uint256 public totalWinCount;
-  uint256 public totalWinVolume;
-  uint256 public totalReferralCount;
-  uint256 public totalReferralVolume;
-
-  //
-  // end stats
-  //
-
-  //
   // start game tracking storage
   //
 
@@ -54,7 +42,6 @@ contract RockPaperScissorsCommon is Upgradeable {
   mapping(address => uint256[]) public activeGamesOf;
   mapping(uint256 => uint256) public activeGameOfIndex;
   mapping(uint256 => uint256) public timingOutGames;
-  mapping(address => address) public referredBy;
 
   //
   // end game tracking storage
@@ -274,6 +261,22 @@ contract RockPaperScissorsCommon is Upgradeable {
     return IBank(registry.getEntry("Bank"));
   }
 
+  function getStatistics()
+    internal
+    view
+    returns (IStatistics)
+  {
+    return IStatistics(registry.getEntry("Statistics"));
+  }
+
+  function getReferrals()
+    internal
+    view
+    returns (IReferrals)
+  {
+    return IReferrals(registry.getEntry("Referrals"));
+  }
+
   function removeActiveGameOf(
     address _player,
     uint256 _gameId
@@ -357,7 +360,7 @@ contract RockPaperScissorsCommon is Upgradeable {
 
     enterStage(_gameId, Stage.WinnerDecided);
 
-    totalWinCount++;
+    getStatistics().incrementTotalWinCount();
 
     address _loser = _game.winner == _a1 ? _a2 : _a1;
 
@@ -374,7 +377,7 @@ contract RockPaperScissorsCommon is Upgradeable {
   {
     uint256 _ownerFee = _bet.mul(feePerMille).div(1e3);
     uint256 _betAfterFee = _bet.sub(_ownerFee);
-    address _referrer = referredBy[_feePayer];
+    address _referrer = getReferrals().getReferral(_feePayer);
     address _owner = owner();
     uint256 _referralFee;
 
@@ -389,7 +392,7 @@ contract RockPaperScissorsCommon is Upgradeable {
         .sub(_ownerFee)
         .sub(_referralFee);
 
-      totalReferralVolume = totalReferralVolume.add(_referralFee);
+      getStatistics().incrementTotalReferralVolume(_referralFee);
     }
 
     IBank _bank = getBank();

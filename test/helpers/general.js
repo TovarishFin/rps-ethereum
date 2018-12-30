@@ -2,6 +2,9 @@ const Registry = artifacts.require('Registry')
 const WrappedEther = artifacts.require('WrappedEther')
 const TestToken = artifacts.require('TestToken')
 const Bank = artifacts.require('Bank')
+const Statistics = artifacts.require('Statistics')
+const Referrals = artifacts.require('Referrals')
+const Placeholder = artifacts.require('Placeholder')
 const ContractProxy = artifacts.require('Proxy')
 const RockPaperScissorsCore = artifacts.require('RockPaperScissorsCore')
 const RockPaperScissorsManagement = artifacts.require(
@@ -181,6 +184,29 @@ const setupContracts = async () => {
   const bnk = await Bank.new(reg.address, weth.address, {
     from: owner
   })
+  const plc = await Placeholder.new({
+    from: owner
+  })
+  const refMaster = await Referrals.new(reg.address, {
+    from: owner
+  })
+  const refProxy = await ContractProxy.new(refMaster.address, plc.address, {
+    from: owner
+  })
+  const ref = await Referrals.at(refProxy.address)
+  await ref.initialize(reg.address, {
+    from: owner
+  })
+  const staMaster = await Statistics.new(reg.address, {
+    from: owner
+  })
+  const staProxy = await ContractProxy.new(staMaster.address, plc.address, {
+    from: owner
+  })
+  const sta = await Statistics.at(staProxy.address, plc.address)
+  await sta.initialize(reg.address, {
+    from: owner
+  })
   const rpsCore = await RockPaperScissorsCore.new({
     from: owner
   })
@@ -199,6 +225,9 @@ const setupContracts = async () => {
 
   await reg.updateEntry('Bank', bnk.address)
   await reg.updateEntry('RockPaperScissors', rps.address)
+  await reg.updateEntry('Statistics', sta.address)
+  await reg.updateEntry('Referrals', ref.address)
+  await reg.addGameContract(rps.address)
 
   for (const account of accounts) {
     await tst.mint(account, toBN(5e18), { from: account })
@@ -213,7 +242,9 @@ const setupContracts = async () => {
     rps,
     rpsCore,
     rpsMan,
-    rpsProxy
+    rpsProxy,
+    ref,
+    sta
   }
 }
 

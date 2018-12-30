@@ -35,20 +35,6 @@ contract IRockPaperScissors {
   //
 
   //
-  // start stats
-  //
-
-  uint256 public totalPlayCount;
-  uint256 public totalWinCount;
-  uint256 public totalWinVolume;
-  uint256 public totalReferralCount;
-  uint256 public totalReferralVolume;
-
-  //
-  // end stats
-  //
-
-  //
   // start game tracking storage
   //
 
@@ -58,7 +44,6 @@ contract IRockPaperScissors {
   mapping(address => uint256[]) public activeGamesOf;
   mapping(uint256 => uint256) public activeGameOfIndex;
   mapping(uint256 => uint256) public timingOutGames;
-  mapping(address => address) public referredBy;
 
   //
   // end game tracking storage

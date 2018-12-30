@@ -21,4 +21,21 @@ interface IRegistry {
     external
     view
     returns (address);
+
+  function addGameContract(
+    address _gameContract
+  )
+    external;
+
+  function removeGameContract(
+    address _gameContract
+  )
+    external;
+
+  function isGameContract(
+    address _contractAddress
+  )
+    external
+    view
+    returns (bool);
 }

@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract Registry is Ownable {
   mapping(bytes32 => address) private entries;
+  mapping(address => bool) public isGameContract;
 
   event EntryUpdated(
     string name,
@@ -16,6 +17,7 @@ contract Registry is Ownable {
     address _address
   )
     external
+    onlyOwner
   {
     bytes32 _name32 = keccak256(abi.encodePacked(_name));
     require(_address != entries[_name32]);
@@ -48,5 +50,23 @@ contract Registry is Ownable {
     require(entries[_name32] != address(0));
 
     return entries[_name32];
+  }
+
+  function addGameContract(
+    address _gameContract
+  )
+    external
+    onlyOwner
+  {
+    isGameContract[_gameContract] = true;
+  }
+
+  function removeGameContract(
+    address _gameContract
+  )
+    external
+    onlyOwner
+  {
+    isGameContract[_gameContract] = false;
   }
 }

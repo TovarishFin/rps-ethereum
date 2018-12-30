@@ -3,9 +3,9 @@ pragma solidity ^0.4.25;
 // interfaces
 import "./interfaces/IRegistry.sol";
 import "./interfaces/IWrappedEther.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 // libraries
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 // TODO: tokenUsage is getting added more than once somewhere! check on this!
 contract Bank {
@@ -55,8 +55,8 @@ contract Bank {
     address indexed fundsOwner
   );
 
-  modifier onlyRps() {
-    require(msg.sender == registry.getEntry("RockPaperScissors"));
+  modifier onlyGameContract() {
+    require(registry.isGameContract(msg.sender));
 
     _;
   }
@@ -201,7 +201,7 @@ contract Bank {
     uint256 _value
   )
     external
-    onlyRps
+    onlyGameContract
   {
     tokenBalanceOf[_fundsOwner][_tokenAddress] = tokenBalanceOf[_fundsOwner][_tokenAddress]
       .sub(_value);
@@ -217,7 +217,7 @@ contract Bank {
     uint256 _value
   )
     external
-    onlyRps
+    onlyGameContract
   {
     allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
       .sub(_value);
@@ -234,7 +234,7 @@ contract Bank {
     uint256 _value
   )
     external
-    onlyRps
+    onlyGameContract
   {
     allocatedTokensOf[_fundsOwner][_tokenAddress] = allocatedTokensOf[_fundsOwner][_tokenAddress]
       .sub(_value);

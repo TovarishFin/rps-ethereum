@@ -144,7 +144,7 @@ contract RockPaperScissorsManagement is RockPaperScissorsCommon {
 
     enterStage(_gameId, Stage.Paid);
 
-    totalWinVolume = totalWinVolume.add(_bet1AfterFees.add(_bet2AfterFees));
+    getStatistics().incrementTotalWinVolume(_bet1AfterFees.add(_bet2AfterFees));
   }
 
   //

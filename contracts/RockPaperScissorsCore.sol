@@ -127,11 +127,11 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     _bank.allocateTokensOf(msg.sender, _tokenAddress, _value);
 
     if (_referrer != address(0)) {
-      referredBy[msg.sender] = _referrer;
+      getReferrals().setReferral(msg.sender, _referrer);
 
       emit ReferralSet(_referrer, msg.sender);
 
-      totalReferralCount++;
+      getStatistics().incrementTotalReferralCount();
     }
 
     lastGameId++;
@@ -190,11 +190,11 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
     _bank.allocateTokensOf(msg.sender, _game.tokenAddress, _game.bet);
 
     if (_referrer != address(0)) {
-      referredBy[msg.sender] = _referrer;
+      getReferrals().setReferral(msg.sender, _referrer);
 
       emit ReferralSet(_referrer, msg.sender);
 
-      totalReferralCount++;
+      getStatistics().incrementTotalReferralCount();
     }
 
     _game.addressP2 = msg.sender;
@@ -256,7 +256,7 @@ contract RockPaperScissorsCore is RockPaperScissorsCommon {
 
     emit ChoiceRevealed(_gameId, msg.sender);
 
-    totalPlayCount++;
+    getStatistics().incrementTotalPlayCount();
 
     if (_game.choiceP1 != Choice.Undecided && _game.choiceP2 != Choice.Undecided) {
       computeWinner(_gameId);

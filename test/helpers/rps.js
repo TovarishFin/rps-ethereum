@@ -133,7 +133,7 @@ const testCreateGame = async (
   config
 ) => {
   const { from: creator, value: etherDesposit } = config
-  const { rps, bnk, weth } = contracts
+  const { rps, bnk, weth, ref } = contracts
 
   const preOpenGames = await rps.allOpenGames()
   const preOpenGamesLength = await rps.openGamesLength()
@@ -148,7 +148,7 @@ const testCreateGame = async (
   const postBankWethBalance = await bnk.tokenBalanceOf(creator, weth.address)
   const postLastGameId = await rps.lastGameId()
   const postGame = await rps.games(preLastGameId.add(toBN(1)))
-  const postReferredBy = await rps.referredBy(creator)
+  const postReferredBy = await ref.referredBy(creator)
   const postOpenGames = await rps.allOpenGames()
   const postOpenGamesLength = await rps.openGamesLength()
 
@@ -235,7 +235,7 @@ const testCreateGame = async (
 
 const testJoinGame = async (contracts, referrer, gameId, config) => {
   const { from: joiner, value: etherDesposit } = config
-  const { rps, bnk, weth } = contracts
+  const { rps, bnk, weth, ref } = contracts
 
   const preOpenGames = await rps.allOpenGames()
   const preOpenGamesLength = await rps.openGamesLength()
@@ -249,7 +249,7 @@ const testJoinGame = async (contracts, referrer, gameId, config) => {
   const postGame = await rps.games(gameId)
   const postAllocatedTokens = await bnk.allocatedTokensOf(joiner, tokenAddress)
   const postBankWethBalance = await bnk.tokenBalanceOf(joiner, weth.address)
-  const postReferredBy = await rps.referredBy(joiner)
+  const postReferredBy = await ref.referredBy(joiner)
   const postOpenGames = await rps.allOpenGames()
   const postOpenGamesLength = await rps.openGamesLength()
 
@@ -463,11 +463,11 @@ const computeWinner = game => {
 }
 
 const computeFees = async (contracts, feePayer, betAmount) => {
-  const { rps } = contracts
+  const { rps, ref } = contracts
 
   const feePerMille = await rps.feePerMille()
   const referralFeePerMille = await rps.referralFeePerMille()
-  const referrer = await rps.referredBy(feePayer)
+  const referrer = await ref.referredBy(feePayer)
   let referralFee = toBN(0)
   let ownerFee = betAmount.mul(feePerMille).div(toBN(1e3))
   let betAfterFee = toBN(0)
@@ -613,7 +613,7 @@ const createRevealedGame = async (
 }
 
 const testSettleBetWinner = async (contracts, gameId, config) => {
-  const { rps, bnk } = contracts
+  const { rps, bnk, ref } = contracts
 
   const {
     addressP1,
@@ -624,8 +624,8 @@ const testSettleBetWinner = async (contracts, gameId, config) => {
     winner
   } = await rps.games(gameId)
   const loser = winner == addressP1 ? addressP2 : addressP1
-  const referrerP1 = await rps.referredBy(addressP1)
-  const referrerP2 = await rps.referredBy(addressP2)
+  const referrerP1 = await ref.referredBy(addressP1)
+  const referrerP2 = await ref.referredBy(addressP2)
 
   const preOwnerTokenBankBalance = await bnk.tokenBalanceOf(owner, tokenAddress)
   const preReferrerP1TokenBankBalance = await bnk.tokenBalanceOf(
@@ -761,7 +761,7 @@ const testSettleBetWinner = async (contracts, gameId, config) => {
 }
 
 const testSettleBetTied = async (contracts, gameId, config) => {
-  const { rps, bnk } = contracts
+  const { rps, bnk, ref } = contracts
 
   const {
     addressP1,
@@ -771,8 +771,8 @@ const testSettleBetTied = async (contracts, gameId, config) => {
     stage: preStage,
     winner
   } = await rps.games(gameId)
-  const referrerP1 = await rps.referredBy(addressP1)
-  const referrerP2 = await rps.referredBy(addressP2)
+  const referrerP1 = await ref.referredBy(addressP1)
+  const referrerP2 = await ref.referredBy(addressP2)
 
   const preOwnerTokenBankBalance = await bnk.tokenBalanceOf(owner, tokenAddress)
   const preReferrerP1TokenBankBalance = await bnk.tokenBalanceOf(
@@ -914,8 +914,8 @@ const testSettleBetTied = async (contracts, gameId, config) => {
 
 const testCancelGame = async (contracts, gameId, config) => {
   const { from: canceller } = config
-  const { rps, bnk } = contracts
-  const referrer = await rps.referredBy(canceller)
+  const { rps, bnk, ref } = contracts
+  const referrer = await ref.referredBy(canceller)
 
   const {
     stage: preStage,
