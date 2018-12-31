@@ -4,8 +4,19 @@
     <v-toolbar-title v-text="name"></v-toolbar-title>
     <v-spacer />
     <v-progress-circular v-show="hasPendingTxs" indeterminate color="primary" />
-    <v-btn @click="toggleShowTransactions" color="secondary">
+    <v-btn
+      v-if="hasGrantedWeb3Access"
+      @click="toggleShowTransactions"
+      color="secondary"
+    >
       {{ showTransactionsText }}
+    </v-btn>
+    <v-btn
+      v-if="!hasGrantedWeb3Access"
+      @click="setWeb3RequestOpen(true)"
+      color="secondary"
+    >
+      enable metamask
     </v-btn>
   </v-toolbar>
 </template>
@@ -21,7 +32,12 @@ export default {
     ...VBtn
   },
   computed: {
-    ...mapGetters(['name', 'hasPendingTxs', 'showTransactions']),
+    ...mapGetters([
+      'name',
+      'hasPendingTxs',
+      'showTransactions',
+      'hasGrantedWeb3Access'
+    ]),
     showTransactionsText() {
       return this.showTransactions
         ? `hide ${this.hasPendingTxs ? ' pending' : ''} transactions`
@@ -29,7 +45,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['toggleDrawer', 'setShowTransactions']),
+    ...mapActions([
+      'toggleDrawer',
+      'setShowTransactions',
+      'setWeb3RequestOpen'
+    ]),
     toggleShowTransactions() {
       this.setShowTransactions(!this.showTransactions)
     }

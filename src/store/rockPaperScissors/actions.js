@@ -37,7 +37,6 @@ export const setupRockPaperScissorsWs = async ({ getters, commit }) => {
 export const getPaused = async ({ getters, commit }) => {
   const { rockPaperScissorsWs } = getters
   const paused = await rockPaperScissorsWs.methods.paused().call()
-
   commit('setPaused', paused)
 }
 
@@ -186,7 +185,7 @@ export const commitChoice = async (
   const { rockPaperScissors, coinbase, web3Ws } = getters
   const sigParams = await web3Ws.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice]
+    [gameId.toString(), choice]
   )
   const sig = await web3Ws.eth.sign(sigParams, coinbase)
   const commitHash = soliditySha3(
@@ -230,13 +229,11 @@ export const rebuildAndRevealChoice = async (
   const { coinbase, web3Ws } = getters
   const sigParams = await web3Ws.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
-    [gameId, choice]
+    [gameId.toString(), choice]
   )
   const sig = await web3Ws.eth.sign(sigParams, coinbase)
 
-  const tx = revealChoice({ getters }, { gameId, choice, sig })
-
-  dispatch('watchPendingTx', { tx, description: 'Reveal Choice' })
+  await revealChoice({ getters, dispatch }, { gameId, choice, sig })
 }
 
 export const startGameTimeout = async ({ getters, dispatch }, gameId) => {

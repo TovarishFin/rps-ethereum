@@ -8,5 +8,5 @@ export default {
   bankTabs: 0,
   accountTabs: 0,
   hasGrantedWeb3Access: false,
-  showTransactions: true
+  showTransactions: false
 }

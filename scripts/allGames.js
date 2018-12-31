@@ -176,7 +176,7 @@ module.exports = async function(callback) {
   )
   await rps.commitChoice(gameId, commitHash2, { from: joiner })
 
-  console.log('commit of choices complete')
+  console.log(chalk.cyan('commit of choices complete'))
 
   console.log(chalk.magenta(`gameId is: ${gameId.toString()}`))
 
@@ -517,7 +517,7 @@ module.exports = async function(callback) {
     from: creator
   })
 
-  console.log('commit of choice complete')
+  console.log(chalk.cyan('commit of choice complete'))
 
   console.log(chalk.yellow('starting timeout as acc 1'))
 
@@ -672,7 +672,7 @@ module.exports = async function(callback) {
   )
   await rps.commitChoice(gameId, commitHash1, { from: creator })
 
-  console.log('commit of choice complete')
+  console.log(chalk.cyan('commit of choice complete'))
 
   console.log(chalk.yellow('starting timeout as acc 1'))
 

@@ -82,7 +82,7 @@ module.exports = async function(callback) {
     from: joiner
   })
 
-  console.log('commit of choices complete')
+  console.log(chalk.cyan('commit of choices complete'))
 
   console.log(chalk.magenta(`gameId is: ${gameId.toString()}`))
 

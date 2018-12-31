@@ -1,3 +1,7 @@
+export const setStatisticsWs = (state, statisticsWs) => {
+  state.statisticsWs = statisticsWs
+}
+
 export const setTotalPlayCount = (state, totalPlayCount) => {
   state.totalPlayCount = totalPlayCount
 }

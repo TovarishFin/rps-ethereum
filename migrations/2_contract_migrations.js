@@ -65,10 +65,9 @@ module.exports = (deployer, network, accounts) => {
           chalk.yellow('setting up upgradeable Referrals Contract...')
         )
 
-        await deployer.deploy(Referrals, {
+        const refMaster = await deployer.deploy(Referrals, {
           from: owner
         })
-        const refMaster = await Referrals.deployed()
         const refProxy = await deployer.deploy(
           ContractProxy,
           refMaster.address,
@@ -90,8 +89,7 @@ module.exports = (deployer, network, accounts) => {
           chalk.yellow('setting up upgradeable Statistics Contract...')
         )
 
-        await deployer.deploy(Statistics, { from: owner })
-        const staMaster = await Statistics.deployed()
+        const staMaster = await deployer.deploy(Statistics, { from: owner })
         const staProxy = await deployer.deploy(
           ContractProxy,
           staMaster.address,
@@ -124,10 +122,15 @@ module.exports = (deployer, network, accounts) => {
         console.log(chalk.cyan('RockPaperScissorsManagement deployed'))
 
         console.log(chalk.yellow('deploying ContractProxy (rps)...'))
-        await deployer.deploy(ContractProxy, rpsCore.address, rpsMan.address, {
-          from: owner
-        })
-        const rpsProxy = await ContractProxy.deployed()
+
+        const rpsProxy = await deployer.deploy(
+          ContractProxy,
+          rpsCore.address,
+          rpsMan.address,
+          {
+            from: owner
+          }
+        )
         console.log(chalk.cyan('ContractProxy (rps) deployed'))
 
         console.log(chalk.yellow('deploying TestToken...'))
@@ -137,11 +140,23 @@ module.exports = (deployer, network, accounts) => {
         console.log(chalk.cyan('TestToken deployed'))
 
         console.log(chalk.yellow('updating registry entries...'))
-        await reg.updateEntry('Bank', bnk.address)
-        await reg.updateEntry('RockPaperScissors', rpsProxy.address)
-        await reg.updateEntry('Statistics', staProxy.address)
-        await reg.updateEntry('Referrals', refProxy.address)
-        await reg.addGameContract(rpsProxy.address)
+
+        await reg.updateEntry('Bank', bnk.address, {
+          from: owner
+        })
+        await reg.updateEntry('RockPaperScissors', rpsProxy.address, {
+          from: owner
+        })
+        await reg.updateEntry('Statistics', staProxy.address, {
+          from: owner
+        })
+        await reg.updateEntry('Referrals', refProxy.address, {
+          from: owner
+        })
+        await reg.addGameContract(rpsProxy.address, {
+          from: owner
+        })
+
         console.log(chalk.cyan('registry updates complete'))
 
         console.log(chalk.yellow('initializing proxied contract...'))
@@ -177,6 +192,8 @@ module.exports = (deployer, network, accounts) => {
 
         fs.writeFileSync(iRpsBuildPath, JSON.stringify(iRpsBuild, null, 2))
 
+        console.log('rps proxy address: ', rpsProxy.address)
+
         const iStatisticsBuildPath = path.join(
           __dirname,
           '../',
@@ -194,6 +211,8 @@ module.exports = (deployer, network, accounts) => {
           JSON.stringify(iStatisticsBuild, null, 2)
         )
 
+        console.log('sta proxy address: ', staProxy.address)
+
         const iReferralsBuildPath = path.join(
           __dirname,
           '../',
@@ -208,6 +227,8 @@ module.exports = (deployer, network, accounts) => {
           iReferralsBuildPath,
           JSON.stringify(iReferralsBuild, null, 2)
         )
+
+        console.log('ref proxy address: ', refProxy.address)
 
         console.log(chalk.cyan('masking complete'))
 

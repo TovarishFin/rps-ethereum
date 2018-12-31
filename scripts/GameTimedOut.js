@@ -67,7 +67,7 @@ module.exports = async function(callback) {
     from: creator
   })
 
-  console.log('commit of choice complete')
+  console.log(chalk.cyan('commit of choice complete'))
 
   console.log(chalk.yellow('starting timeout as acc 1'))
 

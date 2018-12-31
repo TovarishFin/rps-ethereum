@@ -2,9 +2,9 @@ import Statistics from '@/../contractsBuild/IStatistics'
 
 export const setupStatisticsWs = async ({ getters, commit }) => {
   const { web3Ws, networkId } = getters
-  const statisticsWs = await web3Ws.eth.Contract(
+  const statisticsWs = await new web3Ws.eth.Contract(
     Statistics.abi,
-    Statistics.netwokrs[networkId].address
+    Statistics.networks[networkId].address
   )
 
   commit('setStatisticsWs', statisticsWs)

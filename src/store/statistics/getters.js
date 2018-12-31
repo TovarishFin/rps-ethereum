@@ -1,5 +1,7 @@
 import { pathOr } from 'ramda'
 
+export const statisticsWs = state => pathOr(null, ['statisticsWs'], state)
+
 export const totalPlayCount = state => pathOr(0, ['totalPlayCount'], state)
 
 export const totalWinCount = state => pathOr(0, ['totalWinCount'], state)

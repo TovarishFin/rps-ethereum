@@ -1,0 +1,110 @@
+{
+  "contractName": "Placeholder",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a7230582050d1fede5f7a2fcddbe82928c77b520af79b05f0f12f4a3dc5bdf0fec9497d520029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a7230582050d1fede5f7a2fcddbe82928c77b520af79b05f0f12f4a3dc5bdf0fec9497d520029",
+  "sourceMap": "27:25:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;27:25:2;;;;;;;",
+  "deployedSourceMap": "27:25:2:-;;;;;",
+  "source": "pragma solidity ^0.4.25;\n\n\ncontract Placeholder {\n\n}",
+  "sourcePath": "/Users/tovarishfin/dev/personal/rps/contracts/Placeholder.sol",
+  "ast": {
+    "absolutePath": "/Users/tovarishfin/dev/personal/rps/contracts/Placeholder.sol",
+    "exportedSymbols": {
+      "Placeholder": [
+        740
+      ]
+    },
+    "id": 741,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 739,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".25"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 740,
+        "linearizedBaseContracts": [
+          740
+        ],
+        "name": "Placeholder",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 741,
+        "src": "27:25:2"
+      }
+    ],
+    "src": "0:52:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/tovarishfin/dev/personal/rps/contracts/Placeholder.sol",
+    "exportedSymbols": {
+      "Placeholder": [
+        740
+      ]
+    },
+    "id": 741,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 739,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".25"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 740,
+        "linearizedBaseContracts": [
+          740
+        ],
+        "name": "Placeholder",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 741,
+        "src": "27:25:2"
+      }
+    ],
+    "src": "0:52:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xA060c6E3e31e6f1D249724FbcC7b7C93c4f5AA0E",
+      "transactionHash": "0xfe4de44375352cc30eec9a63f2efebdcac45fb93d7e924e65225f5beb7310ecb"
+    }
+  },
+  "schemaVersion": "3.0.0",
+  "updatedAt": "2018-12-31T00:26:15.414Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

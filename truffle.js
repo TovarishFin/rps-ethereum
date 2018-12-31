@@ -33,12 +33,7 @@ module.exports = {
       gas: 6.5e6,
       gasPrice: 5e9,
       provider: () =>
-        new HDWalletProvider(
-          testnetMnemonic,
-          'https://ropsten.infura.io',
-          0,
-          10
-        )
+        new HDWalletProvider(testnetMnemonic, 'http://localhost:8545', 0, 10)
     },
     kovan: {
       network_id: 42,

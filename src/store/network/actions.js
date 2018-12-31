@@ -192,7 +192,8 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
     dispatch('setupBankWs'),
     dispatch('setupRockPaperScissorsWs'),
     dispatch('setupWrappedEtherWs'),
-    dispatch('setupTestTokenWs')
+    dispatch('setupTestTokenWs'),
+    dispatch('setupStatisticsWs')
   ])
   await Promise.all([
     dispatch('getPaused'),
