@@ -182,12 +182,12 @@ export const commitChoice = async (
   { getters, commit, dispatch },
   { gameId, choice }
 ) => {
-  const { rockPaperScissors, coinbase, web3Ws } = getters
-  const sigParams = await web3Ws.eth.abi.encodeParameters(
+  const { rockPaperScissors, coinbase, web3 } = getters
+  const sigParams = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
     [gameId.toString(), choice]
   )
-  const sig = await web3Ws.eth.sign(sigParams, coinbase)
+  const sig = await web3.eth.personal.sign(sigParams, coinbase)
   const commitHash = soliditySha3(
     { t: 'uint256', v: gameId },
     { t: 'uint256', v: choice },
@@ -226,12 +226,12 @@ export const rebuildAndRevealChoice = async (
   { getters, dispatch },
   { gameId, choice }
 ) => {
-  const { coinbase, web3Ws } = getters
-  const sigParams = await web3Ws.eth.abi.encodeParameters(
+  const { coinbase, web3 } = getters
+  const sigParams = await web3.eth.abi.encodeParameters(
     ['uint256', 'uint256'],
     [gameId.toString(), choice]
   )
-  const sig = await web3Ws.eth.sign(sigParams, coinbase)
+  const sig = await web3.eth.personal.sign(sigParams, coinbase)
 
   await revealChoice({ getters, dispatch }, { gameId, choice, sig })
 }
