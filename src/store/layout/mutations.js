@@ -38,6 +38,10 @@ export const setHideEtherDepositWarnings = (state, hide) => {
   state.hideEtherDepositWarnings = hide
 }
 
+export const setHomeTabs = (state, tabsIndex) => {
+  state.homeTabs = tabsIndex
+}
+
 export const setBankTabs = (state, tabsIndex) => {
   state.bankTabs = tabsIndex
 }

@@ -6,9 +6,26 @@
       </v-card-title>
 
       <v-card-text>
-        This is a Decentralized Application. It needs MetaMask in order to
-        interact with the blockchain. Please click "ENABLE METAMASK" below. You
-        will be prompted by MetaMask, click confirm and you will be ready to go.
+        <p class="subheading" v-if="metaMaskInstalled">
+          This is a Decentralized Application. It needs <b>MetaMask</b> in order
+          to interact with the blockchain. Please click
+          <b>"ENABLE METAMASK"</b> below. You will be prompted by MetaMask,
+          click confirm and you will be ready to go.
+        </p>
+
+        <p class="subheading" v-if="!metaMaskInstalled">
+          This is a Decentralized Application. It needs <b>MetaMask</b> in order
+          to interact with the blockchain. Please go to
+          <a target="_blank" href="https://metamask.io/">metamask.io</a> and
+          install MetaMask. Once finished, refresh the page.
+        </p>
+
+        <p class="subheading">
+          If you do not wish to interact with anything and simply want to look
+          around, feel free to click "Don't Enable/Install MetaMask". You can
+          Enable at any time by clicking the "Enable MetaMask" button at the top
+          right of the screen.
+        </p>
       </v-card-text>
 
       <v-divider></v-divider>
@@ -16,9 +33,21 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="continueWithoutPermission" color="secondary">
-          Don't Enable MetaMask
+          Don't Enable/Install MetaMask
         </v-btn>
-        <v-btn @click="continueWithPermission" color="primary">
+        <v-btn
+          v-if="!metaMaskInstalled"
+          color="primary"
+          href="https://metamask.io"
+          target="_blank"
+        >
+          Install MetaMask
+        </v-btn>
+        <v-btn
+          v-if="!!metaMaskInstalled"
+          @click="continueWithPermission"
+          color="primary"
+        >
           Enable MetaMask
         </v-btn>
       </v-card-actions>
@@ -31,12 +60,14 @@ import { mapGetters, mapActions } from 'vuex'
 import * as VDialog from 'vuetify/es5/components/VDialog'
 import * as VCard from 'vuetify/es5/components/VCard'
 import * as VDivider from 'vuetify/es5/components/VDivider'
+import * as VImg from 'vuetify/es5/components/VImg'
 
 export default {
   components: {
     ...VDialog,
     ...VCard,
-    ...VDivider
+    ...VDivider,
+    ...VImg
   },
   computed: {
     ...mapGetters(['web3RequestOpen']),
@@ -47,6 +78,9 @@ export default {
       set(web3RequestOpen) {
         this.setWeb3RequestOpen(web3RequestOpen)
       }
+    },
+    metaMaskInstalled() {
+      return !!window.web3 || !!window.ethereum
     }
   },
   methods: {

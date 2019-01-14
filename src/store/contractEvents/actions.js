@@ -303,7 +303,7 @@ export const handleGameCreated = async (
     )
   }
 
-  await dispatch('getOpenGames')
+  await dispatch('getJoinableGames')
 }
 
 export const handleGameCancelled = async (
@@ -320,7 +320,7 @@ export const handleGameCancelled = async (
     )
   }
 
-  await dispatch('getOpenGames')
+  await dispatch('getJoinableGames')
 }
 
 export const handleGameJoined = async (
@@ -344,7 +344,7 @@ export const handleGameJoined = async (
     )
   }
 
-  await dispatch('getOpenGames')
+  await dispatch('getJoinableGames')
 }
 
 export const handleChoiceCommitted = async (

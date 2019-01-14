@@ -12,6 +12,8 @@ export const hideTokenDepositWarnings = state => state.hideTokenDepositWarnings
 
 export const hideEtherDepositWarnings = state => state.hideEtherDepositWarnings
 
+export const homeTabs = state => state.homeTabs
+
 export const bankTabs = state => state.bankTabs
 
 export const accountTabs = state => state.accountTabs

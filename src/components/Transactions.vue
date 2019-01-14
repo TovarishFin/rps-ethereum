@@ -60,13 +60,13 @@ export default {
     ...mapActions(['setShowTransactions']),
     txLink(txHash) {
       switch (this.network) {
-        case 3:
+        case 'ropsten':
           return `https://ropsten.etherscan.io/tx/${txHash}`
-        case 4:
+        case 'rinkeby':
           return `https://rinkeby.etherscan.io/tx/${txHash}`
-        case 42:
+        case 'kovan':
           return `https://kovan.etherscan.io/tx/${txHash}`
-        case 1:
+        case 'mainnet':
           return `https://etherscan.io/tx/${txHash}`
         default:
           return `https://etherscan.io/tx/${txHash}`

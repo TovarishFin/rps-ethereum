@@ -19,8 +19,8 @@ const actionIdWatcher = store => {
 
         break
 
-      case 'setOpenGames':
-        await store.dispatch('populateOpenGames')
+      case 'setJoinableGames':
+        await store.dispatch('populateJoinableGames')
 
         break
 
@@ -30,6 +30,16 @@ const actionIdWatcher = store => {
 
       case 'setSelectedGameId':
         await store.dispatch('getGame', payload)
+        break
+
+      case 'setGame':
+        if (
+          isAddress(payload.game.tokenAddress) &&
+          payload.game.tokenAddress !== addressZero
+        ) {
+          store.dispatch('getTokenDataOf', payload.game.tokenAddress)
+        }
+
         break
 
       default:

@@ -5,6 +5,7 @@ import { addressZero } from '../../utils/data'
 const accountPollingDelay = 3000
 const networkPollingDelay = 15000
 
+// TODO: handle no metamask
 export const setupWeb3Permissioned = async ({ commit }) => {
   let web3
   switch (true) {
@@ -204,7 +205,7 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
     dispatch('getTotalWinCount'),
     dispatch('getTotalWinVolume'),
     dispatch('getTotalReferralVolume'),
-    dispatch('getOpenGames'),
+    dispatch('getJoinableGames'),
     dispatch('getWethAddress')
   ])
 
@@ -213,6 +214,8 @@ export const bootstrapEth = async ({ dispatch, commit, getters }) => {
 
   if (hasGrantedWeb3Access) {
     dispatch('getWeb3Access')
+  } else {
+    dispatch('setWeb3RequestOpen', true)
   }
 
   dispatch('watchNetwork')

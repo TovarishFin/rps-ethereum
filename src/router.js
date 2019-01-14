@@ -28,19 +28,24 @@ export default new Router({
       component: () => import('@/components/pages/PlayMoney.vue')
     },
     {
-      path: '/create-game',
-      name: 'Create Game',
-      component: () => import('@/components/pages/CreateGame.vue')
-    },
-    {
       path: '/game/:gameId',
       name: 'Game',
       component: () => import('@/components/pages/Game.vue')
     },
     {
-      path: '/account',
-      name: 'Account',
-      component: () => import('@/components/pages/Account.vue')
+      path: '/my-tokens',
+      name: 'My Tokens',
+      component: () => import('@/components/pages/AccountTokenTransactions')
+    },
+    {
+      path: '/my-games',
+      name: 'My Games',
+      component: () => import('@/components/pages/AccountGames')
+    },
+    {
+      path: '/my-referrals',
+      name: 'My Referrals',
+      component: () => import('@/components/pages/AccountReferrals')
     },
     {
       path: '/no-account',

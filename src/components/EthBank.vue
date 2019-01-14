@@ -39,7 +39,7 @@ import { mapGetters, mapActions } from 'vuex'
 import * as VForm from 'vuetify/es5/components/VForm'
 import * as VTextField from 'vuetify/es5/components/VTextField'
 import * as VBtn from 'vuetify/es5/components/VBtn'
-import EtherDepositWarnings from './EtherDepositWarnings'
+import EtherDepositWarnings from '@/components/EtherDepositWarnings'
 
 export default {
   components: {

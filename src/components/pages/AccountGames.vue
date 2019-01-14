@@ -18,6 +18,7 @@
       item-key="gameId"
       :search="gameSearch"
       class="elevation-1 mb-4"
+      :pagination.sync="pagination"
     >
       <template slot="items" slot-scope="props">
         <tr @click="selectGame(props, props.item.gameId)">
@@ -70,6 +71,7 @@ export default {
   },
   data() {
     return {
+      pagination: { rowsPerPage: -1 },
       gameSearch: '',
       gameHeaders: [
         {
@@ -105,7 +107,7 @@ export default {
       return this.coinbaseActiveGameIds
         .map(gameId => this.game(gameId))
         .map(game => ({
-          ...this.game(game.gameId),
+          ...game,
           result: this.result(game.gameId),
           requiredAction: this.requiredAction(game.gameId),
           bet: this.weiToEth(game.bet),

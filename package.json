@@ -74,6 +74,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "truffle-hdwallet-provider": "^0.0.6",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.17",
+    "vuetify-loader": "^1.0.8"
   }
 }

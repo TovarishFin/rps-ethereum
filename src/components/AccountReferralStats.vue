@@ -30,6 +30,7 @@
         :items="referralPayments"
         :search="paymentSearch"
         class="elevation-1 mb-4"
+        :pagination.sync="pagination"
       >
         <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.blockNumber }}</td>
@@ -61,6 +62,9 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        rowsPerPage: -1
+      },
       paymentSearch: '',
       sortedPayments: [],
       paymentHeaders: [

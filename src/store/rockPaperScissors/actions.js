@@ -82,11 +82,11 @@ export const getGame = async ({ getters, commit, dispatch }, gameId) => {
   await dispatch('checkGameTimeout', gameId)
 }
 
-export const getOpenGames = async ({ getters, commit }) => {
+export const getJoinableGames = async ({ getters, commit }) => {
   const { rockPaperScissorsWs } = getters
   const openGameIds = await rockPaperScissorsWs.methods.allOpenGames().call()
 
-  commit('setOpenGames', openGameIds)
+  commit('setJoinableGames', openGameIds)
 }
 
 export const getCoinbaseActiveGameIds = async ({ getters, commit }) => {
@@ -98,7 +98,7 @@ export const getCoinbaseActiveGameIds = async ({ getters, commit }) => {
   commit('setCoinbaseActiveGameIds', activeGamesOf)
 }
 
-export const populateOpenGames = async ({ getters, dispatch }) => {
+export const populateJoinableGames = async ({ getters, dispatch }) => {
   const { openGameIds } = getters
   const promises = []
   for (const gameId of openGameIds) {

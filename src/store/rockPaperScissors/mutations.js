@@ -30,7 +30,7 @@ export const setGame = (state, { gameId, game }) => {
   state.games = { ...state.games, [gameId]: game }
 }
 
-export const setOpenGames = (state, openGameIds) => {
+export const setJoinableGames = (state, openGameIds) => {
   state.openGameIds = openGameIds
 }
 

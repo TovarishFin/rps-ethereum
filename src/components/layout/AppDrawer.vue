@@ -7,21 +7,11 @@
     app
   >
     <v-list>
-      <v-list-tile value="true" to="/account">
-        <v-list-tile-action>
-          <v-icon>account_circle</v-icon>
-        </v-list-tile-action>
-
-        <v-list-tile-content>
-          <v-list-tile-title>My Account</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-
       <v-list-tile
         value="true"
         v-for="(item, i) in items"
         :to="item.to"
-        :key="`nonVoterItems${i}`"
+        :key="`item-${i}`"
       >
         <v-list-tile-action>
           <v-icon v-html="item.icon"></v-icon>
@@ -37,25 +27,24 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import * as VList from 'vuetify/es5/components/VList'
 
 export default {
+  components: {
+    ...VList
+  },
   data() {
     return {
       items: [
         {
-          icon: 'home',
-          title: 'Open Games',
+          icon: 'mdi-rocket',
+          title: 'Play',
           to: '/'
         },
         {
-          icon: 'info',
-          title: 'About',
-          to: '/about'
-        },
-        {
-          icon: 'mdi-rocket',
-          title: 'Create Game',
-          to: '/create-game'
+          icon: 'mdi-account-circle',
+          title: 'My Games',
+          to: '/my-games'
         },
         {
           icon: 'mdi-bank',
@@ -66,6 +55,21 @@ export default {
           icon: 'mdi-coins',
           title: 'Play Money',
           to: '/play-money'
+        },
+        {
+          icon: 'mdi-account-circle',
+          title: 'My Tokens',
+          to: '/my-tokens'
+        },
+        {
+          icon: 'mdi-account-circle',
+          title: 'My Referrals',
+          to: '/my-referrals'
+        },
+        {
+          icon: 'info',
+          title: 'About',
+          to: '/about'
         }
       ]
     }
