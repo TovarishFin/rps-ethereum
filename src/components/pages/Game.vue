@@ -20,15 +20,13 @@ import GameData from '@/components/game/GameData'
 import GameAction from '@/components/game/GameAction'
 import GameDisplay from '@/components/game/GameDisplay'
 import GameTimeline from '@/components/game/GameTimeline'
-import * as VDivider from 'vuetify/es5/components/VDivider'
 
 export default {
   components: {
     GameData,
     GameAction,
     GameDisplay,
-    GameTimeline,
-    ...VDivider
+    GameTimeline
   },
   computed: {
     gameId() {

@@ -46,9 +46,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VForm from 'vuetify/es5/components/VForm'
-import * as VBtn from 'vuetify/es5/components/VBtn'
-import * as VSelect from 'vuetify/es5/components/VSelect'
 
 export default {
   data() {
@@ -56,11 +53,6 @@ export default {
       choice: '0',
       choiceRules: [v => v !== '0' || 'you must make a choice.']
     }
-  },
-  components: {
-    ...VForm,
-    ...VBtn,
-    ...VSelect
   },
   computed: {
     ...mapGetters(['coinbase', 'selectedGameId', 'game']),

@@ -27,12 +27,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VList from 'vuetify/es5/components/VList'
 
 export default {
-  components: {
-    ...VList
-  },
   data() {
     return {
       items: [

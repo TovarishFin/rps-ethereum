@@ -95,16 +95,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VForm from 'vuetify/es5/components/VForm'
-import * as VBtn from 'vuetify/es5/components/VBtn'
-import * as VSelect from 'vuetify/es5/components/VSelect'
 
 export default {
-  components: {
-    ...VForm,
-    ...VBtn,
-    ...VSelect
-  },
   data() {
     return {
       choice: '0',

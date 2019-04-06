@@ -14,12 +14,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VBtn from 'vuetify/es5/components/VBtn'
 
 export default {
-  components: {
-    ...VBtn
-  },
   computed: {
     ...mapGetters(['coinbase', 'selectedGameId', 'game']),
     gameData() {

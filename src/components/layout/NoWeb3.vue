@@ -13,16 +13,3 @@
     </v-flex>
   </v-layout>
 </template>
-
-<script>
-import * as VImg from 'vuetify/es5/components/VImg'
-import * as VProgressCircular from 'vuetify/es5/components/VProgressCircular'
-
-export default {
-  components: {
-    ...VImg,
-    ...VProgressCircular
-  }
-}
-</script>
-<style scoped></style>

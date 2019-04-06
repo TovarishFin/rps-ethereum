@@ -23,14 +23,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import * as VProgressCircular from 'vuetify/es5/components/VProgressCircular'
-import * as VBtn from 'vuetify/es5/components/VBtn'
 
 export default {
-  components: {
-    ...VProgressCircular,
-    ...VBtn
-  },
   computed: {
     ...mapGetters([
       'name',

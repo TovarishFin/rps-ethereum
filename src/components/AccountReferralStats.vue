@@ -50,16 +50,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { toBN } from 'web3-utils'
-import * as VCombobox from 'vuetify/es5/components/VCombobox'
-import * as VDataTable from 'vuetify/es5/components/VDataTable'
-import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
-  components: {
-    ...VCombobox,
-    ...VDataTable,
-    ...VCard
-  },
   data() {
     return {
       pagination: {

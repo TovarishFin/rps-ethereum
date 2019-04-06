@@ -21,7 +21,8 @@
     "migrate:rinkeby": "truffle migrate --reset --network rinkeby",
     "migrate:ropsten": "truffle migrate --reset --network ropsten",
     "migrate:mainnet": "truffle migrate --reset --network live",
-    "exec:local": "truffle exec --network dev"
+    "exec:local": "truffle exec --network dev",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",

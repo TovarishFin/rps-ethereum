@@ -114,18 +114,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTextField from 'vuetify/es5/components/VTextField'
-import * as VList from 'vuetify/es5/components/VList'
-import * as VSubheader from 'vuetify/es5/components/VSubheader'
-import * as VIcon from 'vuetify/es5/components/VIcon'
 
 export default {
-  components: {
-    ...VTextField,
-    ...VList,
-    ...VSubheader,
-    ...VIcon
-  },
   data() {
     return {
       referralAddress: '',

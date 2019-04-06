@@ -9,12 +9,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VBtn from 'vuetify/es5/components/VBtn'
 import TokenDataOf from '../TokenDataOf'
 
 export default {
   components: {
-    ...VBtn,
     TokenDataOf
   },
   computed: {

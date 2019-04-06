@@ -10,15 +10,3 @@
     </v-flex>
   </v-layout>
 </template>
-
-<script>
-import * as VImg from 'vuetify/es5/components/VImg'
-
-export default {
-  components: {
-    ...VImg
-    // ...VSpacer
-  }
-}
-</script>
-<style scoped></style>

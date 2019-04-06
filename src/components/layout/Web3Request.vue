@@ -57,18 +57,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VDialog from 'vuetify/es5/components/VDialog'
-import * as VCard from 'vuetify/es5/components/VCard'
-import * as VDivider from 'vuetify/es5/components/VDivider'
-import * as VImg from 'vuetify/es5/components/VImg'
 
 export default {
-  components: {
-    ...VDialog,
-    ...VCard,
-    ...VDivider,
-    ...VImg
-  },
   computed: {
     ...mapGetters(['web3RequestOpen']),
     web3RequestOpenModel: {

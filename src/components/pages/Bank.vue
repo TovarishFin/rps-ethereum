@@ -11,14 +11,12 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTabs from 'vuetify/es5/components/VTabs'
 import TokenUsageTable from '../TokenUsageTable'
 import TokenBank from '../TokenBank'
 import EthBank from '../EthBank'
 
 export default {
   components: {
-    ...VTabs,
     TokenUsageTable,
     TokenBank,
     EthBank

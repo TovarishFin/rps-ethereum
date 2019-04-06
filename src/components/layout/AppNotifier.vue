@@ -6,15 +6,9 @@
 </template>
 
 <script>
-import * as VSnackbar from 'vuetify/es5/components/VSnackbar'
-import * as VBtn from 'vuetify/es5/components/VBtn'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  components: {
-    ...VSnackbar,
-    ...VBtn
-  },
   computed: {
     ...mapGetters(['notificationOpen', 'notificationMessage']),
     notificationStatus: {

@@ -69,20 +69,11 @@
 </template>
 
 <script>
-import * as VExpansionPanel from 'vuetify/es5/components/VExpansionPanel'
-import * as VCard from 'vuetify/es5/components/VCard'
-import * as VDivider from 'vuetify/es5/components/VDivider'
-
 export default {
   data() {
     return {
       panel: null
     }
-  },
-  components: {
-    ...VExpansionPanel,
-    ...VCard,
-    ...VDivider
   }
 }
 </script>

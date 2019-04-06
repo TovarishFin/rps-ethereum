@@ -49,18 +49,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTextField from 'vuetify/es5/components/VTextField'
-import * as VBtn from 'vuetify/es5/components/VBtn'
-import * as VDataTable from 'vuetify/es5/components/VDataTable'
-import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
-  components: {
-    ...VTextField,
-    ...VBtn,
-    ...VDataTable,
-    ...VCard
-  },
   data() {
     return {
       pagination: {

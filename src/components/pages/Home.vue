@@ -17,7 +17,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTabs from 'vuetify/es5/components/VTabs'
 import JoinableGames from '../JoinableGames'
 import CreateGame from '../CreateGame'
 import Bank from './Bank'
@@ -25,7 +24,6 @@ import AppStats from '../AppStats'
 
 export default {
   components: {
-    ...VTabs,
     AppStats,
     JoinableGames,
     CreateGame,

@@ -24,12 +24,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTimeline from 'vuetify/es5/components/VTimeline'
 
 export default {
-  components: {
-    ...VTimeline
-  },
   computed: {
     ...mapGetters(['bankActivity', 'tokenDataOf', 'coinbase']),
     formattedLogs() {

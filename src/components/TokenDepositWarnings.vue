@@ -87,14 +87,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VCheckbox from 'vuetify/es5/components/VCheckbox'
-import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
-  components: {
-    ...VCheckbox,
-    ...VCard
-  },
   methods: {
     ...mapActions(['setHideTokenDepositWarnings'])
   },

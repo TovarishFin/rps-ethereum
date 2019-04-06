@@ -24,12 +24,8 @@
 <script>
 import { toBN } from 'web3-utils'
 import { mapGetters, mapActions } from 'vuex'
-import * as VBtn from 'vuetify/es5/components/VBtn'
 
 export default {
-  components: {
-    ...VBtn
-  },
   computed: {
     ...mapGetters([
       'game',

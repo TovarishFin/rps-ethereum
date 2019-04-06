@@ -59,12 +59,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import * as VCard from 'vuetify/es5/components/VCard'
 import Typing from '@/components/Typing'
 
 export default {
   components: {
-    ...VCard,
     Typing
   },
   computed: {

@@ -29,14 +29,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import * as VDataTable from 'vuetify/es5/components/VDataTable'
-import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
-  components: {
-    ...VDataTable,
-    ...VCard
-  },
   data() {
     return {
       tokenHeaders: [

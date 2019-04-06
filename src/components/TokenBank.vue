@@ -62,21 +62,11 @@
 <script>
 import { toBN } from 'web3-utils'
 import { mapGetters, mapActions } from 'vuex'
-import * as VForm from 'vuetify/es5/components/VForm'
-import * as VTextField from 'vuetify/es5/components/VTextField'
-import * as VBtn from 'vuetify/es5/components/VBtn'
-import * as VCheckbox from 'vuetify/es5/components/VCheckbox'
-import * as VCombobox from 'vuetify/es5/components/VCombobox'
 import TokenDataOf from '@/components/TokenDataOf.vue'
 import TokenDepositWarnings from '@/components/TokenDepositWarnings'
 
 export default {
   components: {
-    ...VTextField,
-    ...VForm,
-    ...VBtn,
-    ...VCheckbox,
-    ...VCombobox,
     TokenDataOf,
     TokenDepositWarnings
   },

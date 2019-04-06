@@ -55,18 +55,10 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VTextField from 'vuetify/es5/components/VTextField'
-import * as VBtn from 'vuetify/es5/components/VBtn'
-import * as VDataTable from 'vuetify/es5/components/VDataTable'
-import * as VCard from 'vuetify/es5/components/VCard'
 import GameAction from '@/components/game/GameAction'
 
 export default {
   components: {
-    ...VTextField,
-    ...VBtn,
-    ...VDataTable,
-    ...VCard,
     GameAction
   },
   data() {

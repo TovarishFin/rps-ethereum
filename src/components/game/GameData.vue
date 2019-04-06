@@ -39,14 +39,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VDataTable from 'vuetify/es5/components/VDataTable'
-import * as VCard from 'vuetify/es5/components/VCard'
 import TokenDataOf from '@/components/TokenDataOf'
 
 export default {
   components: {
-    ...VDataTable,
-    ...VCard,
     TokenDataOf
   },
   data() {

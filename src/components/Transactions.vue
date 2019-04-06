@@ -35,16 +35,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as VList from 'vuetify/es5/components/VList'
-import * as VSubheader from 'vuetify/es5/components/VSubheader'
-import * as VBottomSheet from 'vuetify/es5/components/VBottomSheet'
 
 export default {
-  components: {
-    ...VList,
-    ...VSubheader,
-    ...VBottomSheet
-  },
   computed: {
     ...mapGetters(['pendingTxs', 'completeTxs', 'network', 'showTransactions']),
     showTransactionsModel: {

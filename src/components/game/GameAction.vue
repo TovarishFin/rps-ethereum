@@ -16,7 +16,6 @@ import GameTimedOut from '@/components/game/GameTimedOut'
 import GameTied from '@/components/game/GameTied'
 import GameWinnerDecided from '@/components/game/GameWinnerDecided'
 import GamePaid from '@/components/game/GamePaid'
-import * as VCard from 'vuetify/es5/components/VCard'
 
 export default {
   props: {
@@ -35,8 +34,7 @@ export default {
     GameTimedOut,
     GameTied,
     GameWinnerDecided,
-    GamePaid,
-    ...VCard
+    GamePaid
   },
   computed: {
     ...mapGetters(['game']),
