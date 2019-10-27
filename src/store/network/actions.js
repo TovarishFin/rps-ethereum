@@ -34,7 +34,8 @@ export const setupWeb3Permissioned = async ({ commit }) => {
             web3_clientVersion: 'ZeroClientProvider'
           },
           getAccounts: cb => cb(null, []),
-          rpcUrl: 'https://rinkeby.infura.io'
+          rpcUrl:
+            'https://rinkeby.infura.io/v3/1d9136c069224da0b67b6035d294bdf4'
         })
       )
       break
@@ -73,7 +74,8 @@ export const setupWeb3 = ({ commit }) =>
                 web3_clientVersion: 'ZeroClientProvider'
               },
               getAccounts: cb => cb(null, []),
-              rpcUrl: 'https://rinkeby.infura.io'
+              rpcUrl:
+                'https://rinkeby.infura.io/v3/1d9136c069224da0b67b6035d294bdf4'
             })
           )
           break
@@ -91,7 +93,9 @@ export const setupWeb3Ws = async ({ commit, getters }) => {
   if (network === 'private') {
     web3Ws = new Web3('ws://localhost:8545')
   } else {
-    web3Ws = new Web3(`wss://${network}.infura.io/ws`)
+    web3Ws = new Web3(
+      `wss://${network}.infura.io/ws/v3/1d9136c069224da0b67b6035d294bdf4`
+    )
   }
 
   commit('setWeb3Ws', web3Ws)

@@ -232,7 +232,7 @@ export default {
     },
     depositTokens() {
       if (this.$refs[`deposit-form-${this.selectedGameId}`].validate()) {
-        if (this.tokenData.decimals !== '18') {
+        if (this.tokenData.decimals.toString() !== '18') {
           this.createNotification(
             'Tokens must use 18 decimals in order to be used.'
           )
