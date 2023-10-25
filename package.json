@@ -27,7 +27,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@mdi/font": "^2.8.94",
-    "crypto-js": "^3.1.9-1",
+    "crypto-js": "^4.2.0",
     "ganache-cli": "^6.2.3",
     "ramda": "^0.25.0",
     "rimraf": "^2.6.2",
